@@ -31,7 +31,7 @@ export async function chshPost(basis: number[]) {
 }
 
 
-async function chshSubmit(currentAngle: number, 
+async function chshSubmit(currentAngle: number,
     setAngleChoices: React.Dispatch<SetStateAction<number []>>,
     arrowRotation: number, angleChoices: number[], setCurrentAngle: React.Dispatch<SetStateAction<number>>, router: Router) {
       if (currentAngle == 1) {
@@ -52,7 +52,7 @@ async function chshSubmit(currentAngle: number,
       } else {
         console.error("Something went wrong please refresh the page")
       }
-        
+
       setCurrentAngle(currentAngle+1)
   }
 
@@ -63,16 +63,13 @@ async function chshSubmit(currentAngle: number,
     //console.log("Unique", process.env)
 
 
+
   const setLinks=()=>{
     setBackArrowLink("/chsh/page1/");
     setForwardArrowLink("/chsh/page2/");
   }
 
-  
-
   useEffect(()=>{setLinks()},[])
-
-
 
     const [open, setOpen] = useState(false);
     const [openModal,setOpenModal] = useState(false);
@@ -83,7 +80,7 @@ async function chshSubmit(currentAngle: number,
     const [angleChoices, setAngleChoices] = useState<number []>([])
     const [textValue, setTextValue] = useState('');
     const [triggerSubmit, setTriggerSubmit] = useState(0);
-   
+
 
 
     useEffect(() => {
@@ -130,7 +127,7 @@ async function chshSubmit(currentAngle: number,
       // chshPost(arrowRotation, currentAngle)
       //console.log("here boi")
       setTriggerSubmit(triggerSubmit+1)
-      
+
     };
 
 
@@ -188,7 +185,7 @@ async function chshSubmit(currentAngle: number,
                 flexDirection="column"
                 position="relative"
                 sx={{ marginTop:'30px'}}
-              > 
+              >
                 <Typography variant="body1" sx={{ fontWeight: 'bold', float: 'left' }}>
                   What is really happening here?
                 </Typography>
@@ -214,8 +211,8 @@ async function chshSubmit(currentAngle: number,
                   This may take a few minutes.
                 </Typography>
 
-              </Stack>  
-            </Stack> 
+              </Stack>
+            </Stack>
             </Stack>
           </DialogContent>
         </Dialog>
@@ -229,9 +226,9 @@ async function chshSubmit(currentAngle: number,
                   position="relative"
                   sx={{ width:'100%'}}
                 >
-                    <Stack direction="row" 
+                    <Stack direction="row"
                       sx={{
-                        minHeight: '8em', 
+                        minHeight: '8em',
                         justifyContent: 'left',
                         alignItems: 'flex-end', // Align items to the bottom of the row
                       }}
@@ -299,20 +296,20 @@ async function chshSubmit(currentAngle: number,
                           position="relative"
                           sx={{ width:'50%'}}
                         >
-                          <Stack 
+                          <Stack
                               direction="row"
                               sx={{
-                                backgroundImage: 'url(/images/circle.png)', 
-                                Height: '560px', 
-                                backgroundRepeat: 'no-repeat', 
-                                width:'560px', 
+                                backgroundImage: 'url(/images/circle.png)',
+                                Height: '560px',
+                                backgroundRepeat: 'no-repeat',
+                                width:'560px',
                                 backgroundPosition: 'center',
                                 position:'relative',
                                 left:'40%',
                                 }}
                               >
-                          <Stack 
-                              direction="row" 
+                          <Stack
+                              direction="row"
                               >
                             <Typography
                               variant="h5"
@@ -374,8 +371,8 @@ async function chshSubmit(currentAngle: number,
                               H
                             </Typography>
 
-                            <Stack 
-                              direction="row" 
+                            <Stack
+                              direction="row"
                               sx={{
                                 position: 'relative',
                                 zIndex: 2,
@@ -407,14 +404,14 @@ async function chshSubmit(currentAngle: number,
                               </Box>
 
                               </Stack>
-                              
+
                               <Stack
                               sx={{
                                   position:'relative',
                                   justifyContent: 'flex-end',
                                   paddingBottom: '60px'
                                 }}
-                              > 
+                              >
                               <Button
                                 variant="contained"
                                 component="a"
@@ -430,10 +427,10 @@ async function chshSubmit(currentAngle: number,
                                 Submit
                               </Button>
                               </Stack>
-                                
+
                               </Stack>
 
-                            </Stack>  
+                            </Stack>
 
 
                         </Stack>

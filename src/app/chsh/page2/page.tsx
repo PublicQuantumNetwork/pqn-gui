@@ -1,14 +1,28 @@
 "use client"
-import {useState, useEffect} from 'react';
+
+import {useState, useEffect, SetStateAction} from 'react';
 import Container from '@mui/material/Container';
-import {Link, Dialog, DialogContent, styled, Box, Stack } from '@mui/material';
+import {Link, Dialog, DialogContent, Button, Box, Stack,TextField } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import {usePageRedirect} from '@/app/contexts/PageRedirectContext';
-import { VerticalAlignCenter } from '@mui/icons-material';
+import CHSHTextbox from '@/components/CHSHTextbox';
+import { Padding, VerticalAlignCenter } from '@mui/icons-material';
+
+
+
+export async function chshPost(basis: number[]) {
+  console.log("HERE ARE THE ENVIRONMENT VARIABLES");
+  console.log("follower_node_address", process.env.NEXT_PUBLIC_FOLLOWER_NODE_ADDRESS)
+  console.log("timetagger_address", process.env.NEXT_PUBLIC_TIMETAGGER_ADDRESS)
+  const resposne = await fetch(`http://127.0.0.1:8000/chsh?basis=[${basis}]&follower_node_address=${process.env.NEXT_PUBLIC_FOLLOWER_NODE_ADDRESS}&timetagger_address=${process.env.NEXT_PUBLIC_TIMETAGGER_ADDRESS}`, {
+    method: "POST",
+  });
+}
+
 
 export default function Home() {
  const {setBackArrowLink, setForwardArrowLink} = usePageRedirect();
-
+  console.log("Unique", process.env)
 
 
   const setLinks=()=>{
@@ -16,18 +30,39 @@ export default function Home() {
     setForwardArrowLink("/chsh/page2/");
   }
 
-  useEffect(()=>{setLinks()},[])
+  function chshSubmit(currentAngle: number, 
+    setAngleChoices: React.Dispatch<SetStateAction<number []>>,
+    arrowRotation: number, angleChoices: number[], setCurrentAngle: React.Dispatch<SetStateAction<number>>) {
+      if (currentAngle == 1) {
+        setAngleChoices([arrowRotation])
+      } else if (currentAngle == 2) {
+        setAngleChoices([...angleChoices, arrowRotation])
+        const response = chshPost([...angleChoices, arrowRotation])
 
+      } else {
+        console.error("Something went wrong please refresh the page")
+      }
+        
+      setCurrentAngle(currentAngle+1)
+  }
+
+  useEffect(()=>{setLinks()},[])
+  
   function MyComponent() {
     const [open, setOpen] = useState(false);
     const [secondOpen, setSecondOpen] = useState(false);
     const [data, setData] = useState(null);
-     const [arrowRotation, setArrowRotation] = useState(50);
+    const [arrowRotation, setArrowRotation] = useState(0);
+    const [currentAngle, setCurrentAngle] = useState(1); // Index of angle choice
+    const [angleChoices, setAngleChoices] = useState<number []>([])
+    const [textValue, setTextValue] = useState('');
+  
+
 
     useEffect(() => {
       const interval = setInterval(() => {
         fetchData();
-      }, 1000);
+      }, 100);
 
       return () => clearInterval(interval);
     }, []);
@@ -36,11 +71,11 @@ export default function Home() {
       try {
         const response = await fetch('http://127.0.0.1:8000/polarimeter/theta');
         const data = await response.json();
-        setData(data);
-        console.log(data);
-        setArrowRotation(data || 45);
+        setData(data.theta);
+        console.log(data.theta);
+        setArrowRotation(data.theta || 0);
       } catch (error) {
-        setArrowRotation(45);
+        setArrowRotation(0);
         console.error('Error fetching data:', error);
       }
     };
@@ -52,6 +87,12 @@ export default function Home() {
 
     const handleSecondClick = () => {
       setSecondOpen(true);
+    };
+
+    const handleSubmitClick = () => {
+      // chshPost(arrowRotation, currentAngle)
+      chshSubmit(currentAngle, setAngleChoices, arrowRotation, angleChoices, setCurrentAngle)
+      
     };
 
     return (
@@ -97,26 +138,7 @@ export default function Home() {
                         }}
                       />
 
-                        <Typography
-                          variant="h5"
-                          component="h1"
-                          sx={{
-                            position: 'absolute',
-                            top: '23%',
-                            left: '50%',
-                            transform: 'translate(-50%, -50%)',
-                            color: '#000000',
-                            width: '75%',
-                          }}
-                        >
-                          <p>
-                            By turning the wheel, you choose which{' '}
-                            <Link href="#" onClick={handleClick}>
-                              polarization
-                            </Link>{' '}
-                            to offer the <Link href="#" onClick={handleSecondClick}>photons</Link>.{' '}<br></br><br></br>Turn the wheel and press the button to choose <strong>angle #1</strong>!
-                          </p>
-                        </Typography>
+                        <CHSHTextbox handleClick = {handleClick} handleSecondClick = {handleSecondClick} angleNumber = {currentAngle} />
 
                         <Dialog open={open} onClose={() => setOpen(false)}>
                         <DialogContent>
@@ -155,13 +177,27 @@ export default function Home() {
                       position="relative"
                       sx={{ width:'50%'}}
                     >
+                      <Stack 
+                          direction="row"
+                          >
+                      <Stack 
+                          direction="row" 
+                          sx={{
+                            backgroundImage: 'url(/images/circle.png)', 
+                            Height: '600px', 
+                            backgroundRepeat: 'no-repeat', 
+                            width:'600px', 
+                            backgroundPosition: 'center',
+                            position:'relative',
+                            left:'40%',
+                            }}>
                         <Typography
                           variant="h5"
                           component="h1"
                           sx={{
                             position: 'absolute',
-                            top: '13%',
-                            left: '56%',
+                            top: '20%',
+                            left: '18%',
                             transform: 'translate(-50%, -50%)',
                             fontSize:'2.5em',
                             color: '#000000',
@@ -175,8 +211,8 @@ export default function Home() {
                           component="h1"
                           sx={{
                             position: 'absolute',
-                            top: '5%',
-                            left: '82%',
+                            top: '8%',
+                            left: '50%',
                             transform: 'translate(-50%, -50%)',
                             fontSize:'2.5em',
                             color: '#000000',
@@ -190,8 +226,8 @@ export default function Home() {
                           component="h1"
                           sx={{
                             position: 'absolute',
-                            top: '13%',
-                            left: '108%',
+                            top: '20%',
+                            left: '82%',
                             transform: 'translate(-50%, -50%)',
                             fontSize:'2.5em',
                             color: '#000000',
@@ -206,7 +242,7 @@ export default function Home() {
                           sx={{
                             position: 'absolute',
                             top: '50%',
-                            left: '127%',
+                            left: '94%',
                             transform: 'translate(-50%, -50%)',
                             fontSize:'2.5em',
                             color: '#000000',
@@ -215,25 +251,66 @@ export default function Home() {
                           H
                         </Typography>
 
-
+                         <Stack 
+                          direction="row" 
+                          sx={{
+                            position: 'relative',
+                            zIndex: 2,
+                            minHeight:'600px',
+                            minWidth:'600px',
+                            alignContent: 'center',
+                            justifyContent: 'center', // Center the content horizontally
+                            }}>
                           <Box
                             sx={{
                               position: 'relative',
-                              top: '65%',
-                              left: '70%',
-                              transform: `rotate(${arrowRotation}deg)`,
-                              width: '1.0em',
-                              height: 'auto',
                               zIndex: 2,
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              height: '100%',
                             }}
                             >
                               <img
                               src="/images/arrow.png"
                                alt="Arrow"
+                              height={'432px'}
+                              style={{
+                                transform: `rotate(${arrowRotation}deg)`,
+                                transformOrigin: 'center center',
+                              }}
                               ></img>
 
                           </Box>
+
+                          </Stack>
                           
+                          <Stack
+                           sx={{
+                              position:'relative',
+                              justifyContent: 'flex-end',
+                              paddingBottom: '60px'
+                            }}
+                          > 
+                           <Button
+                            variant="contained"
+                            component="a"
+                            href="#"
+                            onClick={handleSubmitClick}
+                            sx={{
+                              height: '4em',
+                              border: '1px solid #000',
+                              backgroundColor: '#FFFFFF;',
+                              color: '#000000;',
+                            }}
+                          >
+                            Submit
+                          </Button>
+                          </Stack>
+                            
+                          </Stack>
+
+                        </Stack>  
 
 
                     </Stack>

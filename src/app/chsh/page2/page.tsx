@@ -14,8 +14,13 @@ export async function chshPost(basis: number[]) {
   console.log("HERE ARE THE ENVIRONMENT VARIABLES");
   console.log("follower_node_address", process.env.NEXT_PUBLIC_FOLLOWER_NODE_ADDRESS)
   console.log("timetagger_address", process.env.NEXT_PUBLIC_TIMETAGGER_ADDRESS)
-  const resposne = await fetch(`http://127.0.0.1:8000/chsh?basis=[${basis}]&follower_node_address=${process.env.NEXT_PUBLIC_FOLLOWER_NODE_ADDRESS}&timetagger_address=${process.env.NEXT_PUBLIC_TIMETAGGER_ADDRESS}`, {
+  const resposne = await fetch(`http://127.0.0.1:8000/chsh?follower_node_address=${process.env.NEXT_PUBLIC_FOLLOWER_NODE_ADDRESS}&timetagger_address=${process.env.NEXT_PUBLIC_TIMETAGGER_ADDRESS}`, {
     method: "POST",
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify(basis)
+  
   });
 }
 

@@ -4,6 +4,7 @@ import Container from '@mui/material/Container';
 import {Link, Dialog, DialogContent, styled, Box, Stack } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import {usePageRedirect} from '@/app/contexts/PageRedirectContext';
+import { useSearchParams } from 'next/navigation';
 
 export default function Home() {
  const {setBackArrowLink, setForwardArrowLink} = usePageRedirect();
@@ -11,18 +12,22 @@ export default function Home() {
 
 
   const setLinks=()=>{
-    setBackArrowLink("/");
-    setForwardArrowLink("/chsh/page2/");
+    setBackArrowLink("/chsh/page2/");
+    setForwardArrowLink("/");
   }
 
   useEffect(()=>{setLinks()},[])
 
   function MyComponent() {
-  const [open, setOpen] = useState(false);
+     const searchParams = useSearchParams();
+     const [open, setOpen] = useState(false);
 
   const handleClick = () => {
     setOpen(true);
   };
+
+  const value = searchParams.get('value');
+  const error = searchParams.get('error');
 
 
   return (
@@ -81,18 +86,15 @@ export default function Home() {
                     width: '75%',
                   }}
                 >
-                  <p>
-                    
-                    <Link href="#" onClick={handleClick}>
-                      Entangled photons 
-                    </Link>
-                     &nbsp;are flying through the library.</p>
-                    <p>We are going to check that they are entangled using a Bell Test.{' '}</p>
+                   <div>
+                    <p>ID: {value}</p>
+                    <p>Name: {error}</p>
+                    </div>
                 </Typography>
 
                 <Dialog open={open} onClose={() => setOpen(false)}>
-                  <DialogContent sx={{ padding: '5em' }}>
-                    Entangled photons are light particles that act as if they're connected, even if they are very &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;far  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;apart.
+                  <DialogContent>
+                    Entangled photons are light particles that act as if they're connected,<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p> even if they are very far apart.
                   </DialogContent>
                 </Dialog>
 

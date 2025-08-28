@@ -7,42 +7,39 @@ import Typography from '@mui/material/Typography';
 import {usePageRedirect} from '@/app/contexts/PageRedirectContext';
 import CHSHTextbox from '@/components/CHSHTextbox';
 import { Padding, VerticalAlignCenter } from '@mui/icons-material';
+import { useRouter } from 'next/navigation';
+import { Router } from 'next/router';
 
 
 
 export async function chshPost(basis: number[]) {
-  console.log("HERE ARE THE ENVIRONMENT VARIABLES");
-  console.log("follower_node_address", process.env.NEXT_PUBLIC_FOLLOWER_NODE_ADDRESS)
-  console.log("timetagger_address", process.env.NEXT_PUBLIC_TIMETAGGER_ADDRESS)
-  const resposne = await fetch(`http://127.0.0.1:8000/chsh?follower_node_address=${process.env.NEXT_PUBLIC_FOLLOWER_NODE_ADDRESS}&timetagger_address=${process.env.NEXT_PUBLIC_TIMETAGGER_ADDRESS}`, {
+  const response = await fetch(`http://127.0.0.1:8000/chsh?follower_node_address=${process.env.NEXT_PUBLIC_FOLLOWER_NODE_ADDRESS}&timetagger_address=${process.env.NEXT_PUBLIC_TIMETAGGER_ADDRESS}`, {
     method: "POST",
   headers: {
     'Content-Type': 'application/json',
   },
   body: JSON.stringify(basis)
-  
+
   });
+
+  return response
 }
 
 
-export default function Home() {
- const {setBackArrowLink, setForwardArrowLink} = usePageRedirect();
-  console.log("Unique", process.env)
-
-
-  const setLinks=()=>{
-    setBackArrowLink("/chsh/page1/");
-    setForwardArrowLink("/chsh/page2/");
-  }
-
-  function chshSubmit(currentAngle: number, 
+async function chshSubmit(currentAngle: number, 
     setAngleChoices: React.Dispatch<SetStateAction<number []>>,
-    arrowRotation: number, angleChoices: number[], setCurrentAngle: React.Dispatch<SetStateAction<number>>) {
+    arrowRotation: number, angleChoices: number[], setCurrentAngle: React.Dispatch<SetStateAction<number>>, router: Router) {
       if (currentAngle == 1) {
         setAngleChoices([arrowRotation])
       } else if (currentAngle == 2) {
         setAngleChoices([...angleChoices, arrowRotation])
-        const response = chshPost([...angleChoices, arrowRotation])
+        const response = await chshPost([...angleChoices, arrowRotation])
+
+        if (response.status == 200) {
+          router.push(`/chsh/page3`);
+        } else {
+          router.push(`/chsh/page3?fail=true}`);
+        }
 
       } else {
         console.error("Something went wrong please refresh the page")
@@ -51,17 +48,34 @@ export default function Home() {
       setCurrentAngle(currentAngle+1)
   }
 
-  useEffect(()=>{setLinks()},[])
+ export default function MyComponent() {
+
+    const {setBackArrowLink, setForwardArrowLink} = usePageRedirect();
+    const router = useRouter();
+    //console.log("Unique", process.env)
+
+
+  const setLinks=()=>{
+    setBackArrowLink("/chsh/page1/");
+    setForwardArrowLink("/chsh/page2/");
+  }
+
   
-  function MyComponent() {
+
+  useEffect(()=>{setLinks()},[])
+
+
+
     const [open, setOpen] = useState(false);
+    const [openModal,setOpenModal] = useState(false);
     const [secondOpen, setSecondOpen] = useState(false);
     const [data, setData] = useState(null);
     const [arrowRotation, setArrowRotation] = useState(0);
     const [currentAngle, setCurrentAngle] = useState(1); // Index of angle choice
     const [angleChoices, setAngleChoices] = useState<number []>([])
     const [textValue, setTextValue] = useState('');
-  
+    const [triggerSubmit, setTriggerSubmit] = useState(0);
+   
 
 
     useEffect(() => {
@@ -71,6 +85,16 @@ export default function Home() {
 
       return () => clearInterval(interval);
     }, []);
+
+    useEffect(() => {
+      if (triggerSubmit != 0) {
+        //console.log("in useEffect")
+        chshSubmit(currentAngle, setAngleChoices, arrowRotation, angleChoices, setCurrentAngle, router)
+        if (currentAngle == 2) {
+          setOpenModal(true)
+        }
+    }
+    }, [triggerSubmit])
 
     const fetchData = async () => {
       try {
@@ -96,12 +120,37 @@ export default function Home() {
 
     const handleSubmitClick = () => {
       // chshPost(arrowRotation, currentAngle)
-      chshSubmit(currentAngle, setAngleChoices, arrowRotation, angleChoices, setCurrentAngle)
+      //console.log("here boi")
+      setTriggerSubmit(triggerSubmit+1)
       
     };
 
     return (
     <Container maxWidth="lg">
+
+        <Dialog open={openModal} onClose={()=>{}}>
+          <DialogContent sx={{height:'550 px',}}>
+            <Box
+              component="img"
+              src="/images/gif_pqn.gif"
+              alt="Your photons in action!"
+              sx={{
+                width: 'auto',
+                height: '18em',
+                backgroundRepeat: 'no-repeat',
+                backgroundSize: 'contain',
+                backgroundPosition: 'left',
+                float: 'left',
+              }}
+            />
+
+            <Typography variant="body1" sx={{ fontWeight: 'bold', float: 'left' }}>
+              What is really happening here?
+            </Typography>
+          </DialogContent>
+        </Dialog>
+
+
         <Box
           sx={{
             my: 4,
@@ -331,10 +380,7 @@ export default function Home() {
     )
   }
 
-  return (
-    <MyComponent />
-  );
-}
+
 
 
 

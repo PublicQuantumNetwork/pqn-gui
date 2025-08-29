@@ -9,6 +9,7 @@ import InitColorSchemeScript from '@mui/material/InitColorSchemeScript';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import {PageRedirectProvider} from '@/app/contexts/PageRedirectContext';
+import { WebSocketProvider } from '@/app/contexts/WebSocketContext';
 import RedirectArrow from '@/components/RedirectArrow';
 
 export default function RootLayout(props: { children: React.ReactNode }) {
@@ -25,6 +26,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
             {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
             <CssBaseline />
             {/* <ModeSwitch /> */}
+            <WebSocketProvider>
               <PageRedirectProvider>
               <Stack
                   display="flex"
@@ -123,6 +125,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
                   </Stack>
               </Stack>
               </PageRedirectProvider>
+            </WebSocketProvider>
           </ThemeProvider>
         </AppRouterCacheProvider>
       </body>

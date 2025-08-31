@@ -5,6 +5,7 @@ import {Link, Dialog, DialogContent, styled, Box, Stack } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import {usePageRedirect} from '@/app/contexts/PageRedirectContext';
 import { useSearchParams } from 'next/navigation';
+import CelebrationIcon from '@mui/icons-material/Celebration';
 
 export default function Home() {
  const {setBackArrowLink, setForwardArrowLink} = usePageRedirect();
@@ -26,9 +27,23 @@ export default function Home() {
     setOpen(true);
   };
 
-  const value = searchParams.get('value');
-  const error = searchParams.get('error');
+  const value = searchParams.get('value') ?? 0;
+  const error = searchParams.get('error') ?? 0;
 
+  const fail = searchParams.get('fail').replace(/\}/g, '') ?? true;
+
+ const [message, setMessage] = useState('');
+ const [message2, setMessage2] = useState('');
+
+  // Set the message based on the 'fail' prop
+  useEffect(() => {
+    if (fail === 'true') {
+      setMessage('Some angles are better than others for this test.');
+      setMessage2('Try different angles to see this for yourself!');
+    } else {
+      setMessage('Woo!! Hoo!!');
+    }
+  }, [fail]);
 
   return (
     <Container maxWidth="lg">
@@ -50,7 +65,6 @@ export default function Home() {
 
             <Stack direction="row" 
               sx={{
-                minHeight: '8em', 
                 justifyContent: 'left',
                 alignItems: 'flex-end', // Align items to the bottom of the row
               }}
@@ -86,30 +100,67 @@ export default function Home() {
                     width: '75%',
                   }}
                 >
-                   <div>
-                    <p>ID: {value}</p>
-                    <p>Name: {error}</p>
-                    </div>
+                 {fail === 'true' ? (
+                    <p>{message}<br></br><br></br>{message2}</p>
+                  ) : (
+                       <p>
+                        <Box
+                          component="img"
+                          src="/images/fireworks.gif"
+                          alt="Entanglement was achieved!!"
+                          sx={{
+                            position: 'absolute',
+                            top: '-150px',
+                            left: '0',
+                            width: '100%',
+                            height: '15em',
+                            zIndex: '0',
+                          }}
+                        />
+                      
+                      {/* <div style={{ position: 'relative', zIndex: 1, display: 'flex', justifyContent: 'top', margin: '0' }}>
+                        <CelebrationIcon sx={{ color: 'red', paddingLeft: '10px', fontSize: '2em' }} />
+                        <CelebrationIcon sx={{ color: 'orange', paddingLeft: '10px', fontSize: '2em' }} />
+                        <CelebrationIcon sx={{ color: 'yellow', paddingLeft: '10px', fontSize: '2em' }} />
+                        <CelebrationIcon sx={{ color: 'green', paddingLeft: '10px', fontSize: '2em' }} />
+                        <CelebrationIcon sx={{ color: 'blue', paddingLeft: '10px', fontSize: '2em' }} />
+                        <CelebrationIcon sx={{ color: 'purple', paddingLeft: '10px', fontSize: '2em' }} />
+                      </div> */}
+
+                      
+
+                       </p>
+                  )}
+                  
                 </Typography>
-
-                <Dialog open={open} onClose={() => setOpen(false)}>
-                  <DialogContent>
-                    Entangled photons are light particles that act as if they're connected,<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p> even if they are very far apart.
-                  </DialogContent>
-                </Dialog>
-
+            {fail == "true" ? (
               <Box
                 component="img"
-                src="/images/whobit-left-wing-up.png"
-                alt="Whobit welcomes you"
+                src="/images/whobit-arms-down.png"
+                alt="Entanglement was not achieved, try again."
                 sx={{
-                  width: '18em',
+                  width: '15em',
                   height: 'auto',
                   backgroundRepeat: 'no-repeat',
                   backgroundSize: 'contain',
-                  backgroundPosition: 'left'
+                  backgroundPosition: 'left',
+                  paddingLeft:'20px',
                 }}
               />
+              ) : (
+                <Box
+                  component="img"
+                  src="/images/whobit-arms-up.png"
+                  alt="You achieved entanglement!"
+                  sx={{
+                    width: '20.85em',
+                    height: 'auto',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundSize: 'contain',
+                    backgroundPosition: 'left'
+                  }}
+                />
+                )}
 
               </Stack>
 
@@ -120,7 +171,67 @@ export default function Home() {
                 sx={{ width:'50%'}}
               >
 
-                
+                <Stack direction="row" 
+                  sx={{
+                    minHeight: '8em', 
+                    justifyContent: 'left',
+                    alignItems: 'flex-end', // Align items to the bottom of the row
+                  }}
+                >
+
+                  <Stack
+                    display="flex"
+                    flexDirection="column"
+                    position="relative"
+                    sx={{ width:'100%'}}
+                  >
+                  <Box
+                    component="img"
+                    src="/images/circle.png"
+                    alt="Circle background"
+                    sx={{
+                      width: '38em',
+                      height: '38em',
+                      backgroundRepeat: 'no-repeat',
+                      backgroundSize: 'contain',
+                      backgroundPosition: 'right',
+                    }}
+                  />
+                    <Typography
+                      variant="h5"
+                      component="h1"
+                      sx={{
+                        position: 'absolute',
+                        top: '45%',
+                        left: '56%',
+                        transform: 'translate(-50%, -50%)',
+                        color: '#000000',
+                        width: '50%',
+                        fontSize:'2em'
+                      }}
+                    >
+                        Your value was {value} with an error of {error}
+                    </Typography>
+
+                    <Typography
+                       variant="h5"
+                       sx={{
+                        position: 'absolute',
+                        top: '60%',
+                        left: '32%',
+                        color: '#000000',
+                        fontSize:'.85em',
+                        textAlign: 'center'
+                      }}
+                    >
+                      {fail == "true" ? (
+                        <>This result means the test was unable<br></br>to show the photons are entangled.</>
+                      ) : (
+                        <>This result means the test was able<br></br>to show the photons are entangled.</>
+                      )}
+                      </Typography>
+                  </Stack>
+                </Stack>          
               </Stack>
             </Stack>
       </Stack>

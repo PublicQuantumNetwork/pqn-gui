@@ -91,17 +91,21 @@ export default function Home() {
                 </Typography>
 
                 <Dialog open={open} onClose={() => setOpen(false)}>
-                  <DialogContent sx={{ padding: '5em' }}>
-                    Entangled photons are light particles that act as if they're connected, even if they are very &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;far  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;apart.
+                  <DialogContent sx={{ padding: '2.8em', fontSize:'1.45em' }}>
+                    Entangled photons are light particles that act as if they're connected, even if they are very 
+                    &nbsp; far  
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; apart.
                   </DialogContent>
                 </Dialog>
 
               <Box
                 component="img"
-                src="/images/whobit-left-wing-up.png"
+                src="/images/whobit-arms-down.png"
                 alt="Whobit welcomes you"
                 sx={{
-                  width: '18em',
+                  width: '14em',
                   height: 'auto',
                   backgroundRepeat: 'no-repeat',
                   backgroundSize: 'contain',

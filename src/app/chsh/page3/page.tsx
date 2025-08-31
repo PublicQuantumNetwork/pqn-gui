@@ -101,7 +101,7 @@ export default function Home() {
                   }}
                 >
                  {fail === 'true' ? (
-                    <p>{message}<br></br><br></br>{message2}</p>
+                    <p>{message}<br /><br />{message2}</p>
                   ) : (
                        <p>
                         <Box

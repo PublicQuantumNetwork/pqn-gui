@@ -35,6 +35,9 @@ export default function Home() {
  const [message, setMessage] = useState('');
  const [message2, setMessage2] = useState('');
 
+ const [showFireworks, setShowFireworks] = useState(false);
+const [showFireworks2, setShowFireworks2] = useState(false);
+
   // Set the message based on the 'fail' prop
   useEffect(() => {
     if (fail === 'true') {
@@ -44,6 +47,22 @@ export default function Home() {
       setMessage('Woo!! Hoo!!');
     }
   }, [fail]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowFireworks(true);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+    useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowFireworks2(true);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <Container maxWidth="lg">
@@ -104,20 +123,49 @@ export default function Home() {
                     <p>{message}<br /><br />{message2}</p>
                   ) : (
                        <p>
-                        <Box
+                          {message}
+
+                      {showFireworks && (<Box
                           component="img"
-                          src="/images/fireworks.gif"
+                          src="/images/red-fireworks.gif"
                           alt="Entanglement was achieved!!"
                           sx={{
                             position: 'absolute',
                             top: '-150px',
-                            left: '0',
-                            width: '100%',
-                            height: '15em',
+                            left: '-380px',
+                            width: '12em',
+                            height: '10em',
+                            zIndex: '0',
+                          }}
+                        /> )}
+                        
+                      <Box
+                          component="img"
+                          src="/images/green-fireworks.gif"
+                          alt="Entanglement was achieved!!"
+                          sx={{
+                            position: 'absolute',
+                            top: '-150px',
+                            left: '420px',
+                            width: '12em',
+                            height: '10em',
                             zIndex: '0',
                           }}
                         />
-                      
+
+                        {showFireworks2 && (<Box
+                          component="img"
+                          src="/images/yellow-fireworks.gif"
+                          alt="Entanglement was achieved!!"
+                          sx={{
+                            position: 'absolute',
+                            top: '150px',
+                            left: '180px',
+                            width: '12em',
+                            height: '10em',
+                            zIndex: '0',
+                          }}
+                        />)}
                       {/* <div style={{ position: 'relative', zIndex: 1, display: 'flex', justifyContent: 'top', margin: '0' }}>
                         <CelebrationIcon sx={{ color: 'red', paddingLeft: '10px', fontSize: '2em' }} />
                         <CelebrationIcon sx={{ color: 'orange', paddingLeft: '10px', fontSize: '2em' }} />
@@ -130,6 +178,8 @@ export default function Home() {
                       
 
                        </p>
+
+                       
                   )}
                   
                 </Typography>

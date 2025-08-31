@@ -139,12 +139,13 @@ export default function Home() {
                 src="/images/whobit-arms-down.png"
                 alt="Entanglement was not achieved, try again."
                 sx={{
-                  width: '15em',
+                  width: '14.8em',
                   height: 'auto',
                   backgroundRepeat: 'no-repeat',
                   backgroundSize: 'contain',
                   backgroundPosition: 'left',
-                  paddingLeft:'20px',
+                  paddingLeft:'12px',
+                  marginLeft:'-10px'
                 }}
               />
               ) : (
@@ -157,7 +158,8 @@ export default function Home() {
                     height: 'auto',
                     backgroundRepeat: 'no-repeat',
                     backgroundSize: 'contain',
-                    backgroundPosition: 'left'
+                    backgroundPosition: 'left',
+                    marginLeft:'-54px'
                   }}
                 />
                 )}
@@ -173,7 +175,7 @@ export default function Home() {
 
                 <Stack direction="row" 
                   sx={{
-                    minHeight: '8em', 
+                    minHeight: '7em', 
                     justifyContent: 'left',
                     alignItems: 'flex-end', // Align items to the bottom of the row
                   }}
@@ -183,15 +185,15 @@ export default function Home() {
                     display="flex"
                     flexDirection="column"
                     position="relative"
-                    sx={{ width:'100%'}}
+                    sx={{ width:'100%', marginLeft:'232px'}}
                   >
                   <Box
                     component="img"
                     src="/images/circle.png"
                     alt="Circle background"
                     sx={{
-                      width: '38em',
-                      height: '38em',
+                      width: '560px',
+                      height: '560px',
                       backgroundRepeat: 'no-repeat',
                       backgroundSize: 'contain',
                       backgroundPosition: 'right',
@@ -203,7 +205,7 @@ export default function Home() {
                       sx={{
                         position: 'absolute',
                         top: '45%',
-                        left: '56%',
+                        left: '53%',
                         transform: 'translate(-50%, -50%)',
                         color: '#000000',
                         width: '50%',
@@ -218,7 +220,7 @@ export default function Home() {
                        sx={{
                         position: 'absolute',
                         top: '60%',
-                        left: '32%',
+                        left: '29%',
                         color: '#000000',
                         fontSize:'.85em',
                         textAlign: 'center'
@@ -227,7 +229,7 @@ export default function Home() {
                       {fail == "true" ? (
                         <>This result means the test was unable<br></br>to show the photons are entangled.</>
                       ) : (
-                        <>This result means the test was able<br></br>to show the photons are entangled.</>
+                        <>This result means the test was able to <br></br>show the photons are entangled.</>
                       )}
                       </Typography>
                   </Stack>

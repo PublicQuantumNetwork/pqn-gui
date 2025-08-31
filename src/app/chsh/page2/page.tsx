@@ -134,13 +134,23 @@ async function chshSubmit(currentAngle: number,
     return (
         <Container maxWidth="lg">
 
-          <Dialog open={openModal} onClose={()=>{}}>
+            <Box
+              sx={{
+                my: 4,
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+
+              <Dialog open={openModal} onClose={()=>{}}>
           <DialogContent sx={{ padding:'50px'}}>
             <Stack
               flexDirection="column"
             >
                 <Typography
-                  sx={{color:'#FF5F05', textAlign:'center', paddingBottom:'10px', fontSize:'1.45em'}}
+                  sx={{color:'#FF5F05', textAlign:'center', paddingBottom:'0px', fontSize:'1.45em'}}
                 ><ShareOutlinedIcon/> Photons are being measured back at the lab</Typography>
             </Stack>
             <Stack
@@ -210,15 +220,6 @@ async function chshSubmit(currentAngle: number,
 
 
 
-            <Box
-              sx={{
-                my: 4,
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            >
                 <Stack
                   display="flex"
                   flexDirection="column"
@@ -283,7 +284,7 @@ async function chshSubmit(currentAngle: number,
                               height: 'auto',
                               backgroundRepeat: 'no-repeat',
                               backgroundSize: 'contain',
-                              backgroundPosition: 'left'
+                              backgroundPosition: 'left',
                             }}
                           />
 
@@ -297,18 +298,19 @@ async function chshSubmit(currentAngle: number,
                         >
                           <Stack 
                               direction="row"
-                              >
-                          <Stack 
-                              direction="row" 
                               sx={{
                                 backgroundImage: 'url(/images/circle.png)', 
-                                Height: '600px', 
+                                Height: '560px', 
                                 backgroundRepeat: 'no-repeat', 
-                                width:'600px', 
+                                width:'560px', 
                                 backgroundPosition: 'center',
                                 position:'relative',
                                 left:'40%',
-                                }}>
+                                }}
+                              >
+                          <Stack 
+                              direction="row" 
+                              >
                             <Typography
                               variant="h5"
                               component="h1"
@@ -329,7 +331,7 @@ async function chshSubmit(currentAngle: number,
                               component="h1"
                               sx={{
                                 position: 'absolute',
-                                top: '8%',
+                                top: '6%',
                                 left: '50%',
                                 transform: 'translate(-50%, -50%)',
                                 fontSize:'2.5em',
@@ -374,8 +376,8 @@ async function chshSubmit(currentAngle: number,
                               sx={{
                                 position: 'relative',
                                 zIndex: 2,
-                                minHeight:'600px',
-                                minWidth:'600px',
+                                minHeight:'560px',
+                                minWidth:'560px',
                                 alignContent: 'center',
                                 justifyContent: 'center', // Center the content horizontally
                                 }}>

@@ -31,16 +31,15 @@ export default function Home() {
         sx={{
           my: 4,
           display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
+          flexDirection: 'column', 
+          top:'10'
         }}
       >
         <Stack
             display="flex"
             flexDirection="column"
             position="relative"
-            sx={{ width:'100%'}}
+            sx={{ width:'100%',}}
           >
 
             <Stack direction="row" 
@@ -48,6 +47,7 @@ export default function Home() {
                 minHeight: '8em', 
                 justifyContent: 'left',
                 alignItems: 'flex-end', // Align items to the bottom of the row
+                
               }}
             >
 
@@ -105,11 +105,12 @@ export default function Home() {
                 src="/images/whobit-arms-down.png"
                 alt="Whobit welcomes you"
                 sx={{
-                  width: '14em',
+                  width: '14.3em',
                   height: 'auto',
                   backgroundRepeat: 'no-repeat',
                   backgroundSize: 'contain',
-                  backgroundPosition: 'left'
+                  backgroundPosition: 'left',
+                  paddingLeft:'4px',
                 }}
               />
 

@@ -16,7 +16,7 @@ export const useWebSocket = () => {
 
     useEffect(() => {
         if (open) {
-            const socket = new WebSocket('ws://127.0.0.1:8000/coordination/ws');
+            const socket = new WebSocket('ws://127.0.0.1:8000/coordination/follow_requested_alerts');
             ws.current = socket;
 
             socket.onopen = () => {

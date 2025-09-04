@@ -41,9 +41,12 @@ async function chshSubmit(currentAngle: number,
         const response = await chshPost([...angleChoices, arrowRotation])
 
         if (response.status == 200) {
-          router.push(`/chsh/page3`);
+          const data = await response.json();
+          const value = data.chsh_value;
+          const error = data.chsh_error;
+          router.push(`/chsh/page3?fail=false&value=${value}&error=${error}`);
         } else {
-          router.push(`/chsh/page3?fail=true}`);
+          router.push(`/chsh/page3?fail=true`);
         }
 
       } else {

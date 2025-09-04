@@ -27,8 +27,8 @@ export default function Home() {
     setOpen(true);
   };
 
-  const value = searchParams.get('value') ?? 0;
-  const error = searchParams.get('error') ?? 0;
+  const value = Number(searchParams.get('value')).toFixed(2) ?? 0;
+  const error = Number(searchParams.get('error')).toFixed(2) ?? 0;
 
   const fail = searchParams.get('fail').replace(/\}/g, '') ?? true;
 
@@ -36,15 +36,20 @@ export default function Home() {
  const [message2, setMessage2] = useState('');
 
  const [showFireworks, setShowFireworks] = useState(false);
-const [showFireworks2, setShowFireworks2] = useState(false);
+ const [showFireworks2, setShowFireworks2] = useState(false);
 
   // Set the message based on the 'fail' prop
   useEffect(() => {
     if (fail === 'true') {
-      setMessage('Some angles are better than others for this test.');
-      setMessage2('Try different angles to see this for yourself!');
+      setMessage('There was an error, we will work on this.');
+      setMessage2('Please try a different game.');
     } else {
-      setMessage('Woo!! Hoo!!');
+      if (value >= 2) {
+        setMessage('Woo!! Hoo!!');
+      } else {
+        setMessage('Some angles are better than others for this test.');
+        setMessage2('Try different angles to see this for yourself!');
+      }
     }
   }, [fail]);
 
@@ -122,9 +127,11 @@ const [showFireworks2, setShowFireworks2] = useState(false);
                  {fail === 'true' ? (
                     <p>{message}<br /><br />{message2}</p>
                   ) : (
+                      value >= 2 ? (
                        <p>
                           {message}
 
+                        
                       {showFireworks && (<Box
                           component="img"
                           src="/images/red-fireworks.gif"
@@ -166,20 +173,12 @@ const [showFireworks2, setShowFireworks2] = useState(false);
                             zIndex: '0',
                           }}
                         />)}
-                      {/* <div style={{ position: 'relative', zIndex: 1, display: 'flex', justifyContent: 'top', margin: '0' }}>
-                        <CelebrationIcon sx={{ color: 'red', paddingLeft: '10px', fontSize: '2em' }} />
-                        <CelebrationIcon sx={{ color: 'orange', paddingLeft: '10px', fontSize: '2em' }} />
-                        <CelebrationIcon sx={{ color: 'yellow', paddingLeft: '10px', fontSize: '2em' }} />
-                        <CelebrationIcon sx={{ color: 'green', paddingLeft: '10px', fontSize: '2em' }} />
-                        <CelebrationIcon sx={{ color: 'blue', paddingLeft: '10px', fontSize: '2em' }} />
-                        <CelebrationIcon sx={{ color: 'purple', paddingLeft: '10px', fontSize: '2em' }} />
-                      </div> */}
-
-                      
 
                        </p>
 
-                       
+                        )  : (
+                          <p>{message}<br /><br />{message2}</p>
+                        ) 
                   )}
                   
                 </Typography>
@@ -199,6 +198,7 @@ const [showFireworks2, setShowFireworks2] = useState(false);
                 }}
               />
               ) : (
+                value >= 2 ? (
                 <Box
                   component="img"
                   src="/images/whobit-arms-up.png"
@@ -212,6 +212,23 @@ const [showFireworks2, setShowFireworks2] = useState(false);
                     marginLeft:'-54px'
                   }}
                 />
+
+                ) : (
+                  <Box
+                    component="img"
+                    src="/images/whobit-arms-down.png"
+                    alt="Entanglement was not achieved, try again."
+                    sx={{
+                      width: '14.8em',
+                      height: 'auto',
+                      backgroundRepeat: 'no-repeat',
+                      backgroundSize: 'contain',
+                      backgroundPosition: 'left',
+                      paddingLeft:'12px',
+                      marginLeft:'-10px'
+                    }}
+                  />
+                )
                 )}
 
               </Stack>
@@ -262,7 +279,18 @@ const [showFireworks2, setShowFireworks2] = useState(false);
                         fontSize:'2em'
                       }}
                     >
-                        Your value was {value} with an error of {error}
+                      {fail == "true" ? (  
+                        
+                        <>Your value was {value} with an error of {error}</>
+                      ) : (
+                          value >= 2 ? (
+                            <>Your value was {value} with an error of {error}</>
+
+                          ) : (
+                            <>Your value was {value} with an error of {error}</>
+                          )
+                      )                    
+                      }
                     </Typography>
 
                     <Typography
@@ -276,10 +304,14 @@ const [showFireworks2, setShowFireworks2] = useState(false);
                         textAlign: 'center'
                       }}
                     >
-                      {fail == "true" ? (
+                      {fail === "true" ? (
                         <>This result means the test was unable<br></br>to show the photons are entangled.</>
                       ) : (
-                        <>This result means the test was able to <br></br>show the photons are entangled.</>
+                          value >= 2 ? (
+                            <>This result means the test was able to <br></br>show the photons are entangled.</>
+                            ) : (
+                            ''
+                          )
                       )}
                       </Typography>
                   </Stack>

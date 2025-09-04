@@ -93,10 +93,7 @@ export default function Home() {
                 <Dialog open={open} onClose={() => setOpen(false)}>
                   <DialogContent sx={{ padding: '2.8em', fontSize:'1.45em' }}>
                     Entangled photons are light particles that act as if they're connected, even if they are very 
-                    &nbsp; far  
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; apart.
+                    &nbsp; far apart.
                   </DialogContent>
                 </Dialog>
 

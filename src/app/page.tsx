@@ -10,14 +10,14 @@ import EventModal from '@/components/EventModal';
 
 
 export async function resetBackendState() {
-    const response = await fetch("http://127.0.0.1:8000/coordination/reset_coordination_state", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({}),
-    });
-    return response
+  const response = await fetch("http://127.0.0.1:8000/coordination/reset_coordination_state", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({}),
+  });
+  return response
 
 }
 
@@ -33,8 +33,8 @@ export default function Home() {
   }
 
   useEffect(() => {
-      setLinks();
-      const ret = resetBackendState();
+    setLinks();
+    const ret = resetBackendState();
   }, [])
 
   useEffect(() => {
@@ -58,7 +58,7 @@ export default function Home() {
 
   return (
     <Container maxWidth="lg">
-      <EventModal isOpen={isModalOpen} onClose={handleCloseModal} message={modalMessage} sendMessage={sendMessage}/>
+      <EventModal isOpen={isModalOpen} onClose={handleCloseModal} message={modalMessage} sendMessage={sendMessage} />
       <Box
         sx={{
           my: 4,

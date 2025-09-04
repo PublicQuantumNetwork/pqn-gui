@@ -8,7 +8,7 @@ import theme from '@/theme';
 import InitColorSchemeScript from '@mui/material/InitColorSchemeScript';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import {PageRedirectProvider} from '@/app/contexts/PageRedirectContext';
+import { PageRedirectProvider } from '@/app/contexts/PageRedirectContext';
 import RedirectArrow from '@/components/RedirectArrow';
 
 export default function RootLayout(props: { children: React.ReactNode }) {
@@ -26,19 +26,19 @@ export default function RootLayout(props: { children: React.ReactNode }) {
             <CssBaseline />
             {/* <ModeSwitch /> */}
             <PageRedirectProvider>
-            <Stack
+              <Stack
                 display="flex"
                 flexDirection="column"
                 position="relative"
-                sx={{ width:'100%'}}
+                sx={{ width: '100%' }}
               >
                 {/*<Stack direction="row" 
                 sx={{backgroundImage: 'url(images/PQN-blue-ufl-website-image-blue4-small.png)', minHeight: '8em', backgroundRepeat: 'no-repeat', backgroundSize: 'contain', backgroundPosition: 'center', marginTop: '2em',}}
                 >*/}
 
-                <Stack direction="row" 
+                <Stack direction="row"
                   sx={{
-                    minHeight: '8em', 
+                    minHeight: '8em',
                     marginTop: '2em',
                     justifyContent: 'center',
                     alignItems: 'flex-end', // Align items to the bottom of the row
@@ -64,7 +64,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
                     sx={{
                       maxWidth: '100%',
                       height: '4em',
-                      display:'block',
+                      display: 'block',
                       backgroundRepeat: 'no-repeat',
                       backgroundSize: 'contain',
                       backgroundPosition: 'center bottom',
@@ -74,34 +74,34 @@ export default function RootLayout(props: { children: React.ReactNode }) {
                   />
 
                   <Button
-                  variant="contained"
-                  component="a"
-                  href="/"
-                  sx={{
-                    maxWidth: '100%',
-                    height: '4em',
-                    display: 'block',
-                    backgroundRepeat: 'no-repeat',
-                    backgroundSize: 'contain',
-                    backgroundPosition: 'center bottom',
-                    margin: '0 0 20px 3em',
-                    paddingTop:'15px',
-                    border: '1px solid #000',
-                    backgroundColor: '#FFFFFF;',
-                    color: '#000000;'
-                  }}
-                >
-                  Start Over
-                </Button>
+                    variant="contained"
+                    component="a"
+                    href="/"
+                    sx={{
+                      maxWidth: '100%',
+                      height: '4em',
+                      display: 'block',
+                      backgroundRepeat: 'no-repeat',
+                      backgroundSize: 'contain',
+                      backgroundPosition: 'center bottom',
+                      margin: '0 0 20px 3em',
+                      paddingTop: '15px',
+                      border: '1px solid #000',
+                      backgroundColor: '#FFFFFF;',
+                      color: '#000000;'
+                    }}
+                  >
+                    Start Over
+                  </Button>
 
-                <Box
+                  <Box
                     component="img"
                     src="/images/block-I.png"
                     alt="University of Illinois Urbana-Champaign"
                     sx={{
                       maxWidth: '100%',
                       height: '3.8em',
-                      display:'block',
+                      display: 'block',
                       backgroundRepeat: 'no-repeat',
                       backgroundSize: 'contain',
                       backgroundPosition: 'right bottom',
@@ -110,18 +110,18 @@ export default function RootLayout(props: { children: React.ReactNode }) {
                   />
 
                 </Stack>
-                  
+
                 {/* </Stack>*/}
-                <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{backgroundImage: 'url(/images/GUI-background.png)', minHeight: '40em', backgroundRepeat: 'no-repeat', width:'100%', backgroundPosition: 'center'}}>
+                <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ backgroundImage: 'url(/images/GUI-background.png)', minHeight: '40em', backgroundRepeat: 'no-repeat', width: '100%', backgroundPosition: 'center' }}>
                   <RedirectArrow direction="back">
-                  {<Icon><ArrowBackIosNewIcon/></Icon>}
-                </RedirectArrow>
+                    {<Icon><ArrowBackIosNewIcon /></Icon>}
+                  </RedirectArrow>
                   {props.children}
                   <RedirectArrow direction="forward">
-                  <Icon><ArrowForwardIosIcon/></Icon>
-                </RedirectArrow>
+                    <Icon><ArrowForwardIosIcon /></Icon>
+                  </RedirectArrow>
                 </Stack>
-            </Stack>
+              </Stack>
             </PageRedirectProvider>
           </ThemeProvider>
         </AppRouterCacheProvider>

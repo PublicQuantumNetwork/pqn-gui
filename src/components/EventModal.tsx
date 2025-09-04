@@ -2,13 +2,15 @@
 "use client";
 
 import React from 'react';
-import { Modal, Box, Typography, IconButton } from '@mui/material';
+import { Modal, Box, Typography, IconButton, Button } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import { useRouter } from 'next/navigation';
 
 interface EventModalProps {
     isOpen: boolean;
     onClose: () => void;
     message: string | null;
+    sendMessage: (message: string) => void;
 }
 
 const style = {
@@ -23,7 +25,24 @@ const style = {
     p: 4,
 };
 
-const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, message }) => {
+const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, message, sendMessage }) => {
+
+    const router = useRouter();
+
+    const handleAccept = () => {
+        sendMessage("true");
+        // Add a short delay to allow the WebSocket message to be sent before navigating
+        setTimeout(() => {
+            router.push('/qkd');
+            onClose();
+        }, 500);
+    };
+
+    const handleReject = () => {
+        sendMessage("false");
+        onClose();
+    };
+
     return (
         <Modal
             open={isOpen}
@@ -44,12 +63,17 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, message }) => 
                 >
                     <CloseIcon />
                 </IconButton>
-                <Typography id="modal-title" variant="h6" component="h2">
-                    New Message Received
-                </Typography>
                 <Typography id="modal-description" sx={{ mt: 2 }}>
                     {message || "No message content"}
                 </Typography>
+                <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
+                    <Button onClick={handleReject} sx={{ mr: 1 }}>
+                        Reject
+                    </Button>
+                    <Button onClick={handleAccept} variant="contained">
+                        Accept
+                    </Button>
+                </Box>
             </Box>
         </Modal>
     );

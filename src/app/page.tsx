@@ -1,16 +1,16 @@
-"use client"
+'use client'
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import { Box, Stack, Button } from '@mui/material';
 import { usePageRedirect } from '@/app/contexts/PageRedirectContext';
-import { useWebSocket } from '@/app/contexts/WebSocketContext';
+import { useWebSocket } from '@/app/hooks/WebSocketHook';
 import EventModal from '@/components/EventModal';
 
 export default function Home() {
   const { setBackArrowLink, setForwardArrowLink } = usePageRedirect();
-  const { lastMessage } = useWebSocket();
+  const { lastMessage, sendMessage, connect, disconnect } = useWebSocket();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState<string | null>(null);
 
@@ -27,6 +27,13 @@ export default function Home() {
     }
   }, [lastMessage]);
 
+  useEffect(() => {
+    connect();
+    return () => {
+      disconnect();
+    };
+  }, [connect, disconnect]);
+
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setModalMessage(null);
@@ -34,7 +41,7 @@ export default function Home() {
 
   return (
     <Container maxWidth="lg">
-      <EventModal isOpen={isModalOpen} onClose={handleCloseModal} message={modalMessage} />
+      <EventModal isOpen={isModalOpen} onClose={handleCloseModal} message={modalMessage} sendMessage={sendMessage}/>
       <Box
         sx={{
           my: 4,

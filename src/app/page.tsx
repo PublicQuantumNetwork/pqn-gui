@@ -8,6 +8,20 @@ import { usePageRedirect } from '@/app/contexts/PageRedirectContext';
 import { useWebSocket } from '@/app/hooks/WebSocketHook';
 import EventModal from '@/components/EventModal';
 
+
+export async function resetBackendState() {
+    const response = await fetch("http://127.0.0.1:8000/coordination/reset_coordination_state", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({}),
+    });
+    return response
+
+}
+
+
 export default function Home() {
   const { setBackArrowLink, setForwardArrowLink } = usePageRedirect();
   const { lastMessage, sendMessage, connect, disconnect } = useWebSocket();
@@ -18,7 +32,10 @@ export default function Home() {
     setForwardArrowLink("chsh/page1");
   }
 
-  useEffect(() => { setLinks() }, [])
+  useEffect(() => {
+      setLinks();
+      const ret = resetBackendState();
+  }, [])
 
   useEffect(() => {
     if (lastMessage) {

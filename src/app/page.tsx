@@ -1,25 +1,64 @@
-"use client"
+'use client'
 import * as React from 'react';
+import { useState, useEffect } from 'react';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import { Box, Stack, Button } from '@mui/material';
-import {usePageRedirect} from '@/app/contexts/PageRedirectContext';
-import { useEffect } from 'react';
+import { usePageRedirect } from '@/app/contexts/PageRedirectContext';
+import { useWebSocket } from '@/app/hooks/WebSocketHook';
+import EventModal from '@/components/EventModal';
+
+
+export async function resetBackendState() {
+  const response = await fetch("http://127.0.0.1:8000/coordination/reset_coordination_state", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({}),
+  });
+  return response
+
+}
+
 
 export default function Home() {
- const {setBackArrowLink, setForwardArrowLink} = usePageRedirect();
+  const { setBackArrowLink, setForwardArrowLink } = usePageRedirect();
+  const { lastMessage, sendMessage, connect, disconnect } = useWebSocket();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState<string | null>(null);
 
-
-
-  const setLinks=()=>{
-    //setBackArrowLink("http://www.google.com");
+  const setLinks = () => {
     setForwardArrowLink("chsh/page1");
   }
 
-  useEffect(()=>{setLinks()},[])
+  useEffect(() => {
+    setLinks();
+    const ret = resetBackendState();
+  }, [])
+
+  useEffect(() => {
+    if (lastMessage) {
+      setModalMessage(lastMessage.data);
+      setIsModalOpen(true);
+    }
+  }, [lastMessage]);
+
+  useEffect(() => {
+    connect();
+    return () => {
+      disconnect();
+    };
+  }, [connect, disconnect]);
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setModalMessage(null);
+  };
 
   return (
     <Container maxWidth="lg">
+      <EventModal isOpen={isModalOpen} onClose={handleCloseModal} message={modalMessage} sendMessage={sendMessage} />
       <Box
         sx={{
           my: 4,
@@ -30,55 +69,55 @@ export default function Home() {
         }}
       >
         <Stack
-            display="flex"
-            flexDirection="column"
-            position="relative"
-            sx={{ width:'100%'}}
-          >
+          display="flex"
+          flexDirection="column"
+          position="relative"
+          sx={{ width: '100%' }}
+        >
 
-            <Stack direction="row" 
+          <Stack direction="row"
+            sx={{
+              minHeight: '8em',
+              justifyContent: 'left',
+              alignItems: 'flex-end', // Align items to the bottom of the row
+            }}
+          >
+            <Box
+              component="img"
+              src="/images/speech-bubble-white-small.png"
+              alt="Whobit welcomes you"
               sx={{
-                minHeight: '8em', 
-                justifyContent: 'left',
-                alignItems: 'flex-end', // Align items to the bottom of the row
+                maxWidth: '100%',
+                height: '18em',
+                backgroundRepeat: 'no-repeat',
+                backgroundSize: 'contain',
+                backgroundPosition: 'left',
+              }}
+            />
+            <Typography
+              variant="h5"
+              component="h1"
+              sx={{
+                position: 'absolute', // Add this line to position the text
+                top: '23%', // Adjust the top position as needed
+                left: '19%', // Adjust the left position as needed
+                transform: 'translate(-50%, -50%)', // Center the text
+                color: '#000000', // Set the text color
               }}
             >
-              <Box
-                component="img"
-                src="/images/speech-bubble-white-small.png"
-                alt="Whobit welcomes you"
-                sx={{
-                  maxWidth: '100%',
-                  height: '18em',
-                  backgroundRepeat: 'no-repeat',
-                  backgroundSize: 'contain',
-                  backgroundPosition: 'left',
-                }}
-              />
-              <Typography
-                variant="h5"
-                component="h1"
-                sx={{
-                  position: 'absolute', // Add this line to position the text
-                  top: '23%', // Adjust the top position as needed
-                  left: '19%', // Adjust the left position as needed
-                  transform: 'translate(-50%, -50%)', // Center the text
-                  color: '#000000', // Set the text color
-                }}
-              >
-                <p>Hi, Quantum Adventurer!</p>
-                
-                <p>I'm Whobit.</p>  
+              <p>Hi, Quantum Adventurer!</p>
 
-                <p>What would you like to do?</p>  
-              </Typography>
+              <p>I'm Whobit.</p>
 
-              <Stack
-                display="flex"
-                flexDirection="column"
-                position="relative"
-                sx={{ width:'100%'}}
-              >
+              <p>What would you like to do?</p>
+            </Typography>
+
+            <Stack
+              display="flex"
+              flexDirection="column"
+              position="relative"
+              sx={{ width: '100%' }}
+            >
 
               <Button
                 variant="contained"
@@ -124,35 +163,35 @@ export default function Home() {
                 Quantum Fortune (single player)
               </Button>
 
-              </Stack>
             </Stack>
+          </Stack>
 
-            <Stack direction="row" 
+          <Stack direction="row"
+            sx={{
+              marginTop: '0em',
+              justifyContent: 'left',
+              alignItems: 'flex-end', // Align items to the bottom of the row
+            }}
+          >
+            <Box
+              component="img"
+              src="/images/whobit-left-wing-up.png"
+              alt="Whobit welcomes you"
               sx={{
-                marginTop: '0em',
-                justifyContent: 'left',
-                alignItems: 'flex-end', // Align items to the bottom of the row
+                width: '18em',
+                height: 'auto',
+                backgroundRepeat: 'no-repeat',
+                backgroundSize: 'contain',
+                backgroundPosition: 'left'
               }}
-            >
-              <Box
-                component="img"
-                src="/images/whobit-left-wing-up.png"
-                alt="Whobit welcomes you"
-                sx={{
-                  width: '18em',
-                  height: 'auto',
-                  backgroundRepeat: 'no-repeat',
-                  backgroundSize: 'contain',
-                  backgroundPosition: 'left'
-                }}
-              />
+            />
 
-              <Stack
-                display="flex"
-                flexDirection="column"
-                position="relative"
-                sx={{ width:'100%'}}
-              >
+            <Stack
+              display="flex"
+              flexDirection="column"
+              position="relative"
+              sx={{ width: '100%' }}
+            >
 
               <Button
                 variant="contained"
@@ -198,9 +237,9 @@ export default function Home() {
                 Get to know someone (multi-player)
               </Button>
 
-              </Stack>
             </Stack>
           </Stack>
+        </Stack>
 
 
       </Box>

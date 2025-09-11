@@ -31,7 +31,7 @@ export default function Home() {
         sx={{
           my: 4,
           display: 'flex',
-          flexDirection: 'column', 
+          flexDirection: 'column',
           top:'10'
         }}
       >
@@ -47,7 +47,7 @@ export default function Home() {
                 minHeight: '8em', 
                 justifyContent: 'left',
                 alignItems: 'flex-end', // Align items to the bottom of the row
-                
+
               }}
             >
 
@@ -92,7 +92,7 @@ export default function Home() {
 
                 <Dialog open={open} onClose={() => setOpen(false)}>
                   <DialogContent sx={{ padding: '2.8em', fontSize:'1.45em' }}>
-                    Entangled photons are light particles that act as if they're connected, even if they are very 
+                    Entangled photons are light particles that act as if they're connected, even if they are very
                     &nbsp; far apart.
                   </DialogContent>
                 </Dialog>

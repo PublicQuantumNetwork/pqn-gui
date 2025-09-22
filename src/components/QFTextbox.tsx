@@ -6,14 +6,14 @@ function envStuff() {
   return process.env
 }
 
-interface CHSHTextboxProps {
+interface QFTextboxProps {
   handleClick: () => void;
   handleSecondClick: () => void;
   angleNumber: number;
 }
 
-export default function CHSHTextbox(
-  props: CHSHTextboxProps
+export default function QFTextbox(
+  props: QFTextboxProps
 ): React.ReactElement {
     const handleClick = props.handleClick;
     const handleSecondClick = props.handleSecondClick;
@@ -23,28 +23,17 @@ export default function CHSHTextbox(
     console.log(angleNumber)
   return (
     <Typography
-      variant="h5"
+      variant="h1"
       component="h1"
       sx={{
         position: 'absolute',
-        top: '23%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
+        top: '20%',
         color: '#000000',
-        width: '75%',
       }}
     >
       <p>
-        By turning the wheel, you choose which{' '}
-        <Link href="#" onClick={handleClick}>
-          polarization
-        </Link>{' '}
-        to offer the <Link href="#" onClick={handleSecondClick}>photons</Link>.{' '}
-        <br />
-        <br />
-        Turn the wheel and press the button to choose <strong>angle #{angleNumber}</strong>!
+        <strong>{angleNumber}</strong>
       </p>
-      <p>{envStuff().keys}</p>
     </Typography>
   );
 }

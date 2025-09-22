@@ -144,7 +144,7 @@ export default function Home() {
               <Button
                 variant="contained"
                 component="a"
-                href="#"
+                href="/qf/page1"
                 sx={{
                   minWidth: '464px',
                   height: '6em',

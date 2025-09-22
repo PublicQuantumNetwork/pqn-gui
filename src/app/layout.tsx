@@ -78,7 +78,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
                     component="a"
                     href="/"
                     sx={{
-                      maxWidth: '100%',
+                      minWidth: '120px',
                       height: '4em',
                       display: 'block',
                       backgroundRepeat: 'no-repeat',
@@ -92,6 +92,27 @@ export default function RootLayout(props: { children: React.ReactNode }) {
                     }}
                   >
                     Start Over
+                  </Button>
+
+                  <Button
+                    variant="contained"
+                    component="a"
+                    href="/survey"
+                    sx={{
+                      minWidth: '88px',
+                      height: '4em',
+                      display: 'block',
+                      backgroundRepeat: 'no-repeat',
+                      backgroundSize: 'contain',
+                      backgroundPosition: 'center bottom',
+                      margin: '0 0 20px 3em',
+                      paddingTop: '15px',
+                      border: '1px solid #000',
+                      backgroundColor: '#FFFFFF;',
+                      color: '#000000;'
+                    }}
+                  >
+                    Survey
                   </Button>
 
                   <Box
@@ -114,11 +135,11 @@ export default function RootLayout(props: { children: React.ReactNode }) {
                 {/* </Stack>*/}
                 <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ backgroundImage: 'url(/images/GUI-background.png)', minHeight: '40em', backgroundRepeat: 'no-repeat', width: '100%', backgroundPosition: 'center' }}>
                   <RedirectArrow direction="back">
-                    {<Icon><ArrowBackIosNewIcon /></Icon>}
+                    {<Icon sx={{height:'30px'}}><ArrowBackIosNewIcon /></Icon>}
                   </RedirectArrow>
                   {props.children}
                   <RedirectArrow direction="forward">
-                    <Icon><ArrowForwardIosIcon /></Icon>
+                    <Icon sx={{height:'30px'}}><ArrowForwardIosIcon /></Icon>
                   </RedirectArrow>
                 </Stack>
               </Stack>

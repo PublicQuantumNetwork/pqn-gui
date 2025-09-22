@@ -5,15 +5,10 @@ import Container from '@mui/material/Container';
 import {Link, Dialog, DialogContent, Button, Box, Stack,TextField, Paper } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import {usePageRedirect} from '@/app/contexts/PageRedirectContext';
-import CHSHTextbox from '@/components/CHSHTextbox';
-import ModalBox from '@/components/ModalBox';
 import { useRouter } from 'next/navigation';
 import { Router } from 'next/router';
-import WbSunnyIcon from '@mui/icons-material/WbSunny';
-import MovingIcon from '@mui/icons-material/Moving';
-import TrendingFlatIcon from '@mui/icons-material/TrendingFlat';
-import DoDisturbIcon from '@mui/icons-material/DoDisturb';
-import PolylineIcon from '@mui/icons-material/Polyline';
+import QFTextbox from '@/components/QFTextbox';
+import ModalBox from '@/components/ModalBox';
 
 
 export async function chshPost(basis: number[]) {
@@ -35,7 +30,7 @@ async function chshSubmit(currentAngle: number,
     arrowRotation: number, angleChoices: number[], setCurrentAngle: React.Dispatch<SetStateAction<number>>, router: Router) {
       if (currentAngle == 1) {
         setAngleChoices([arrowRotation])
-      } else if (currentAngle == 2) {
+      } else if (currentAngle == 7) {
         setAngleChoices([...angleChoices, arrowRotation])
         const response = await chshPost([...angleChoices, arrowRotation])
 
@@ -57,15 +52,15 @@ async function chshSubmit(currentAngle: number,
 
  export default function MyComponent() {
 
-  const {setBackArrowLink, setForwardArrowLink} = usePageRedirect();
-  const router = useRouter();
-  //console.log("Unique", process.env)
+    const {setBackArrowLink, setForwardArrowLink} = usePageRedirect();
+    const router = useRouter();
+    //console.log("Unique", process.env)
 
 
 
   const setLinks=()=>{
-    setBackArrowLink("/chsh/page1/");
-    setForwardArrowLink("/chsh/page2/");
+    setBackArrowLink("/");
+    setForwardArrowLink("/qf/page2/");
   }
 
   useEffect(()=>{setLinks()},[])
@@ -94,7 +89,7 @@ async function chshSubmit(currentAngle: number,
       if (triggerSubmit != 0) {
         //console.log("in useEffect")
         chshSubmit(currentAngle, setAngleChoices, arrowRotation, angleChoices, setCurrentAngle, router)
-        if (currentAngle == 2) {
+        if (currentAngle == 7) {
           setOpenModal(true)
         }
     }
@@ -131,7 +126,7 @@ async function chshSubmit(currentAngle: number,
 
 
     return (
-        <Container maxWidth="lg" sx={{}}>
+        <Container maxWidth="lg">
 
             <Box
               sx={{
@@ -140,13 +135,14 @@ async function chshSubmit(currentAngle: number,
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
-                
               }}
             >
 
-              <Dialog open={openModal} onClose={()=>{}}>
+             <Dialog open={openModal} onClose={()=>{}}>
               <ModalBox handleClick = {handleClick} handleSecondClick = {handleSecondClick} angleNumber = {currentAngle} />
               </Dialog>
+
+
 
 
                 <Stack
@@ -181,28 +177,20 @@ async function chshSubmit(currentAngle: number,
                             }}
                           />
 
-                            <CHSHTextbox handleClick = {handleClick} handleSecondClick = {handleSecondClick} angleNumber = {currentAngle} />
-
-                            <Dialog open={open} onClose={() => setOpen(false)}>
-                            <DialogContent sx={{ padding: '0em 2.8em', fontSize:'1.45em' }}>
-                              <p>&nbsp;</p>
-                              Polarization is the direction light wiggles. <MovingIcon fontSize="large"/>   <br></br><br></br>
-                              The wheel has a polarizer that asks the photons if they are wiggling a certain direction or not. <TrendingFlatIcon /> <DoDisturbIcon /><br></br><br></br>
-                              Because the photons are entangled, their answers should be connected. <PolylineIcon />
-                              <p>&nbsp;</p>
-                            </DialogContent>
-                          </Dialog>
-
-                            <Dialog open={secondOpen} onClose={() => setSecondOpen(false)}>
-                              <DialogContent  sx={{ padding: '0em 2.8em', fontSize:'1.45em' }}>
-                                <p>&nbsp;</p>
-                                Photons are the faintest possible specks of light. <WbSunnyIcon fontSize="small" sx={{ color: 'orange', paddingTop:'10px' }} />
-                                <p>&nbsp;</p>
-                              </DialogContent>
-                            </Dialog>
-
-
-
+                           <Typography
+                            variant="h5"
+                            component="h1"
+                            sx={{
+                                position: 'absolute',
+                                top: '23%',
+                                left: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                color: '#000000',
+                                width: '75%',
+                            }}
+                            >
+                            <p>Press the red button seven times to generate your fortune. </p>
+                            </Typography>
 
                           <Box
                             component="img"
@@ -240,66 +228,6 @@ async function chshSubmit(currentAngle: number,
                           <Stack
                               direction="row"
                               >
-                            <Typography
-                              variant="h5"
-                              component="h1"
-                              sx={{
-                                position: 'absolute',
-                                top: '20%',
-                                left: '18%',
-                                transform: 'translate(-50%, -50%)',
-                                fontSize:'2.5em',
-                                color: '#000000',
-                              }}
-                            >
-                              A
-                            </Typography>
-
-                            <Typography
-                              variant="h5"
-                              component="h1"
-                              sx={{
-                                position: 'absolute',
-                                top: '6%',
-                                left: '50%',
-                                transform: 'translate(-50%, -50%)',
-                                fontSize:'2.5em',
-                                color: '#000000',
-                              }}
-                            >
-                              V
-                            </Typography>
-
-                            <Typography
-                              variant="h5"
-                              component="h1"
-                              sx={{
-                                position: 'absolute',
-                                top: '20%',
-                                left: '82%',
-                                transform: 'translate(-50%, -50%)',
-                                fontSize:'2.5em',
-                                color: '#000000',
-                              }}
-                            >
-                              D
-                            </Typography>
-
-                            <Typography
-                              variant="h5"
-                              component="h1"
-                              sx={{
-                                position: 'absolute',
-                                top: '50%',
-                                left: '94%',
-                                transform: 'translate(-50%, -50%)',
-                                fontSize:'2.5em',
-                                color: '#000000',
-                              }}
-                            >
-                              H
-                            </Typography>
-
                             <Stack
                               direction="row"
                               sx={{
@@ -320,15 +248,16 @@ async function chshSubmit(currentAngle: number,
                                   height: '100%',
                                 }}
                                 >
-                                  <img
-                                  src="/images/arrow.png"
-                                  alt="Arrow"
-                                  height={'432px'}
-                                  style={{
-                                    transform: `rotate(${arrowRotation}deg)`,
-                                    transformOrigin: 'center center',
-                                  }}
-                                  ></img>
+                                  
+                                <QFTextbox handleClick = {handleClick} handleSecondClick = {handleSecondClick} angleNumber = {currentAngle} />
+
+                                <Dialog open={open} onClose={() => setOpen(false)}>
+                                <DialogContent sx={{ padding: '0em 2.8em', fontSize:'1.45em' }}>
+                                <p>&nbsp;</p>
+                                
+                                <p>&nbsp;</p>
+                                </DialogContent>
+                            </Dialog>
 
                               </Box>
 

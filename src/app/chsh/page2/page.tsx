@@ -14,20 +14,7 @@ import MovingIcon from '@mui/icons-material/Moving';
 import TrendingFlatIcon from '@mui/icons-material/TrendingFlat';
 import DoDisturbIcon from '@mui/icons-material/DoDisturb';
 import PolylineIcon from '@mui/icons-material/Polyline';
-
-
-export async function chshPost(basis: number[]) {
-  const response = await fetch(`http://127.0.0.1:8000/chsh?follower_node_address=${process.env.NEXT_PUBLIC_FOLLOWER_NODE_ADDRESS}&timetagger_address=${process.env.NEXT_PUBLIC_TIMETAGGER_ADDRESS}`, {
-    method: "POST",
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify(basis)
-
-  });
-
-  return response
-}
+import { chshPost } from '@/calls';
 
 
 async function chshSubmit(currentAngle: number,
@@ -145,7 +132,7 @@ async function chshSubmit(currentAngle: number,
             >
 
               <Dialog open={openModal} onClose={()=>{}}>
-              <ModalBox handleClick = {handleClick} handleSecondClick = {handleSecondClick} angleNumber = {currentAngle} />
+              <ModalBox />
               </Dialog>
 
 

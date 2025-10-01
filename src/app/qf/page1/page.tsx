@@ -8,18 +8,7 @@ import {usePageRedirect} from '@/app/contexts/PageRedirectContext';
 import QFTextbox from '@/components/QFTextbox';
 import ModalBox from '@/components/ModalBox';
 import { useRouter } from 'next/navigation';
-
-
-async function submitFortune() {
-    const response = await fetch(`http://127.0.0.1:8000/rng/fortune?timetagger_address=${process.env.NEXT_PUBLIC_TIMETAGGER_ADDRESS}&integration_time_s=0.1&fortune_size=6&channels=1`, {
-        method: 'GET',
-    });
-    const data = await response.json();
-    if (!response.ok) {
-        return { success: false, data };
-    }
-    return { success: true, data };
-}
+import { submitFortune } from '@/calls';
 
 
  export default function MyComponent() {
@@ -38,15 +27,6 @@ async function submitFortune() {
     const [openModal,setOpenModal] = useState(false);
     const [secondOpen, setSecondOpen] = useState(false);
     const [currentAngle, setCurrentAngle] = useState(1); // Index of angle choice
-
-
-    const handleClick = () => {
-      setOpen(true);
-    };
-
-    const handleSecondClick = () => {
-      setSecondOpen(true);
-    };
 
     const handleSubmitClick = async () => {
       if (currentAngle == 7) {
@@ -77,7 +57,7 @@ async function submitFortune() {
             >
 
              <Dialog open={openModal} onClose={()=>{}}>
-              <ModalBox handleClick = {handleClick} handleSecondClick = {handleSecondClick} angleNumber = {currentAngle} />
+              <ModalBox />
               </Dialog>
                 <Stack
                   display="flex"

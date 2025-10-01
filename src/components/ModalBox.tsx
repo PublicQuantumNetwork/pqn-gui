@@ -10,9 +10,6 @@ function envStuff() {
 }
 
 interface ModalBoxProps {
-  handleClick: () => void;
-  handleSecondClick: () => void;
-  angleNumber: number;
 }
 
 
@@ -23,12 +20,6 @@ const setLinks=()=>{
 export default function ModalBox(
   props: ModalBoxProps
 ): React.ReactElement {
-    const handleClick = props.handleClick;
-    const handleSecondClick = props.handleSecondClick;
-    const angleNumber = props.angleNumber;
-    console.log("what are my arguments", handleClick)
-    console.log(handleSecondClick)
-    console.log(angleNumber)
   return (
 
       <DialogContent sx={{ padding:'50px'}}>

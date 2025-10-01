@@ -18,9 +18,6 @@ export default function CHSHTextbox(
     const handleClick = props.handleClick;
     const handleSecondClick = props.handleSecondClick;
     const angleNumber = props.angleNumber;
-    console.log("what are my arguments", handleClick)
-    console.log(handleSecondClick)
-    console.log(angleNumber)
   return (
     <Typography
       variant="h5"

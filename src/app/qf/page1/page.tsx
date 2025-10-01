@@ -1,62 +1,31 @@
 "use client"
 
-import {useState, useEffect, SetStateAction} from 'react';
+import {useState, useEffect} from 'react';
 import Container from '@mui/material/Container';
-import {Link, Dialog, DialogContent, Button, Box, Stack,TextField, Paper } from '@mui/material';
+import { Dialog, DialogContent, Button, Box, Stack} from '@mui/material';
 import Typography from '@mui/material/Typography';
 import {usePageRedirect} from '@/app/contexts/PageRedirectContext';
-import { useRouter } from 'next/navigation';
-import { Router } from 'next/router';
 import QFTextbox from '@/components/QFTextbox';
 import ModalBox from '@/components/ModalBox';
+import { useRouter } from 'next/navigation';
 
 
-export async function chshPost(basis: number[]) {
-  const response = await fetch(`http://127.0.0.1:8000/chsh?follower_node_address=${process.env.NEXT_PUBLIC_FOLLOWER_NODE_ADDRESS}&timetagger_address=${process.env.NEXT_PUBLIC_TIMETAGGER_ADDRESS}`, {
-    method: "POST",
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify(basis)
-
-  });
-
-  return response
+async function submitFortune() {
+    const response = await fetch(`http://127.0.0.1:8000/rng/fortune?timetagger_address=${process.env.NEXT_PUBLIC_TIMETAGGER_ADDRESS}&integration_time_s=0.1&fortune_size=6&channels=1`, {
+        method: 'GET',
+    });
+    const data = await response.json();
+    if (!response.ok) {
+        return { success: false, data };
+    }
+    return { success: true, data };
 }
 
 
-async function chshSubmit(currentAngle: number,
-    setAngleChoices: React.Dispatch<SetStateAction<number []>>,
-    arrowRotation: number, angleChoices: number[], setCurrentAngle: React.Dispatch<SetStateAction<number>>, router: Router) {
-      if (currentAngle == 1) {
-        setAngleChoices([arrowRotation])
-      } else if (currentAngle == 7) {
-        setAngleChoices([...angleChoices, arrowRotation])
-        const response = await chshPost([...angleChoices, arrowRotation])
-
-        if (response.status == 200) {
-          const data = await response.json();
-          const value = data.chsh_value;
-          const error = data.chsh_error;
-          router.push(`/chsh/page3?fail=false&value=${value}&error=${error}`);
-        } else {
-          router.push(`/chsh/page3?fail=true`);
-        }
-
-      } else {
-        console.error("Something went wrong please refresh the page")
-      }
-
-      setCurrentAngle(currentAngle+1)
-  }
-
  export default function MyComponent() {
 
-    const {setBackArrowLink, setForwardArrowLink} = usePageRedirect();
-    const router = useRouter();
-    //console.log("Unique", process.env)
-
-
+  const {setBackArrowLink, setForwardArrowLink} = usePageRedirect();
+  const router = useRouter();
 
   const setLinks=()=>{
     setBackArrowLink("/");
@@ -68,45 +37,7 @@ async function chshSubmit(currentAngle: number,
     const [open, setOpen] = useState(false);
     const [openModal,setOpenModal] = useState(false);
     const [secondOpen, setSecondOpen] = useState(false);
-    const [data, setData] = useState(null);
-    const [arrowRotation, setArrowRotation] = useState(0);
     const [currentAngle, setCurrentAngle] = useState(1); // Index of angle choice
-    const [angleChoices, setAngleChoices] = useState<number []>([])
-    const [textValue, setTextValue] = useState('');
-    const [triggerSubmit, setTriggerSubmit] = useState(0);
-
-
-
-    useEffect(() => {
-      const interval = setInterval(() => {
-        fetchData();
-      }, 100);
-
-      return () => clearInterval(interval);
-    }, []);
-
-    useEffect(() => {
-      if (triggerSubmit != 0) {
-        //console.log("in useEffect")
-        chshSubmit(currentAngle, setAngleChoices, arrowRotation, angleChoices, setCurrentAngle, router)
-        if (currentAngle == 7) {
-          setOpenModal(true)
-        }
-    }
-    }, [triggerSubmit])
-
-    const fetchData = async () => {
-      try {
-        const response = await fetch('http://127.0.0.1:8000/polarimeter/theta');
-        const data = await response.json();
-        setData(data.theta);
-        console.log(data.theta);
-        setArrowRotation(data.theta || 0);
-      } catch (error) {
-        setArrowRotation(0);
-        console.error('Error fetching data:', error);
-      }
-    };
 
 
     const handleClick = () => {
@@ -117,13 +48,20 @@ async function chshSubmit(currentAngle: number,
       setSecondOpen(true);
     };
 
-    const handleSubmitClick = () => {
-      // chshPost(arrowRotation, currentAngle)
-      //console.log("here boi")
-      setTriggerSubmit(triggerSubmit+1)
+    const handleSubmitClick = async () => {
+      if (currentAngle == 7) {
+        setOpenModal(true);
+        const response = await submitFortune();
 
+        if (response.success) {
+          const value = response.data[0];
+          router.push(`/qf/page2?fail=false&value=${value}`);
+        } else {
+          router.push(`/qf/page2?fail=true`);
+        }
+      }
+      setCurrentAngle(currentAngle + 1);
     };
-
 
     return (
         <Container maxWidth="lg">
@@ -141,10 +79,6 @@ async function chshSubmit(currentAngle: number,
              <Dialog open={openModal} onClose={()=>{}}>
               <ModalBox handleClick = {handleClick} handleSecondClick = {handleSecondClick} angleNumber = {currentAngle} />
               </Dialog>
-
-
-
-
                 <Stack
                   display="flex"
                   flexDirection="column"
@@ -249,7 +183,7 @@ async function chshSubmit(currentAngle: number,
                                 }}
                                 >
                                   
-                                <QFTextbox handleClick = {handleClick} handleSecondClick = {handleSecondClick} angleNumber = {currentAngle} />
+                                <QFTextbox questionNumber = {currentAngle} />
 
                                 <Dialog open={open} onClose={() => setOpen(false)}>
                                 <DialogContent sx={{ padding: '0em 2.8em', fontSize:'1.45em' }}>

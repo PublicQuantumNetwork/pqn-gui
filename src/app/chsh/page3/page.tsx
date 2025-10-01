@@ -19,12 +19,7 @@ import { useSearchParams } from 'next/navigation';
   useEffect(()=>{setLinks()},[])
 
  function MyComponent() {
-     const searchParams = useSearchParams();
-     const [open, setOpen] = useState(false);
-
-  const handleClick = () => {
-    setOpen(true);
-  };
+  const searchParams = useSearchParams();
 
   const value = Number(searchParams.get('value')).toFixed(2) ?? 0;
   const error = Number(searchParams.get('error')).toFixed(2) ?? 0;
@@ -32,11 +27,11 @@ import { useSearchParams } from 'next/navigation';
   const failParam = searchParams.get('fail');
   const fail = failParam ? failParam.replace(/\}/g, '') : true;
 
- const [message, setMessage] = useState('');
- const [message2, setMessage2] = useState('');
+  const [message, setMessage] = useState('');
+  const [message2, setMessage2] = useState('');
 
- const [showFireworks, setShowFireworks] = useState(false);
- const [showFireworks2, setShowFireworks2] = useState(false);
+  const [showFireworks, setShowFireworks] = useState(false);
+  const [showFireworks2, setShowFireworks2] = useState(false);
 
   // Set the message based on the 'fail' prop
   useEffect(() => {

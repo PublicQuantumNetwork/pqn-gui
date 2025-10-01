@@ -20,12 +20,7 @@ import fortune from '@/app/qf/page2/fortunes';
   useEffect(()=>{setLinks()},[])
 
  function MyComponent() {
-     const searchParams = useSearchParams();
-     const [open, setOpen] = useState(false);
-
-  const handleClick = () => {
-    setOpen(true);
-  };
+  const searchParams = useSearchParams();
 
   const value = Number(searchParams.get('value')).toFixed(0) ?? 42;
 

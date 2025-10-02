@@ -4,11 +4,13 @@ import Container from '@mui/material/Container';
 import {Link, Dialog, DialogContent, styled, Box, Stack } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import {usePageRedirect} from '@/app/contexts/PageRedirectContext';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import fortune from '@/app/qf/page2/fortunes';
+import { useEnterKey } from '@/hooks/useEnterKey';
 
  export default function Home() {
  const {setBackArrowLink, setForwardArrowLink} = usePageRedirect();
+ const router = useRouter();
 
 
 
@@ -18,6 +20,10 @@ import fortune from '@/app/qf/page2/fortunes';
   }
 
   useEffect(()=>{setLinks()},[])
+
+  useEnterKey(() => {
+    router.push("/survey/");
+  });
 
  function MyComponent() {
   const searchParams = useSearchParams();

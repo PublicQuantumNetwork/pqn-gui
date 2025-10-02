@@ -1,6 +1,6 @@
 "use client"
 
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useRef} from 'react';
 import Container from '@mui/material/Container';
 import { Dialog, DialogContent, Button, Box, Stack} from '@mui/material';
 import Typography from '@mui/material/Typography';
@@ -9,6 +9,7 @@ import QFTextbox from '@/components/QFTextbox';
 import ModalBox from '@/components/ModalBox';
 import { useRouter } from 'next/navigation';
 import { submitFortune } from '@/calls';
+import {useEnterKey} from "@/hooks/useEnterKey";
 
 
  export default function MyComponent() {
@@ -28,13 +29,16 @@ import { submitFortune } from '@/calls';
     const [secondOpen, setSecondOpen] = useState(false);
     const [currentAngle, setCurrentAngle] = useState(1); // Index of angle choice
 
+    const enterOnRef = useRef(true);  // Controls if the enter key press is executed. Needs to be a ref to avoid async updates.
+
     const handleSubmitClick = async () => {
       if (currentAngle == 7) {
+        enterOnRef.current = false;
         setOpenModal(true);
         const response = await submitFortune();
 
         if (response.success) {
-          const value = response.data[0];
+          const value = response.data[0] + 1; // Add 1 to make it 1-indexed
           router.push(`/qf/page2?fail=false&value=${value}`);
         } else {
           router.push(`/qf/page2?fail=true`);
@@ -42,6 +46,12 @@ import { submitFortune } from '@/calls';
       }
       setCurrentAngle(currentAngle + 1);
     };
+
+    useEnterKey(() => {
+        if (enterOnRef.current) {
+            handleSubmitClick();
+        }
+    });
 
     return (
         <Container maxWidth="lg">

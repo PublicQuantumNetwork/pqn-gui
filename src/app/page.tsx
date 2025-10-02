@@ -34,7 +34,7 @@ export default function Home() {
 
   useEffect(() => {
     setLinks();
-    const ret = resetBackendState();
+    // const ret = resetBackendState();
   }, [])
 
   useEffect(() => {

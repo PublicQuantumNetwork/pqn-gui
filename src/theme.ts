@@ -31,6 +31,16 @@ const theme = createTheme({
         },
       },
     },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          '&.Mui-disabled': {
+            backgroundColor: '#e0e0e0',
+            color: '#757575',
+          },
+        },
+      },
+    },
   },
 });
 

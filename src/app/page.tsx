@@ -34,7 +34,7 @@ export default function Home() {
 
   useEffect(() => {
     setLinks();
-    const ret = resetBackendState();
+    // const ret = resetBackendState();
   }, [])
 
   useEffect(() => {
@@ -44,12 +44,12 @@ export default function Home() {
     }
   }, [lastMessage]);
 
-  useEffect(() => {
-    connect();
-    return () => {
-      disconnect();
-    };
-  }, [connect, disconnect]);
+  // useEffect(() => {
+  //   connect();
+  //   return () => {
+  //     disconnect();
+  //   };
+  // }, [connect, disconnect]);
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
@@ -194,6 +194,7 @@ export default function Home() {
             >
 
               <Button
+                disabled
                 variant="contained"
                 component="a"
                 href="#"
@@ -212,10 +213,11 @@ export default function Home() {
                   color: '#000000;',
                 }}
               >
-                Share a secret message (multi-player)
+                Share a secret message (Coming soon)
               </Button>
 
               <Button
+                disabled
                 variant="contained"
                 component="a"
                 href="#"
@@ -234,7 +236,7 @@ export default function Home() {
                   color: '#000000;',
                 }}
               >
-                Get to know someone (multi-player)
+                Get to know someone (Coming soon)
               </Button>
 
             </Stack>

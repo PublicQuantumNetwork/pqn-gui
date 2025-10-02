@@ -9,6 +9,7 @@ import CHSHTextbox from '@/components/CHSHTextbox';
 import ModalBox from '@/components/ModalBox';
 import { useRouter } from 'next/navigation';
 import { Router } from 'next/router';
+import { useEnterKey } from '@/hooks/useEnterKey';
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
 import MovingIcon from '@mui/icons-material/Moving';
 import TrendingFlatIcon from '@mui/icons-material/TrendingFlat';
@@ -115,6 +116,10 @@ async function chshSubmit(currentAngle: number,
       setTriggerSubmit(triggerSubmit+1)
 
     };
+
+    useEnterKey(() => {
+      handleSubmitClick();
+    });
 
 
     return (

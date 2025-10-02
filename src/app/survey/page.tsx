@@ -82,6 +82,7 @@ export default function Home() {
                   }}
                 >
                   <p>Please take a moment to fill out this short survey.</p>
+                  <p>Press the "START OVER" button to play another game.</p>
                 </Typography>
 
 

@@ -4,11 +4,13 @@ import Container from '@mui/material/Container';
 import {Link, Dialog, DialogContent, styled, Box, Stack } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import {usePageRedirect} from '@/app/contexts/PageRedirectContext';
+import { useEnterKey} from "@/hooks/useEnterKey";
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
  const {setBackArrowLink, setForwardArrowLink} = usePageRedirect();
-
-
+ const router = useRouter();
+ const [open, setOpen] = useState(false);
 
   const setLinks=()=>{
     setBackArrowLink("/");
@@ -17,13 +19,13 @@ export default function Home() {
 
   useEffect(()=>{setLinks()},[])
 
-  function MyComponent() {
-  const [open, setOpen] = useState(false);
+  useEnterKey(() => {
+    router.push("/chsh/page2/");
+  });
 
   const handleClick = () => {
     setOpen(true);
   };
-
 
   return (
     <Container maxWidth="lg">
@@ -127,10 +129,5 @@ export default function Home() {
 
       </Box>
     </Container>
-  );
-}
-
-return (
-    <MyComponent />
   );
 }

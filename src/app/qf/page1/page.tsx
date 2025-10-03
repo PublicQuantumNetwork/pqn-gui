@@ -44,7 +44,9 @@ import {useEnterKey} from "@/hooks/useEnterKey";
           router.push(`/qf/page2?fail=true`);
         }
       }
-      setCurrentAngle(currentAngle + 1);
+      else {
+        setCurrentAngle(currentAngle + 1);
+      }
     };
 
     useEnterKey(() => {

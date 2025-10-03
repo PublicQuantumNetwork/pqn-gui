@@ -90,7 +90,7 @@ async function chshSubmit(currentAngle: number,
 
     const fetchData = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:8000/polarimeter/theta');
+        const response = await fetch('http://127.0.0.1:8000/serial/');
         const data = await response.json();
         setData(data.theta);
         console.log(data.theta);

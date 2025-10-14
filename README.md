@@ -1,47 +1,77 @@
-# Material UI - Next.js App Router example in TypeScript
+# PQN GUI
 
-This is a [Next.js](https://nextjs.org/) project bootstrapped using [`create-next-app`](https://github.com/vercel/next.js/tree/HEAD/packages/create-next-app) with Material UI installed.
+**Web interface for Public Quantum Network (PQN) nodes**
 
-## How to use
+An interactive web interface designed for the general public to interact with quantum networks.
 
-Download the example [or clone the repo](https://github.com/mui/material-ui):
+<p align="center">
+  <img src="public/images/frontend_screenshot.png" alt="PQN Web Interface" width="800"/>
+  <br>
+  <em>PQN web interface for public interaction with a quantum network</em>
+</p>
 
-<!-- #target-branch-reference -->
+> [!NOTE]
+> For complete project information, architecture details, and backend setup, see the [pqn-stack repository](https://github.com/PublicQuantumNetwork/pqn-stack).
+
+## Quick Start
+
+### Prerequisites
+
+- Node.js 18 or higher
+- npm or pnpm package manager
+- A running PQN Node API (see [pqn-stack](https://github.com/PublicQuantumNetwork/pqn-stack))
+
+### Installation
+
+1. **Clone the repository**
+
+   ```bash
+   git clone https://github.com/PublicQuantumNetwork/pqn-gui.git
+   cd pqn-gui
+   ```
+
+2. **Install dependencies**
+
+   ```bash
+   npm install
+   # or
+   pnpm install
+   ```
+
+### Running the Development Server
 
 ```bash
-curl https://codeload.github.com/mui/material-ui/tar.gz/master | tar -xz --strip=2  material-ui-master/examples/material-ui-nextjs-ts
-cd material-ui-nextjs-ts
-```
-
-Install it and run:
-
-```bash
-npm install
 npm run dev
+# or
+pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser to see the interface.
 
-or:
+### Building for Production
 
-<!-- #target-branch-reference -->
+```bash
+npm run build
+npm run start
+# or
+pnpm build
+pnpm start
+```
 
-[![Edit on StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/mui/material-ui/tree/master/examples/material-ui-nextjs-ts)
+## Configuration
 
-[![Edit on CodeSandbox](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/p/sandbox/github/mui/material-ui/tree/master/examples/material-ui-nextjs-ts)
+The frontend expects the PQN Node API to be running at `http://127.0.0.1:8000` by default.
 
-## Learn more
+To configure the API endpoints, create a `.env.local` file in the root of the project:
 
-To learn more about this example:
+```bash
+NEXT_PUBLIC_TIMETAGGER_ADDRESS=127.0.0.1:8000
+NEXT_PUBLIC_FOLLOWER_NODE_ADDRESS=127.0.0.1:8000
+```
 
-<!-- #host-reference -->
+Replace the addresses with your actual Node API endpoints if they differ from the defaults.
 
-- [Next.js documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Customizing Material UI](https://mui.com/material-ui/customization/how-to-customize/) - approaches to customizing Material UI.
+## Learn More
 
-## What's next?
-
-<!-- #host-reference -->
-
-You now have a working example project.
-You can head back to the documentation and continue by browsing the [templates](https://mui.com/material-ui/getting-started/templates/) section.
+- [pqn-stack](https://github.com/PublicQuantumNetwork/pqn-stack) - Backend software stack and complete project documentation
+- [Public Quantum Network](https://publicquantumnetwork.org) - Learn more about the PQN project

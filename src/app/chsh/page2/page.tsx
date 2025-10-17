@@ -44,7 +44,7 @@ async function chshSubmit(currentAngle: number,
   }
 
  export default function MyComponent() {
-  
+
   const {setBackArrowLink, setForwardArrowLink} = usePageRedirect();
   const router = useRouter();
   //console.log("Unique", process.env)
@@ -67,7 +67,7 @@ async function chshSubmit(currentAngle: number,
     const [angleChoices, setAngleChoices] = useState<number []>([])
     const [textValue, setTextValue] = useState('');
     const [triggerSubmit, setTriggerSubmit] = useState(0);
-    
+
 
 
     useEffect(() => {
@@ -204,7 +204,7 @@ async function chshSubmit(currentAngle: number,
                           position="relative"
                           sx={{ width:'50%'}}
                         >
-                          
+
                           <Stack
                               direction="row"
                               sx={{

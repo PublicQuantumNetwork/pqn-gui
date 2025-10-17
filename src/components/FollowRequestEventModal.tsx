@@ -25,7 +25,7 @@ const style = {
   p: 4,
 };
 
-const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, message, sendMessage }) => {
+const FollowRequestEventModal: React.FC<EventModalProps> = ({ isOpen, onClose, message, sendMessage }) => {
 
   const router = useRouter();
 
@@ -79,4 +79,4 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, message, sendM
   );
 };
 
-export default EventModal;
+export default FollowRequestEventModal;

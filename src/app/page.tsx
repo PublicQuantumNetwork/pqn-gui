@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import { Box, Stack, Button } from '@mui/material';
 import { usePageRedirect } from '@/app/contexts/PageRedirectContext';
 import { useWebSocket } from '@/app/hooks/WebSocketHook';
-import EventModal from '@/components/EventModal';
+import FollowRequestEventModal from '@/components/FollowRequestEventModal';
 
 
 export async function resetBackendState() {
@@ -25,8 +25,8 @@ export async function resetBackendState() {
 export default function Home() {
   const { setBackArrowLink, setForwardArrowLink } = usePageRedirect();
   const { lastMessage, sendMessage, connect, disconnect } = useWebSocket();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalMessage, setModalMessage] = useState<string | null>(null);
+  const [isFollowRequestModalOpen, setIsFollowRequestModalOpen] = useState(false);
+  const [followRequestModalMessage, setFollowRequestModalMessage] = useState<string | null>(null);
 
   const setLinks = () => {
     setForwardArrowLink("chsh/page1");
@@ -34,31 +34,31 @@ export default function Home() {
 
   useEffect(() => {
     setLinks();
-    // const ret = resetBackendState();
+    const ret = resetBackendState();
   }, [])
 
   useEffect(() => {
     if (lastMessage) {
-      setModalMessage(lastMessage.data);
-      setIsModalOpen(true);
+      setFollowRequestModalMessage(lastMessage.data);
+      setIsFollowRequestModalOpen(true);
     }
   }, [lastMessage]);
 
-  // useEffect(() => {
-  //   connect();
-  //   return () => {
-  //     disconnect();
-  //   };
-  // }, [connect, disconnect]);
+  useEffect(() => {
+    connect();
+    return () => {
+      disconnect();
+    };
+  }, [connect, disconnect]);
 
   const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setModalMessage(null);
+    setIsFollowRequestModalOpen(false);
+    setFollowRequestModalMessage(null);
   };
 
   return (
     <Container maxWidth="lg">
-      <EventModal isOpen={isModalOpen} onClose={handleCloseModal} message={modalMessage} sendMessage={sendMessage} />
+      <FollowRequestEventModal isOpen={isFollowRequestModalOpen} onClose={handleCloseModal} message={followRequestModalMessage} sendMessage={sendMessage} />
       <Box
         sx={{
           my: 4,

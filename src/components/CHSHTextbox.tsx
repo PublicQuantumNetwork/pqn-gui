@@ -31,16 +31,23 @@ export default function CHSHTextbox(
         width: '75%',
       }}
     >
-      <p>
-        By turning the wheel, you choose which{' '}
-        <Link href="#" onClick={handleClick}>
-          polarization
-        </Link>{' '}
-        to offer the <Link href="#" onClick={handleSecondClick}>photons</Link>.{' '}
-        <br />
-        <br />
-        Turn the wheel and press the button to choose <strong>angle #{angleNumber}</strong>!
-      </p>
+      {angleNumber === 1 && (
+        <p>
+          By turning the wheel, you choose which{' '}
+          <Link href="#" onClick={handleClick}>
+            polarization
+          </Link>{' '}
+          to offer the <Link href="#" onClick={handleSecondClick}>photons</Link>.{' '}
+          <br />
+          <br />
+          Turn the wheel and press the button to choose <strong>angle #{angleNumber}</strong>!
+        </p>
+      )} 
+       {angleNumber === 2 && (
+        <p>
+        Great job!<br /><br />Now choose <strong>angle #{angleNumber}</strong>!
+        </p>
+      )} 
       <p>{envStuff().keys}</p>
     </Typography>
   );

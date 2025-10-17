@@ -194,10 +194,9 @@ export default function Home() {
             >
 
               <Button
-                disabled
                 variant="contained"
                 component="a"
-                href="#"
+                href="/ssm/page1"
                 sx={{
                   minWidth: '464px',
                   height: '6em',
@@ -213,7 +212,7 @@ export default function Home() {
                   color: '#000000;',
                 }}
               >
-                Share a secret message (Coming soon)
+                Share a secret message (Preview)
               </Button>
 
               <Button

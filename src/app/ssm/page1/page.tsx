@@ -1,78 +1,122 @@
 "use client"
-
-import {useState, useEffect, SetStateAction} from 'react';
-import {usePageRedirect} from '@/app/contexts/PageRedirectContext';
+import { useEffect, useState } from 'react';
+import Container from '@mui/material/Container';
+import { Box, Dialog, DialogContent, Link, Stack } from '@mui/material';
+import Typography from '@mui/material/Typography';
+import { usePageRedirect } from '@/app/contexts/PageRedirectContext';
+import { useEnterKey } from "@/hooks/useEnterKey";
 import { useRouter } from 'next/navigation';
-import SSMTextbox from '@/components/SSMTextbox';
-import ModalBox from '@/components/ModalBox';
-import { Router } from 'next/router';
-import { useEnterKey } from '@/hooks/useEnterKey';
-import { ssmPost } from '@/calls';
 
-async function ssmSubmit(currentAngle: number,
-    setAngleChoices: React.Dispatch<SetStateAction<number []>>,
-    arrowRotation: number, angleChoices: number[], setCurrentAngle: React.Dispatch<SetStateAction<number>>, router: Router) {
-      if (currentAngle == 1) {
-        setAngleChoices([arrowRotation])
-      } else if (currentAngle == 2) {
-        setAngleChoices([...angleChoices, arrowRotation])
-        const response = await ssmPost([...angleChoices, arrowRotation])
+export default function Home() {
+  const { setBackArrowLink, setForwardArrowLink } = usePageRedirect();
+  const router = useRouter();
+  const [open, setOpen] = useState(false);
 
-        if (response.status == 200) {
-          const data = await response.json();
-          const value = data.chsh_value;
-          const error = data.chsh_error;
-          router.push(`/ssm/page3?fail=false&value=${value}&error=${error}`);
-        } else {
-          router.push(`/ssm/page3?fail=true`);
-        }
-
-      } else {
-        console.error("Something went wrong please refresh the page")
-      }
-
-      setCurrentAngle(currentAngle+1)
+  const setLinks = () => {
+    setBackArrowLink("/");
+    setForwardArrowLink("/ssm/page2/");
   }
 
-export default function hiya(){
-const {setBackArrowLink, setForwardArrowLink} = usePageRedirect();
-    const router = useRouter();
-    const [triggerSubmit, setTriggerSubmit] = useState(0);
+  useEffect(() => {
+    setLinks()
+  }, [])
 
-    const setLinks=()=>{
-        setBackArrowLink("/ssm/page1/");
-        setForwardArrowLink("/ssm/page2/");
-    }
+  useEnterKey(() => {
+    router.push("/ssm/page2/");
+  });
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-        fetchData();
-        }, 100);
+  const handleClick = () => {
+    setOpen(true);
+  };
 
-        return () => clearInterval(interval);
-    }, []);
-    
-    useEffect(() => {
-        if (triggerSubmit != 0) {
-        //console.log("in useEffect")
-        ssmSubmit(currentAngle, setAngleChoices, arrowRotation, angleChoices, setCurrentAngle, router)
-        if (currentAngle == 2) {
-            setOpenModal(true)
-        }
-    }
-    }, [triggerSubmit])
+  return (<Container maxWidth="lg">
+    <Box
+      sx={{
+        my: 4, display: 'flex', flexDirection: 'column', top: '10'
+      }}
+    >
+      <Stack
+        display="flex"
+        flexDirection="column"
+        position="relative"
+        sx={{ width: '100%', }}
+      >
 
-    const fetchData = async () => {
-      try {
-        const response = await fetch('http://127.0.0.1:8000/serial/');
-        const data = await response.json();
-        setData(data.theta);
-        console.log(data.theta);
-        setArrowRotation(data.theta || 0);
-      } catch (error) {
-        setArrowRotation(0);
-        console.error('Error fetching data:', error);
-      }
-    };
+        <Stack direction="row"
+          sx={{
+            minHeight: '8em', justifyContent: 'left', alignItems: 'flex-end', // Align items to the bottom of the row
 
-} 
+          }}
+        >
+
+          <Stack
+            display="flex"
+            flexDirection="column"
+            position="relative"
+            sx={{ width: '50%' }}
+          >
+            <Box
+              component="img"
+              src="/images/speech-bubble-white-small.png"
+              alt="Whobit welcomes you"
+              sx={{
+                width: 'auto',
+                height: '18em',
+                backgroundRepeat: 'no-repeat',
+                backgroundSize: 'contain',
+                backgroundPosition: 'left',
+              }}
+            />
+            <Typography
+              variant="h5"
+              component="h1"
+              sx={{
+                position: 'absolute',
+                top: '23%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                color: '#000000',
+                width: '75%',
+              }}
+            >
+              <p>Share a Secret message is a 2 player game that requires another player to join you.</p>
+              <p>Press the big red button to ask the terminal next to you if they want to join you. Please make sure you have a second player ready.</p>
+            </Typography>
+
+            <Dialog open={open} onClose={() => setOpen(false)}>
+              <DialogContent sx={{ padding: '2.8em', fontSize: '1.45em' }}>
+                Entangled photons are light particles that act as if they're connected, even if they
+                are very
+                &nbsp; far apart.
+              </DialogContent>
+            </Dialog>
+
+            <Box
+              component="img"
+              src="/images/whobit-arms-down.png"
+              alt="Whobit welcomes you"
+              sx={{
+                width: '14.3em',
+                height: 'auto',
+                backgroundRepeat: 'no-repeat',
+                backgroundSize: 'contain',
+                backgroundPosition: 'left',
+                paddingLeft: '4px',
+              }}
+            />
+
+          </Stack>
+
+          <Stack
+            display="flex"
+            flexDirection="column"
+            position="relative"
+            sx={{ width: '50%' }}
+          >
+          </Stack>
+        </Stack>
+      </Stack>
+
+    </Box>
+  </Container>);
+}

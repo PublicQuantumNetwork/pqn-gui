@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:instance1": "dotenv -e .env.local -- next dev",
+    "dev:instance2": "dotenv -e .env.local2 -- next dev -p 3001",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -16,6 +18,7 @@
     "@mui/icons-material": "latest",
     "@mui/material": "latest",
     "@mui/material-nextjs": "latest",
+    "dotenv-cli": "^10.0.0",
     "next": "^15.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

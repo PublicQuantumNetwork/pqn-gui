@@ -33,3 +33,20 @@ export async function ssmPost(basis: number[]) {
 
   return response;
 }
+
+export async function fetchRotatorAngle() {
+  try {
+    const response = await fetch('http://127.0.0.1:8000/serial/');
+
+    if (!response.ok) {
+      console.error(`Error fetching rotator angle: HTTP ${response.status}`);
+      return { success: false, theta: 0 };
+    }
+
+    const data = await response.json();
+    return { success: true, theta: data.theta || 0 };
+  } catch (error) {
+    console.error('Error fetching rotator angle:', error);
+    return { success: false, theta: 0 };
+  }
+}

@@ -15,7 +15,7 @@ import MovingIcon from '@mui/icons-material/Moving';
 import TrendingFlatIcon from '@mui/icons-material/TrendingFlat';
 import DoDisturbIcon from '@mui/icons-material/DoDisturb';
 import PolylineIcon from '@mui/icons-material/Polyline';
-import { chshPost } from '@/calls';
+import { chshPost, fetchRotatorAngle } from '@/calls';
 
 
 async function chshSubmit(currentAngle: number,
@@ -71,8 +71,11 @@ async function chshSubmit(currentAngle: number,
 
 
     useEffect(() => {
-      const interval = setInterval(() => {
-        fetchData();
+      const interval = setInterval(async () => {
+        const result = await fetchRotatorAngle();
+        setData(result.theta);
+        console.log(result.theta);
+        setArrowRotation(result.theta);
       }, 100);
 
       return () => clearInterval(interval);
@@ -87,20 +90,6 @@ async function chshSubmit(currentAngle: number,
         }
     }
     }, [triggerSubmit])
-
-
-    const fetchData = async () => {
-      try {
-        const response = await fetch('http://127.0.0.1:8000/serial/');
-        const data = await response.json();
-        setData(data.theta);
-        console.log(data.theta);
-        setArrowRotation(data.theta || 0);
-      } catch (error) {
-        setArrowRotation(0);
-        console.error('Error fetching data:', error);
-      }
-    };
 
 
     const handleClick = () => {

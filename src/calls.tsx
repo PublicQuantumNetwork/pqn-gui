@@ -1,6 +1,6 @@
 
 export async function chshPost(basis: number[]) {
-  const response = await fetch(`http://127.0.0.1:8000/chsh?follower_node_address=${process.env.NEXT_PUBLIC_FOLLOWER_NODE_ADDRESS}&timetagger_address=${process.env.NEXT_PUBLIC_TIMETAGGER_ADDRESS}`, {
+  const response = await fetch(`http://${process.env.NEXT_PUBLIC_API_ADDRESS}/chsh?follower_node_address=${process.env.NEXT_PUBLIC_FOLLOWER_NODE_ADDRESS}&timetagger_address=${process.env.NEXT_PUBLIC_TIMETAGGER_ADDRESS}`, {
     method: "POST",
     headers: {
       'Content-Type': 'application/json',
@@ -12,7 +12,7 @@ export async function chshPost(basis: number[]) {
 }
 
 export async function submitFortune() {
-  const response = await fetch(`http://127.0.0.1:8000/rng/fortune?timetagger_address=${process.env.NEXT_PUBLIC_TIMETAGGER_ADDRESS}&integration_time_s=0.1&fortune_size=6&channels=1`, {
+  const response = await fetch(`http://${process.env.NEXT_PUBLIC_API_ADDRESS}/rng/fortune?timetagger_address=${process.env.NEXT_PUBLIC_TIMETAGGER_ADDRESS}&integration_time_s=0.1&fortune_size=6&channels=1`, {
     method: 'GET',
   });
   const data = await response.json();
@@ -23,7 +23,7 @@ export async function submitFortune() {
 }
 
 export async function ssmPost(basis: number[]) {
-  const response = await fetch(`http://127.0.0.1:8000/chsh?follower_node_address=${process.env.NEXT_PUBLIC_FOLLOWER_NODE_ADDRESS}&timetagger_address=${process.env.NEXT_PUBLIC_TIMETAGGER_ADDRESS}`, {
+  const response = await fetch(`http://${process.env.NEXT_PUBLIC_API_ADDRESS}/chsh?follower_node_address=${process.env.NEXT_PUBLIC_FOLLOWER_NODE_ADDRESS}&timetagger_address=${process.env.NEXT_PUBLIC_TIMETAGGER_ADDRESS}`, {
     method: "POST",
     headers: {
       'Content-Type': 'application/json',
@@ -36,7 +36,7 @@ export async function ssmPost(basis: number[]) {
 
 export async function fetchRotatorAngle() {
   try {
-    const response = await fetch('http://127.0.0.1:8000/serial/');
+    const response = await fetch(`http://${process.env.NEXT_PUBLIC_API_ADDRESS}/serial/`);
 
     if (!response.ok) {
       console.error(`Error fetching rotator angle: HTTP ${response.status}`);
@@ -49,4 +49,16 @@ export async function fetchRotatorAngle() {
     console.error('Error fetching rotator angle:', error);
     return { success: false, theta: 0 };
   }
+}
+
+export async function resetBackendState() {
+  const response = await fetch(`http://${process.env.NEXT_PUBLIC_API_ADDRESS}/coordination/reset_coordination_state`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({}),
+  });
+  return response
+
 }

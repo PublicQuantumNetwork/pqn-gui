@@ -1,25 +1,13 @@
 'use client'
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import {useEffect, useState} from 'react';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-import { Box, Stack, Button } from '@mui/material';
-import { usePageRedirect } from '@/app/contexts/PageRedirectContext';
-import { useWebSocket } from '@/app/hooks/WebSocketHook';
+import {Box, Button, Stack} from '@mui/material';
+import {usePageRedirect} from '@/app/contexts/PageRedirectContext';
+import {useWebSocket} from '@/app/hooks/WebSocketHook';
 import FollowRequestEventModal from '@/components/FollowRequestEventModal';
-
-
-export async function resetBackendState() {
-  const response = await fetch("http://127.0.0.1:8000/coordination/reset_coordination_state", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({}),
-  });
-  return response
-
-}
+import {resetBackendState} from "@/calls";
 
 
 export default function Home() {

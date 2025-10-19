@@ -62,3 +62,25 @@ export async function resetBackendState() {
   return response
 
 }
+export async function requestFollower() {
+  try {
+    const response = await fetch(`http://${process.env.NEXT_PUBLIC_API_ADDRESS}/coordination/collect_follower?address=${process.env.NEXT_PUBLIC_FOLLOWER_NODE_ADDRESS}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({}),
+    });
+
+    if (!response.ok) {
+      console.error(`Error requesting follower: HTTP ${response.status}`);
+      return { success: false, error: `HTTP ${response.status}` };
+    }
+
+    const data = await response.json();
+    return { success: true, data };
+  } catch (error) {
+    console.error('Error requesting follower:', error);
+    return { success: false, error: String(error) };
+  }
+}

@@ -84,3 +84,71 @@ export async function requestFollower() {
     return { success: false, error: String(error) };
   }
 }
+
+export async function fetchQuestionOrder() {
+  const maxRetries = 5;
+  const retryDelay = 1000; // 1 second
+
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const response = await fetch(`http://${process.env.NEXT_PUBLIC_API_ADDRESS}/qkd/question_order`, {
+        method: "GET",
+      });
+
+      if (!response.ok) {
+        console.error(`Error fetching question order: HTTP ${response.status}`);
+        return { success: false, error: `HTTP ${response.status}`, questionOrder: [] };
+      }
+
+      const data = await response.json();
+      const questionOrder = data.question_order || data;
+
+      // Check if the question order is an empty array
+      if (Array.isArray(questionOrder) && questionOrder.length === 0) {
+        if (attempt < maxRetries) {
+          console.log(`Question order is empty, retrying... (attempt ${attempt}/${maxRetries})`);
+          // Wait for 1 second before retrying
+          await new Promise(resolve => setTimeout(resolve, retryDelay));
+          continue;
+        } else {
+          // After 5 attempts, return error
+          console.error('Question order is still empty after 5 attempts');
+          return { success: false, error: 'Question order not available after 5 attempts', questionOrder: [] };
+        }
+      }
+
+      // Success - question order has items
+      return { success: true, questionOrder };
+
+    } catch (error) {
+      console.error('Error fetching question order:', error);
+      return { success: false, error: String(error), questionOrder: [] };
+    }
+  }
+
+  // Fallback (should not reach here)
+  return { success: false, error: 'Failed to fetch question order', questionOrder: [] };
+}
+
+export async function submitSSMAnswers(answers: string[]) {
+  try {
+    const response = await fetch(`http://${process.env.NEXT_PUBLIC_API_ADDRESS}/ssm/submit?follower_node_address=${process.env.NEXT_PUBLIC_FOLLOWER_NODE_ADDRESS}&timetagger_address=${process.env.NEXT_PUBLIC_TIMETAGGER_ADDRESS}`, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ answers })
+    });
+
+    if (!response.ok) {
+      console.error(`Error submitting SSM answers: HTTP ${response.status}`);
+      return { success: false, error: `HTTP ${response.status}` };
+    }
+
+    const data = await response.json();
+    return { success: true, data };
+  } catch (error) {
+    console.error('Error submitting SSM answers:', error);
+    return { success: false, error: String(error) };
+  }
+}

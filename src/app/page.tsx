@@ -9,7 +9,7 @@ import { useWebSocket } from '@/app/hooks/WebSocketHook';
 import EventModal from '@/components/EventModal';
 
 
-export async function resetBackendState() {
+async function resetBackendState() {
   const response = await fetch("http://127.0.0.1:8000/coordination/reset_coordination_state", {
     method: "POST",
     headers: {

@@ -106,7 +106,7 @@ export default function Home() {
                 display="flex"
                 flexDirection="column"
                 position="relative"
-                sx={{ width:'600px', marginLeft:'60px', top:'-2px'}}
+                sx={{ width:'600px', marginLeft:'60px', top:'-2px', scrollbarWidth: 'thick', scrollbarColor: '#888 #f1f1f1' }}
               >
                 <iframe
                   src="https://docs.google.com/forms/d/e/1FAIpQLSfdGIL2c6nmcvaOU4PKZwy5imlwrGXgCu6nASd1tla6-DvtGQ/viewform?usp=sharing&ouid=104503430832388474561"

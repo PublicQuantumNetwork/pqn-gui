@@ -134,13 +134,13 @@ export default function RootLayout(props: { children: React.ReactNode }) {
 
                 {/* </Stack>*/}
                 <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ backgroundImage: 'url(/images/GUI-background.png)', minHeight: '40em', backgroundRepeat: 'no-repeat', width: '100%', backgroundPosition: 'center' }}>
-                  <RedirectArrow direction="back">
+                  {/*<RedirectArrow direction="back">
                     {<Icon sx={{height:'30px'}}><ArrowBackIosNewIcon /></Icon>}
-                  </RedirectArrow>
+                  </RedirectArrow>*/}
                   {props.children}
-                  <RedirectArrow direction="forward">
+                  {/* <RedirectArrow direction="forward">
                     <Icon sx={{height:'30px'}}><ArrowForwardIosIcon /></Icon>
-                  </RedirectArrow>
+                  </RedirectArrow>*/}
                 </Stack>
               </Stack>
             </PageRedirectProvider>

@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "dev:instance1": "dotenv -e .env.local -- next dev",
-    "dev:instance2": "dotenv -e .env.local2 -- next dev -p 3001",
+    "dev:instance1": "dotenv -e .env.locala -- next dev",
+    "dev:instance2": "dotenv -e .env.localb -- next dev -p 3001",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",

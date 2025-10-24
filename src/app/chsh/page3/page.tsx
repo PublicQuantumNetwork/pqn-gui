@@ -1,5 +1,5 @@
 "use client"
-import {useState, useEffect} from 'react';
+import {useState, useEffect, Suspense} from 'react';
 import Container from '@mui/material/Container';
 import {Link, Dialog, DialogContent, styled, Box, Stack } from '@mui/material';
 import Typography from '@mui/material/Typography';
@@ -327,6 +327,8 @@ import { useEnterKey } from '@/hooks/useEnterKey';
 }
 
 return (
-    <MyComponent />
+    <Suspense fallback={<div>Loading...</div>}>
+      <MyComponent />
+    </Suspense>
   );
 }

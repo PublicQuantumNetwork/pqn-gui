@@ -8,7 +8,7 @@ import {usePageRedirect} from '@/app/contexts/PageRedirectContext';
 import CHSHTextbox from '@/components/CHSHTextbox';
 import ModalBox from '@/components/ModalBox';
 import { useRouter } from 'next/navigation';
-import { Router } from 'next/router';
+import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import { useEnterKey } from '@/hooks/useEnterKey';
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
 import MovingIcon from '@mui/icons-material/Moving';
@@ -20,7 +20,7 @@ import { chshPost } from '@/calls';
 
 async function chshSubmit(currentAngle: number,
     setAngleChoices: React.Dispatch<SetStateAction<number []>>,
-    arrowRotation: number, angleChoices: number[], setCurrentAngle: React.Dispatch<SetStateAction<number>>, router: Router) {
+    arrowRotation: number, angleChoices: number[], setCurrentAngle: React.Dispatch<SetStateAction<number>>, router: AppRouterInstance) {
       if (currentAngle == 1) {
         setAngleChoices([arrowRotation])
       } else if (currentAngle == 2) {

@@ -1,16 +1,20 @@
 "use client"
 import { useEffect, useState } from 'react';
 import Container from '@mui/material/Container';
-import { Box, Dialog, DialogContent, Link, Stack } from '@mui/material';
+import { Box, Dialog, DialogContent, Stack, Button, Snackbar } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { usePageRedirect } from '@/app/contexts/PageRedirectContext';
 import { useEnterKey } from "@/hooks/useEnterKey";
 import { useRouter } from 'next/navigation';
+import EmojiPicker, { EmojiClickData, EmojiStyle } from 'emoji-picker-react';
 
 export default function Home() {
   const { setBackArrowLink, setForwardArrowLink } = usePageRedirect();
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [emojiText, setEmojiText] = useState('');
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   const setLinks = () => {
     setBackArrowLink("/");
@@ -22,12 +26,26 @@ export default function Home() {
   }, [])
 
   useEnterKey(() => {
-    router.push("/ssm/page2/");
+    handleNextPageCheck()
   });
 
   const handleClick = () => {
     setOpen(true);
   };
+
+  const handleEmojiClick = (emojiData: EmojiClickData) => {
+    setEmojiText(emojiData.emoji);
+    setPickerOpen(false);
+  };
+
+  const handleNextPageCheck = () => {
+    if (!emojiText) {  // FIXME: probably want to have better validation here, make sure its character, make sure its an emoji, etc.
+      setSnackbarOpen(true);
+      return;
+    }
+    router.push("/ssm/page2/");
+  }
+
 
   return (<Container maxWidth="lg">
     <Box
@@ -45,7 +63,6 @@ export default function Home() {
         <Stack direction="row"
           sx={{
             minHeight: '8em', justifyContent: 'left', alignItems: 'flex-end', // Align items to the bottom of the row
-
           }}
         >
 
@@ -113,10 +130,131 @@ export default function Home() {
             position="relative"
             sx={{ width: '50%' }}
           >
+            <Stack
+              direction="row"
+              sx={{
+                backgroundImage: 'url(/images/circle.png)',
+                Height: '560px',
+                backgroundRepeat: 'no-repeat',
+                width: '560px',
+                backgroundPosition: 'center',
+                position: 'relative',
+                left: '40%',
+              }}
+            >
+              <Stack direction="row">
+                <Stack
+                  direction="row"
+                  sx={{
+                    position: 'relative',
+                    zIndex: 2,
+                    minHeight: '560px',
+                    minWidth: '560px',
+                    alignContent: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Box
+                    sx={{
+                      position: 'relative',
+                      zIndex: 2,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      height: '100%',
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        width: '200px',
+                        height: '200px',
+                        border: '3px solid #1976d2',
+                        borderRadius: '12px',
+                        padding: '20px',
+                        backgroundColor: '#f5f5f5',
+                        fontSize: '5rem',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        '&:hover': {
+                          backgroundColor: '#e3f2fd',
+                          transform: 'scale(1.05)',
+                        },
+                        '&:active': {
+                          transform: 'scale(0.95)',
+                        },
+                      }}
+                      onClick={() => setPickerOpen(true)}
+                    >
+                      {emojiText || <Typography sx={{ fontSize: '1rem', color: '#666' }}>Tap</Typography>}
+                    </Box>
+                  </Box>
+                </Stack>
+
+                <Stack
+                  sx={{
+                    position: 'relative',
+                    justifyContent: 'flex-end',
+                    paddingBottom: '60px'
+                  }}
+                >
+                  <Button
+                    variant="contained"
+                    component="a"
+                    href="#"
+                    onClick={handleNextPageCheck}
+                    sx={{
+                      height: '4em',
+                      border: '1px solid #000',
+                      backgroundColor: '#FFFFFF',
+                      color: '#000000',
+                    }}
+                  >
+                    Next
+                  </Button>
+                </Stack>
+              </Stack>
+            </Stack>
+
+            <Dialog
+              open={pickerOpen}
+              onClose={() => setPickerOpen(false)}
+              maxWidth="md"
+              fullWidth
+            >
+              <DialogContent sx={{ padding: '20px' }}>
+                <EmojiPicker
+                  onEmojiClick={handleEmojiClick}
+                  width="100%"
+                  height="500px"
+                  searchDisabled
+                  emojiStyle={EmojiStyle.NATIVE}
+                  style={{
+                    '--epr-emoji-size': '48px',
+                  } as React.CSSProperties}
+                />
+              </DialogContent>
+            </Dialog>
           </Stack>
         </Stack>
       </Stack>
 
     </Box>
+
+    <Snackbar
+      open={snackbarOpen}
+      autoHideDuration={4000}
+      onClose={() => setSnackbarOpen(false)}
+      message="Please choose an emoji before going to the next page"
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      ContentProps={{
+        sx: {
+          fontSize: '1.2rem',
+          backgroundColor: '#f44336',
+        }
+      }}
+    />
   </Container>);
 }

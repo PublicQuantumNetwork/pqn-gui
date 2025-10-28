@@ -19,6 +19,7 @@
     "@mui/material": "latest",
     "@mui/material-nextjs": "latest",
     "dotenv-cli": "^10.0.0",
+    "emoji-picker-react": "^4.15.0",
     "next": "^15.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

@@ -132,12 +132,12 @@ export async function fetchQuestionOrder() {
 
 export async function submitSSMAnswers(answers: string[]) {
   try {
-    const response = await fetch(`http://${process.env.NEXT_PUBLIC_API_ADDRESS}/ssm/submit?follower_node_address=${process.env.NEXT_PUBLIC_FOLLOWER_NODE_ADDRESS}&timetagger_address=${process.env.NEXT_PUBLIC_TIMETAGGER_ADDRESS}`, {
+    const response = await fetch(`http://${process.env.NEXT_PUBLIC_API_ADDRESS}/qkd/submit_selection_and_start_qkd?timetagger_address=${process.env.NEXT_PUBLIC_TIMETAGGER_ADDRESS}`, {
       method: "POST",
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ answers })
+      body: JSON.stringify(answers)
     });
 
     if (!response.ok) {

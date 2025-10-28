@@ -70,46 +70,74 @@ export default function Home() {
       clearInterval(intervalId);
 
       let isDragging = false;
+      let hasMoved = false;
       let startY = 0;
+      let startX = 0;
       let scrollTop = 0;
+      const dragThreshold = 5; // pixels - if user moves more than this, it's a drag
 
       const handlePointerDown = (e: PointerEvent) => {
         console.log('PointerDown event fired', e.pointerType, e.button);
         if (e.button !== 0) return; // Only left click
 
-        // Check if click is on an emoji button - if so, don't start drag
-        const target = e.target as HTMLElement;
-        if (target.closest('button.epr-emoji')) {
-          console.log('Clicked on emoji button, skipping drag');
-          return;
-        }
-
         isDragging = true;
+        hasMoved = false;
         startY = e.pageY;
+        startX = e.pageX;
         scrollTop = emojiBody.scrollTop;
-        emojiBody.style.cursor = 'grabbing';
-        emojiBody.style.userSelect = 'none';
         emojiBody.setPointerCapture(e.pointerId);
-        e.preventDefault();
-        console.log('Started dragging at Y:', startY, 'ScrollTop:', scrollTop);
+        console.log('Pointer down at Y:', startY, 'ScrollTop:', scrollTop);
       };
 
       const handlePointerMove = (e: PointerEvent) => {
         if (!isDragging) return;
-        e.preventDefault();
 
-        const y = e.pageY;
-        const walk = (y - startY) * 1.5; // scroll speed multiplier
-        emojiBody.scrollTop = scrollTop - walk;
-        console.log('Dragging - Y:', y, 'New ScrollTop:', emojiBody.scrollTop);
+        const deltaY = Math.abs(e.pageY - startY);
+        const deltaX = Math.abs(e.pageX - startX);
+
+        // Check if user has moved beyond threshold
+        if (deltaY > dragThreshold || deltaX > dragThreshold) {
+          if (!hasMoved) {
+            console.log('Movement detected, starting scroll');
+            hasMoved = true;
+            emojiBody.style.cursor = 'grabbing';
+            emojiBody.style.userSelect = 'none';
+          }
+
+          e.preventDefault();
+          e.stopPropagation();
+
+          const y = e.pageY;
+          const walk = (y - startY) * 1.5; // scroll speed multiplier
+          emojiBody.scrollTop = scrollTop - walk;
+          console.log('Dragging - Y:', y, 'New ScrollTop:', emojiBody.scrollTop);
+        }
       };
 
       const handlePointerUp = (e: PointerEvent) => {
         if (isDragging) {
-          console.log('Stopped dragging');
+          console.log('Pointer up. hasMoved:', hasMoved);
           emojiBody.releasePointerCapture(e.pointerId);
+
+          // If user dragged, prevent emoji clicks
+          if (hasMoved) {
+            console.log('Was dragging, preventing emoji selection');
+            // Prevent any clicks from firing for a brief moment
+            const preventClick = (clickEvent: Event) => {
+              console.log('Preventing click after drag');
+              clickEvent.preventDefault();
+              clickEvent.stopPropagation();
+              emojiBody.removeEventListener('click', preventClick, true);
+            };
+            emojiBody.addEventListener('click', preventClick, true);
+
+            setTimeout(() => {
+              emojiBody.removeEventListener('click', preventClick, true);
+            }, 100);
+          }
         }
         isDragging = false;
+        hasMoved = false;
         emojiBody.style.cursor = 'grab';
         emojiBody.style.userSelect = 'auto';
       };

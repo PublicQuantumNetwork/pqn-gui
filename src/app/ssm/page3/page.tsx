@@ -68,8 +68,8 @@ export default function MyComponent() {
     // If arrow points left (180-360 degrees), select answer 'a'
     // If arrow points right (0-180 degrees), select answer 'b'
     const answer = (arrowRotation >= 180 && arrowRotation < 360)
-      ? currentQuestionData.a
-      : currentQuestionData.b;
+      ? 'a'
+      : 'b';
 
     // Add the answer to the list
     const newAnswers = [...answerChoices, answer];

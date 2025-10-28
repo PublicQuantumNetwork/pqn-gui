@@ -1,0 +1,52 @@
+/* Enable touch scrolling globally */
+* {
+  -webkit-overflow-scrolling: touch;
+}
+
+html, body {
+  touch-action: pan-y pan-x;
+  overscroll-behavior: contain;
+}
+
+/* Ensure all scrollable containers support touch */
+[style*="overflow: auto"],
+[style*="overflow: scroll"],
+[style*="overflowY: auto"],
+[style*="overflowY: scroll"] {
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+}
+
+/* Material-UI specific fixes for touch scrolling */
+.MuiDialog-paper,
+.MuiDialogContent-root,
+.MuiBox-root {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Prevent default touch behavior conflicts */
+button, a, input, textarea, select {
+  touch-action: manipulation;
+}
+
+/* Emoji picker specific styles for drag-scroll */
+.epr-emoji-category-label {
+  pointer-events: none;
+  user-select: none;
+}
+
+.epr-body {
+  overflow-y: auto !important;
+  cursor: grab;
+}
+
+.epr-body:active {
+  cursor: grabbing;
+}
+
+/* Allow emoji clicks while enabling drag scroll */
+button.epr-emoji {
+  pointer-events: auto;
+  touch-action: manipulation;
+  cursor: pointer !important;
+}

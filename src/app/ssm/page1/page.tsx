@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Container from '@mui/material/Container';
 import { Box, Dialog, DialogContent, Stack, Button, Snackbar } from '@mui/material';
 import Typography from '@mui/material/Typography';
@@ -15,6 +15,7 @@ export default function Home() {
   const [emojiText, setEmojiText] = useState('');
   const [pickerOpen, setPickerOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const dialogRef = useRef<HTMLDivElement>(null);
 
   const setLinks = () => {
     setBackArrowLink("/");
@@ -28,6 +29,108 @@ export default function Home() {
   useEnterKey(() => {
     handleNextPageCheck()
   });
+
+  // Setup drag-to-scroll for the emoji picker's scrollable area
+  useEffect(() => {
+    console.log('Effect running. pickerOpen:', pickerOpen, 'dialogRef.current:', !!dialogRef.current);
+    if (!pickerOpen) return;
+
+    let cleanupFn: (() => void) | null = null;
+    let attempts = 0;
+    const maxAttempts = 20;
+
+    // Poll for the dialog and emoji body to be ready
+    const intervalId = setInterval(() => {
+      attempts++;
+      console.log(`Attempt ${attempts}: Looking for dialog and .epr-body`);
+
+      if (!dialogRef.current) {
+        console.log('dialogRef.current is null, waiting...');
+        if (attempts >= maxAttempts) {
+          console.error('Failed to find dialogRef after', maxAttempts, 'attempts');
+          clearInterval(intervalId);
+        }
+        return;
+      }
+
+      const emojiBody = dialogRef.current.querySelector('.epr-body') as HTMLElement;
+      console.log('EmojiPicker body found:', !!emojiBody);
+
+      if (!emojiBody) {
+        console.log('epr-body not found yet, waiting...');
+        if (attempts >= maxAttempts) {
+          console.error('Failed to find .epr-body after', maxAttempts, 'attempts');
+          clearInterval(intervalId);
+        }
+        return;
+      }
+
+      // Success! Found both the dialog and the emoji body
+      console.log('Successfully found .epr-body, attaching event listeners');
+      clearInterval(intervalId);
+
+      let isDragging = false;
+      let startY = 0;
+      let scrollTop = 0;
+
+      const handlePointerDown = (e: PointerEvent) => {
+        console.log('PointerDown event fired', e.pointerType, e.button);
+        if (e.button !== 0) return; // Only left click
+
+        // Check if click is on an emoji button - if so, don't start drag
+        const target = e.target as HTMLElement;
+        if (target.closest('button.epr-emoji')) {
+          console.log('Clicked on emoji button, skipping drag');
+          return;
+        }
+
+        isDragging = true;
+        startY = e.pageY;
+        scrollTop = emojiBody.scrollTop;
+        emojiBody.style.cursor = 'grabbing';
+        emojiBody.style.userSelect = 'none';
+        emojiBody.setPointerCapture(e.pointerId);
+        e.preventDefault();
+        console.log('Started dragging at Y:', startY, 'ScrollTop:', scrollTop);
+      };
+
+      const handlePointerMove = (e: PointerEvent) => {
+        if (!isDragging) return;
+        e.preventDefault();
+
+        const y = e.pageY;
+        const walk = (y - startY) * 1.5; // scroll speed multiplier
+        emojiBody.scrollTop = scrollTop - walk;
+        console.log('Dragging - Y:', y, 'New ScrollTop:', emojiBody.scrollTop);
+      };
+
+      const handlePointerUp = (e: PointerEvent) => {
+        if (isDragging) {
+          console.log('Stopped dragging');
+          emojiBody.releasePointerCapture(e.pointerId);
+        }
+        isDragging = false;
+        emojiBody.style.cursor = 'grab';
+        emojiBody.style.userSelect = 'auto';
+      };
+
+      emojiBody.style.cursor = 'grab';
+      emojiBody.addEventListener('pointerdown', handlePointerDown as any);
+      emojiBody.addEventListener('pointermove', handlePointerMove as any);
+      emojiBody.addEventListener('pointerup', handlePointerUp as any);
+
+      cleanupFn = () => {
+        emojiBody.removeEventListener('pointerdown', handlePointerDown as any);
+        emojiBody.removeEventListener('pointermove', handlePointerMove as any);
+        emojiBody.removeEventListener('pointerup', handlePointerUp as any);
+      };
+    }, 100); // Check every 100ms
+
+    return () => {
+      clearInterval(intervalId);
+      if (cleanupFn) cleanupFn();
+    };
+  }, [pickerOpen]);
 
   const handleClick = () => {
     setOpen(true);
@@ -224,7 +327,16 @@ export default function Home() {
               maxWidth="md"
               fullWidth
             >
-              <DialogContent sx={{ padding: '20px' }}>
+              <DialogContent
+                ref={dialogRef}
+                sx={{
+                  padding: '20px',
+                  overflow: 'hidden',
+                  '& .epr-body': {
+                    overflowY: 'auto !important',
+                  }
+                }}
+              >
                 <EmojiPicker
                   onEmojiClick={handleEmojiClick}
                   width="100%"

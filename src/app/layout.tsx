@@ -10,6 +10,7 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { PageRedirectProvider } from '@/app/contexts/PageRedirectContext';
 import RedirectArrow from '@/components/RedirectArrow';
+import './globals.css';
 
 export default function RootLayout(props: { children: React.ReactNode }) {
 
@@ -17,8 +18,18 @@ export default function RootLayout(props: { children: React.ReactNode }) {
   
   
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', marginRight: 'auto', marginLeft: 'auto' }}>
+    <html lang="en" suppressHydrationWarning style={{ touchAction: 'pan-y pan-x' }}>
+      <body style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+        marginRight: 'auto',
+        marginLeft: 'auto',
+        touchAction: 'pan-y pan-x',
+        WebkitOverflowScrolling: 'touch',
+        overflowY: 'auto'
+      }}>
         <InitColorSchemeScript attribute="class" />
         <AppRouterCacheProvider options={{ enableCssLayer: true }}>
           <ThemeProvider theme={theme}>
@@ -30,7 +41,11 @@ export default function RootLayout(props: { children: React.ReactNode }) {
                 display="flex"
                 flexDirection="column"
                 position="relative"
-                sx={{ width: '100%' }}
+                sx={{
+                  width: '100%',
+                  touchAction: 'pan-y pan-x',
+                  WebkitOverflowScrolling: 'touch'
+                }}
               >
                 {/*<Stack direction="row" 
                 sx={{backgroundImage: 'url(images/PQN-blue-ufl-website-image-blue4-small.png)', minHeight: '8em', backgroundRepeat: 'no-repeat', backgroundSize: 'contain', backgroundPosition: 'center', marginTop: '2em',}}
@@ -133,7 +148,15 @@ export default function RootLayout(props: { children: React.ReactNode }) {
                 </Stack>
 
                 {/* </Stack>*/}
-                <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ backgroundImage: 'url(/images/GUI-background.png)', minHeight: '40em', backgroundRepeat: 'no-repeat', width: '100%', backgroundPosition: 'center' }}>
+                <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{
+                  backgroundImage: 'url(/images/GUI-background.png)',
+                  minHeight: '40em',
+                  backgroundRepeat: 'no-repeat',
+                  width: '100%',
+                  backgroundPosition: 'center',
+                  touchAction: 'pan-y pan-x',
+                  WebkitOverflowScrolling: 'touch'
+                }}>
                   {/*<RedirectArrow direction="back">
                     {<Icon sx={{height:'30px'}}><ArrowBackIosNewIcon /></Icon>}
                   </RedirectArrow>*/}

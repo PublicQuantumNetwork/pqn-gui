@@ -152,3 +152,26 @@ export async function submitSSMAnswers(answers: string[]) {
     return { success: false, error: String(error) };
   }
 }
+
+export async function submitQKDEmoji(emoji: string) {
+  try {
+    const response = await fetch(`http://${process.env.NEXT_PUBLIC_API_ADDRESS}/qkd/set_qkd_emoji?emoji=${encodeURIComponent(emoji)}`, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({})
+    });
+
+    if (!response.ok) {
+      console.error(`Error submitting QKD emoji: HTTP ${response.status}`);
+      return { success: false, error: `HTTP ${response.status}` };
+    }
+
+    const data = await response.json();
+    return { success: true, data };
+  } catch (error) {
+    console.error('Error submitting QKD emoji:', error);
+    return { success: false, error: String(error) };
+  }
+}

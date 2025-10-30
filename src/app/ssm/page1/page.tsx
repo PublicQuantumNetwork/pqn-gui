@@ -7,6 +7,7 @@ import { usePageRedirect } from '@/app/contexts/PageRedirectContext';
 import { useEnterKey } from "@/hooks/useEnterKey";
 import { useRouter } from 'next/navigation';
 import EmojiPicker, { EmojiClickData, EmojiStyle } from 'emoji-picker-react';
+import { submitQKDEmoji } from '@/calls';
 
 export default function Home() {
   const { setBackArrowLink, setForwardArrowLink } = usePageRedirect();
@@ -15,6 +16,7 @@ export default function Home() {
   const [emojiText, setEmojiText] = useState('');
   const [pickerOpen, setPickerOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [emojiSentError, setEmojiSentError] = useState(false);
   const dialogRef = useRef<HTMLDivElement>(null);
 
   const setLinks = () => {
@@ -85,8 +87,7 @@ export default function Home() {
         startY = e.pageY;
         startX = e.pageX;
         scrollTop = emojiBody.scrollTop;
-        emojiBody.setPointerCapture(e.pointerId);
-        console.log('Pointer down at Y:', startY, 'ScrollTop:', scrollTop);
+        // Don't capture pointer - let events propagate normally
       };
 
       const handlePointerMove = (e: PointerEvent) => {
@@ -110,21 +111,15 @@ export default function Home() {
           const y = e.pageY;
           const walk = (y - startY) * 1.5; // scroll speed multiplier
           emojiBody.scrollTop = scrollTop - walk;
-          console.log('Dragging - Y:', y, 'New ScrollTop:', emojiBody.scrollTop);
         }
       };
 
       const handlePointerUp = (e: PointerEvent) => {
         if (isDragging) {
-          console.log('Pointer up. hasMoved:', hasMoved);
-          emojiBody.releasePointerCapture(e.pointerId);
-
           // If user dragged, prevent emoji clicks
           if (hasMoved) {
-            console.log('Was dragging, preventing emoji selection');
             // Prevent any clicks from firing for a brief moment
             const preventClick = (clickEvent: Event) => {
-              console.log('Preventing click after drag');
               clickEvent.preventDefault();
               clickEvent.stopPropagation();
               emojiBody.removeEventListener('click', preventClick, true);
@@ -169,11 +164,20 @@ export default function Home() {
     setPickerOpen(false);
   };
 
-  const handleNextPageCheck = () => {
+  const handleNextPageCheck = async () => {
     if (!emojiText) {  // FIXME: probably want to have better validation here, make sure its character, make sure its an emoji, etc.
       setSnackbarOpen(true);
       return;
     }
+
+    // Submit the emoji to the backend
+    const result = await submitQKDEmoji(emojiText);
+
+    if (!result.success) {
+      setEmojiSentError(true);
+      return;
+    }
+
     router.push("/ssm/page2/");
   }
 
@@ -227,8 +231,14 @@ export default function Home() {
                 width: '75%',
               }}
             >
-              <p>Share a Secret message is a 2 player game that requires another player to join you.</p>
-              <p>Press the big red button to ask the terminal next to you if they want to join you. Please make sure you have a second player ready.</p>
+              {emojiSentError ? (
+                <p>There was an error sending your emoji to the backend. Please press the `START OVER` button and try again.</p>
+              ) : (
+                <>
+                  <p>Share a Secret message is a 2 player game that requires another player to join you.</p>
+                  <p>Press the big red button to ask the terminal next to you if they want to join you. Please make sure you have a second player ready.</p>
+                </>
+              )}
             </Typography>
 
             <Dialog open={open} onClose={() => setOpen(false)}>
@@ -261,93 +271,108 @@ export default function Home() {
             position="relative"
             sx={{ width: '50%' }}
           >
-            <Stack
-              direction="row"
-              sx={{
-                backgroundImage: 'url(/images/circle.png)',
-                Height: '560px',
-                backgroundRepeat: 'no-repeat',
-                width: '560px',
-                backgroundPosition: 'center',
-                position: 'relative',
-                left: '40%',
-              }}
-            >
-              <Stack direction="row">
-                <Stack
-                  direction="row"
-                  sx={{
-                    position: 'relative',
-                    zIndex: 2,
-                    minHeight: '560px',
-                    minWidth: '560px',
-                    alignContent: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <Box
+            {emojiSentError ? (
+              <Box
+                component="img"
+                src="/images/broken-computer.png"
+                alt="Error submitting emoji"
+                sx={{
+                  position: 'relative',
+                  left: '70%',
+                  bottom: '150px',
+                  width: '200px',
+                  height: 'auto',
+                }}
+              />
+            ) : (
+              <Stack
+                direction="row"
+                sx={{
+                  backgroundImage: 'url(/images/circle.png)',
+                  Height: '560px',
+                  backgroundRepeat: 'no-repeat',
+                  width: '560px',
+                  backgroundPosition: 'center',
+                  position: 'relative',
+                  left: '40%',
+                }}
+              >
+                <Stack direction="row">
+                  <Stack
+                    direction="row"
                     sx={{
                       position: 'relative',
                       zIndex: 2,
-                      display: 'flex',
-                      alignItems: 'center',
+                      minHeight: '560px',
+                      minWidth: '560px',
+                      alignContent: 'center',
                       justifyContent: 'center',
-                      height: '100%',
                     }}
                   >
                     <Box
                       sx={{
-                        width: '200px',
-                        height: '200px',
-                        border: '3px solid #1976d2',
-                        borderRadius: '12px',
-                        padding: '20px',
-                        backgroundColor: '#f5f5f5',
-                        fontSize: '5rem',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s',
+                        position: 'relative',
+                        zIndex: 2,
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        '&:hover': {
-                          backgroundColor: '#e3f2fd',
-                          transform: 'scale(1.05)',
-                        },
-                        '&:active': {
-                          transform: 'scale(0.95)',
-                        },
+                        height: '100%',
                       }}
-                      onClick={() => setPickerOpen(true)}
                     >
-                      {emojiText || <Typography sx={{ fontSize: '1rem', color: '#666' }}>Tap</Typography>}
+                      <Box
+                        sx={{
+                          width: '200px',
+                          height: '200px',
+                          border: '3px solid #1976d2',
+                          borderRadius: '12px',
+                          padding: '20px',
+                          backgroundColor: '#f5f5f5',
+                          fontSize: '5rem',
+                          cursor: 'pointer',
+                          transition: 'all 0.2s',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          '&:hover': {
+                            backgroundColor: '#e3f2fd',
+                            transform: 'scale(1.05)',
+                          },
+                          '&:active': {
+                            transform: 'scale(0.95)',
+                          },
+                        }}
+                        onClick={() => setPickerOpen(true)}
+                      >
+                        {emojiText || <Typography sx={{ fontSize: '1rem', color: '#666' }}>Tap</Typography>}
+                      </Box>
                     </Box>
-                  </Box>
-                </Stack>
+                  </Stack>
 
-                <Stack
-                  sx={{
-                    position: 'relative',
-                    justifyContent: 'flex-end',
-                    paddingBottom: '60px'
-                  }}
-                >
-                  <Button
-                    variant="contained"
-                    component="a"
-                    href="#"
-                    onClick={handleNextPageCheck}
+                  <Stack
                     sx={{
-                      height: '4em',
-                      border: '1px solid #000',
-                      backgroundColor: '#FFFFFF',
-                      color: '#000000',
+                      position: 'relative',
+                      justifyContent: 'flex-end',
+                      paddingBottom: '60px'
                     }}
                   >
-                    Next
-                  </Button>
+                    <Button
+                      variant="contained"
+                      component="a"
+                      href="#"
+                      onClick={handleNextPageCheck}
+                      sx={{
+                        height: '4em',
+                        border: '1px solid #000',
+                        backgroundColor: '#FFFFFF',
+                        color: '#000000',
+                      }}
+                    >
+                      Next
+                    </Button>
+                  </Stack>
                 </Stack>
               </Stack>
-            </Stack>
+            )}
 
             <Dialog
               open={pickerOpen}
@@ -392,7 +417,6 @@ export default function Home() {
       ContentProps={{
         sx: {
           fontSize: '1.2rem',
-          backgroundColor: '#f44336',
         }
       }}
     />

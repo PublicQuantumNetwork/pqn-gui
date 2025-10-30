@@ -59,10 +59,6 @@ export default function MyComponent() {
     return () => clearInterval(interval);
   }, []);
 
-  const handleClick = () => {
-    setOpen(true);
-  };
-
   const handleSubmitClick = async () => {
     // Determine which answer based on arrow rotation
     // If arrow points left (180-360 degrees), select answer 'a'
@@ -71,23 +67,17 @@ export default function MyComponent() {
       ? 'a'
       : 'b';
 
-    // Add the answer to the list
     const newAnswers = [...answerChoices, answer];
     setAnswerChoices(newAnswers);
 
-    // Check if this was the last question
     if (currentQuestionIndex === questionOrder.length - 1) {
-      // All questions answered, show modal and submit to backend
       setOpenModal(true);
-
       const result = await submitSSMAnswers(newAnswers);
-
       if (result.success) {
-        // Navigate to results page or handle success
-        // router.push(`/ssm/page4?success=true`);
+        const { n_matching_bits, n_total_bits, emoji, role } = result.data;
+        router.push(`/ssm/page4?n_matching_bits=${n_matching_bits}&n_total_bits=${n_total_bits}&emoji=${encodeURIComponent(emoji)}&role=${encodeURIComponent(role)}&success=true`);
       } else {
-        // Handle error
-        console.error("Failed to submit answers:", result.error);
+        router.push(`/ssm/page4?success=false`);
       }
     } else {
       // Move to next question

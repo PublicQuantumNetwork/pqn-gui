@@ -1,32 +1,20 @@
 'use client'
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import {useEffect, useState} from 'react';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-import { Box, Stack, Button } from '@mui/material';
-import { usePageRedirect } from '@/app/contexts/PageRedirectContext';
-import { useWebSocket } from '@/app/hooks/WebSocketHook';
-import EventModal from '@/components/EventModal';
-
-
-async function resetBackendState() {
-  const response = await fetch("http://127.0.0.1:8000/coordination/reset_coordination_state", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({}),
-  });
-  return response
-
-}
+import {Box, Button, Stack} from '@mui/material';
+import {usePageRedirect} from '@/app/contexts/PageRedirectContext';
+import {useWebSocket} from '@/app/hooks/WebSocketHook';
+import FollowRequestEventModal from '@/components/FollowRequestEventModal';
+import {resetBackendState} from "@/calls";
 
 
 export default function Home() {
   const { setBackArrowLink, setForwardArrowLink } = usePageRedirect();
   const { lastMessage, sendMessage, connect, disconnect } = useWebSocket();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalMessage, setModalMessage] = useState<string | null>(null);
+  const [isFollowRequestModalOpen, setIsFollowRequestModalOpen] = useState(false);
+  const [followRequestModalMessage, setFollowRequestModalMessage] = useState<string | null>(null);
 
   const setLinks = () => {
     setForwardArrowLink("chsh/page1");
@@ -34,31 +22,31 @@ export default function Home() {
 
   useEffect(() => {
     setLinks();
-    // const ret = resetBackendState();
+    const ret = resetBackendState();
   }, [])
 
   useEffect(() => {
     if (lastMessage) {
-      setModalMessage(lastMessage.data);
-      setIsModalOpen(true);
+      setFollowRequestModalMessage(lastMessage.data);
+      setIsFollowRequestModalOpen(true);
     }
   }, [lastMessage]);
 
-  // useEffect(() => {
-  //   connect();
-  //   return () => {
-  //     disconnect();
-  //   };
-  // }, [connect, disconnect]);
+  useEffect(() => {
+    connect();
+    return () => {
+      disconnect();
+    };
+  }, [connect, disconnect]);
 
   const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setModalMessage(null);
+    setIsFollowRequestModalOpen(false);
+    setFollowRequestModalMessage(null);
   };
 
   return (
     <Container maxWidth="lg">
-      <EventModal isOpen={isModalOpen} onClose={handleCloseModal} message={modalMessage} sendMessage={sendMessage} />
+      <FollowRequestEventModal isOpen={isFollowRequestModalOpen} onClose={handleCloseModal} message={followRequestModalMessage} sendMessage={sendMessage} />
       <Box
         sx={{
           my: 4,
@@ -194,10 +182,9 @@ export default function Home() {
             >
 
               <Button
-                disabled
                 variant="contained"
                 component="a"
-                href="#"
+                href="/ssm/page1"
                 sx={{
                   minWidth: '464px',
                   height: '6em',
@@ -213,7 +200,7 @@ export default function Home() {
                   color: '#000000;',
                 }}
               >
-                Share a secret message (Coming soon)
+                Share a secret message (Preview)
               </Button>
 
               <Button

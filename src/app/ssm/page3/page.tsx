@@ -214,12 +214,16 @@ export default function MyComponent() {
               >
                 {/* Question at the top */}
                 <Typography
-                  variant="h4"
-                  component="h2"
+                  variant="h5"
+                  component="h1"
                   sx={{
+                    // top: '60%',
+                    // left: '60%',
+                    transform: 'translate(40%, 45%)',
                     textAlign: 'center',
                     mb: 2,
                     color: '#000000',
+
                     fontWeight: 'bold',
                   }}
                 >
@@ -247,10 +251,12 @@ export default function MyComponent() {
                         position: 'absolute',
                         top: '50%',
                         left: '6%',
-                        transform: 'translate(-50%, -50%)',
-                        fontSize:'2em',
+                        transform: 'translate(-100%, -50%)',
+                        fontSize:'1em',
                         color: '#000000',
                         fontWeight: 'bold',
+                        width: '150px',
+                        textAlign: 'right',
                       }}
                     >
                       {currentQuestionData.a}
@@ -264,8 +270,8 @@ export default function MyComponent() {
                         position: 'absolute',
                         top: '50%',
                         left: '94%',
-                        transform: 'translate(-50%, -50%)',
-                        fontSize:'2em',
+                        transform: 'translate(-30%, -50%)',
+                        fontSize:'1em',
                         color: '#000000',
                         fontWeight: 'bold',
                       }}

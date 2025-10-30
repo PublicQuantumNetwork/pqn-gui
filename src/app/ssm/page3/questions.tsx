@@ -1,24 +1,15 @@
 const questions = [
-  { number: 1, question: "What is your favorite color?", a: "Blue", b: "Red" },
-  { number: 2, question: "What is your favorite season?", a: "Summer", b: "Winter" },
-  { number: 3, question: "What do you prefer?", a: "Mountains", b: "Beach" },
-  { number: 4, question: "What is your favorite time of day?", a: "Morning", b: "Evening" },
-  { number: 5, question: "What do you enjoy more?", a: "Reading", b: "Sports" },
-  { number: 6, question: "What is your favorite meal?", a: "Breakfast", b: "Dinner" },
-  { number: 7, question: "What type of weather do you prefer?", a: "Sunny", b: "Rainy" },
-  { number: 8, question: "What do you prefer to drink?", a: "Coffee", b: "Tea" },
-  { number: 9, question: "What is your favorite pet?", a: "Dog", b: "Cat" },
-  { number: 10, question: "What do you prefer?", a: "City", b: "Countryside" },
-  { number: 11, question: "What is your favorite music genre?", a: "Pop", b: "Rock" },
-  { number: 12, question: "What do you prefer?", a: "Sweet", b: "Salty" },
-  { number: 13, question: "What is your preferred mode of travel?", a: "Train", b: "Plane" },
-  { number: 14, question: "What do you enjoy more?", a: "Movies", b: "TV Shows" },
-  { number: 15, question: "What is your favorite pizza topping?", a: "Pepperoni", b: "Mushroom" },
-  { number: 16, question: "What do you prefer?", a: "Hot", b: "Cold" },
-  { number: 17, question: "What is your favorite ice cream flavor?", a: "Chocolate", b: "Vanilla" },
-  { number: 18, question: "What do you prefer?", a: "Night Owl", b: "Early Bird" },
-  { number: 19, question: "What is your favorite fruit?", a: "Apple", b: "Orange" },
-  { number: 20, question: "What do you prefer?", a: "Indoors", b: "Outdoors" },
+  {number: 1, question: "The smallest quantity of light is a photon. If your friend were a photon, would they be more", a: "Ocean blue", b: "Fiery red" },
+  {number: 2, question: "Photons come in all kinds of shapes. Is your friend a", a: "Tight spiral", b: "A smooth wave" },
+  {number: 3, question: "Photons can be undecided (in a superposition) when asked which way they wiggle. What question would your friend be most undecided about?", a: "Which book to read", b: "Which movie to watch" },
+  {number: 4, question: "Photons can be in superpositions (undecided) together. Which scenario would your friend prefer being in superposition about with you?", a: "Where to go on vacation", b: "Who to invite to a party" },
+  {number: 5, question: "Photons can be entangled so they always choose the same way. What do you think your friend would prefer to always agree with you on?", a: "When to leave a party", b: "When to eat dinner" },
+  {number: 6, question: "Quantum networks can share secret messages using entangled photons. What message would your friend send first on such a network?", a: "An embarassing photo", b: "A declaration of love" },
+  {number: 7, question: "If your friend controlled a quantum network, what would they use it for?", a: "World domination", b: "World peace" },
+  {number: 8, question: "Quantum networks use entanglement to share information securely. What would your friend use entanglement to do?", a: "Make sure people are who they say they are", b: "Make sure people's votes stay secret" }
 ];
 
 export default questions;
+
+
+

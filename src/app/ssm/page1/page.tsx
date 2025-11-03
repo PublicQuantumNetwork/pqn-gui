@@ -220,7 +220,6 @@ export default function Home() {
               }}
             />
             <Typography
-              variant="h5"
               component="h1"
               sx={{
                 position: 'absolute',
@@ -229,14 +228,16 @@ export default function Home() {
                 transform: 'translate(-50%, -50%)',
                 color: '#000000',
                 width: '75%',
+                fontSize: '1.35em',
               }}
             >
               {emojiSentError ? (
                 <p>There was an error sending your emoji to the backend. Please press the `START OVER` button and try again.</p>
               ) : (
                 <>
-                  <p>Share a Secret message is a 2 player game that requires another player to join you.</p>
-                  <p>Press the big red button to ask the terminal next to you if they want to join you. Please make sure you have a second player ready.</p>
+                  <p>Choose a message to send to your friend! To keep this a secret, you and your friend will send a secret emoji by answering questions.</p>
+                  <p>Try to guess the answer <b>YOU</b> think the other person will choose. Your friend will guess the answers they think <b>YOU</b> would answer
+                  </p>
                 </>
               )}
             </Typography>

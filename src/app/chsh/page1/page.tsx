@@ -1,7 +1,7 @@
 "use client"
 import {useState, useEffect} from 'react';
 import Container from '@mui/material/Container';
-import {Link, Dialog, DialogContent, styled, Box, Stack, Button } from '@mui/material';
+import {Link, Dialog, DialogContent, Box, Stack, Button } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import {usePageRedirect} from '@/app/contexts/PageRedirectContext';
 import { useEnterKey} from "@/hooks/useEnterKey";

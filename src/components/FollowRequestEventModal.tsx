@@ -33,7 +33,7 @@ const FollowRequestEventModal: React.FC<EventModalProps> = ({ isOpen, onClose, m
     sendMessage("true");
     // Add a short delay to allow the WebSocket message to be sent before navigating
     setTimeout(() => {
-      router.push('/ssm/page3');
+      router.push('/ssm/page3?role=follower');
       onClose();
     }, 500);
   };

@@ -23,7 +23,7 @@ export default function MyComponent() {
       } else if (result.data && result.data.accepted !== undefined) {
         setWasAccepted(result.data.accepted);
         if (result.data.accepted === true) {
-          router.push('/ssm/page3');
+          router.push('/ssm/page3?role=leader');
         }
       }
     };

@@ -5,7 +5,7 @@ import Container from '@mui/material/Container';
 import {Dialog, DialogContent, Button, Box, Stack, CircularProgress} from '@mui/material';
 import Typography from '@mui/material/Typography';
 import {usePageRedirect} from '@/app/contexts/PageRedirectContext';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useEnterKey } from '@/hooks/useEnterKey';
 import { fetchRotatorAngle, fetchQuestionOrder, submitSSMAnswers } from '@/calls';
 import questions from './questions';
@@ -14,6 +14,8 @@ export default function MyComponent() {
 
   const {setBackArrowLink, setForwardArrowLink} = usePageRedirect();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const role = searchParams.get('role') || 'leader'; // Default to 'leader' if no role specified
 
   const setLinks=()=>{
     setBackArrowLink("/ssm/page2/");
@@ -48,6 +50,11 @@ export default function MyComponent() {
 
   const currentQuestionNumber = questionOrder[currentQuestionIndex];
   const currentQuestionData = questions[currentQuestionNumber - 1] || questions[0];
+
+  // Get the appropriate question text based on role
+  const currentQuestion = role === 'leader'
+    ? currentQuestionData.leader_question
+    : currentQuestionData.follower_question;
 
   // Fetch rotator angle continuously
   useEffect(() => {
@@ -157,7 +164,9 @@ export default function MyComponent() {
                   <p>Error fetching questions. The question order is not available. Please try again.</p>
                 ) : (
                   <>
-                    <p>Share your secret message by rotating the wheel to select your answer.</p>
+                    {currentQuestionIndex === 0 && (
+                      <p>Share your secret message by rotating the wheel to select your answer.</p>
+                    )}
                     <p>Question {currentQuestionIndex + 1} of {questionOrder.length}</p>
                   </>
                 )}
@@ -217,8 +226,6 @@ export default function MyComponent() {
                   variant="h5"
                   component="h1"
                   sx={{
-                    // top: '60%',
-                    // left: '60%',
                     transform: 'translate(40%, 45%)',
                     textAlign: 'center',
                     mb: 2,
@@ -227,7 +234,7 @@ export default function MyComponent() {
                     fontWeight: 'bold',
                   }}
                 >
-                  {currentQuestionData.question}
+                  {currentQuestion}
                 </Typography>
 
                 <Stack

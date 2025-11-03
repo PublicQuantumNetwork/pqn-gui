@@ -9,6 +9,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useEnterKey } from '@/hooks/useEnterKey';
 import { fetchRotatorAngle, fetchQuestionOrder, submitSSMAnswers } from '@/calls';
 import questions from './questions';
+import SSMModalBox from '@/components/SSMModalBox';
 
 export default function MyComponent() {
 
@@ -181,23 +182,11 @@ export default function MyComponent() {
               </Dialog>
 
               {/* Modal for when all questions are answered */}
-              <Dialog open={openModal} onClose={() => {}}>
-                <DialogContent sx={{ padding: '2.8em', fontSize:'1.45em', textAlign: 'center' }}>
-                  <CircularProgress
-                    size={80}
-                    thickness={4}
-                    sx={{
-                      color: 'black',
-                      mb: 3,
-                    }}
-                  />
-                  <Typography variant="h5" sx={{ mt: 2 }}>
-                    Processing your answers...
-                  </Typography>
-                  <Typography variant="body1" sx={{ mt: 2 }}>
-                    The backend is executing the quantum game!
-                  </Typography>
-                </DialogContent>
+              <Dialog maxWidth="md" open={openModal} onClose={() => {}}>
+                <SSMModalBox
+                  title="Your secret messages are being encoded and transmitted"
+                  description="The entangled photons are being measured at the first angle you chose for one photon and at a slightly offset angle for the other photon. These measurements are repeated for the second angle. By comparing the results, we can tell whether the photons are entangled."
+                />
               </Dialog>
 
               <Box

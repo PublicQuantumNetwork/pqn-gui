@@ -43,7 +43,8 @@ export async function fetchRotatorAngle() {
       return { success: false, theta: 0 };
     }
 
-    const data = await response.json();
+    let data = await response.json();
+    data.theta = data.theta * 2;
     return { success: true, theta: data.theta || 0 };
   } catch (error) {
     console.error('Error fetching rotator angle:', error);

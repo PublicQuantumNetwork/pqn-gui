@@ -1,6 +1,6 @@
 "use client"
 
-import {useState, useEffect} from 'react';
+import {useState, useEffect, Suspense} from 'react';
 import Container from '@mui/material/Container';
 import {Dialog, DialogContent, Button, Box, Stack, CircularProgress} from '@mui/material';
 import Typography from '@mui/material/Typography';
@@ -11,7 +11,7 @@ import { fetchRotatorAngle, fetchQuestionOrder, submitSSMAnswers } from '@/calls
 import questions from './questions';
 import SSMModalBox from '@/components/SSMModalBox';
 
-export default function MyComponent() {
+function SSMPage3Content() {
 
   const {setBackArrowLink, setForwardArrowLink} = usePageRedirect();
   const router = useRouter();
@@ -184,7 +184,7 @@ export default function MyComponent() {
               {/* Modal for when all questions are answered */}
               <Dialog maxWidth="md" open={openModal} onClose={() => {}}>
                 <SSMModalBox
-                  title="Your secret messages are being encoded and transmitted"
+                  title="Your secret message is being encoded and transmitted"
                   description="The entangled photons are being measured at the first angle you chose for one photon and at a slightly offset angle for the other photon. These measurements are repeated for the second angle. By comparing the results, we can tell whether the photons are entangled."
                 />
               </Dialog>
@@ -352,5 +352,19 @@ export default function MyComponent() {
         </Stack>
       </Box>
     </Container>
+  )
+}
+
+export default function MyComponent() {
+  return (
+    <Suspense fallback={
+      <Container maxWidth="lg">
+        <Box sx={{ my: 4, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <CircularProgress size={60} thickness={4} sx={{ color: 'black' }} />
+        </Box>
+      </Container>
+    }>
+      <SSMPage3Content />
+    </Suspense>
   )
 }

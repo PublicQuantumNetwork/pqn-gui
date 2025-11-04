@@ -71,8 +71,7 @@ function SSMPage3Content() {
     // Determine which answer based on arrow rotation
     // If arrow points left (180-360 degrees), select answer 'a'
     // If arrow points right (0-180 degrees), select answer 'b'
-    console.log("HELLO I AM ABOUT TO CHOOSE THE ANSWER BASED ON ARROW ROTATION OF: ", arrowRotation);
-    const answer = (arrowRotation/2 >= 180 && arrowRotation/2 < 360)
+    const answer = (arrowRotation >= 180 && arrowRotation < 360)
       ? 'a'
       : 'b';
 

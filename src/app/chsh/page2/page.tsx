@@ -61,7 +61,6 @@ async function chshSubmit(currentAngle: number,
     const [open, setOpen] = useState(false);
     const [openModal,setOpenModal] = useState(false);
     const [secondOpen, setSecondOpen] = useState(false);
-    const [data, setData] = useState(null);
     const [arrowRotation, setArrowRotation] = useState(0);
     const [currentAngle, setCurrentAngle] = useState(1); // Index of angle choice
     const [angleChoices, setAngleChoices] = useState<number []>([])
@@ -73,9 +72,8 @@ async function chshSubmit(currentAngle: number,
     useEffect(() => {
       const interval = setInterval(async () => {
         const result = await fetchRotatorAngle();
-        setData(result.theta);
         console.log(result.theta);
-        setArrowRotation(result.theta);
+        setArrowRotation(result.theta * 2);
       }, 100);
 
       return () => clearInterval(interval);

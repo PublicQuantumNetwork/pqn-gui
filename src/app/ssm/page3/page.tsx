@@ -77,6 +77,7 @@ function SSMPage3Content() {
 
     console.log("the answer is: ", answer);
     const newAnswers = [...answerChoices, answer];
+    console.log("all answers so far are:", newAnswers)
     setAnswerChoices(newAnswers);
 
     if (currentQuestionIndex === questionOrder.length - 1) {

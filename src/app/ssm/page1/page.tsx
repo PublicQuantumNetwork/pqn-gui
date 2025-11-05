@@ -1,0 +1,425 @@
+"use client"
+import { useEffect, useState, useRef } from 'react';
+import Container from '@mui/material/Container';
+import { Box, Dialog, DialogContent, Stack, Button, Snackbar } from '@mui/material';
+import Typography from '@mui/material/Typography';
+import { usePageRedirect } from '@/app/contexts/PageRedirectContext';
+import { useEnterKey } from "@/hooks/useEnterKey";
+import { useRouter } from 'next/navigation';
+import EmojiPicker, { EmojiClickData, EmojiStyle } from 'emoji-picker-react';
+import { submitQKDEmoji } from '@/calls';
+
+export default function Home() {
+  const { setBackArrowLink, setForwardArrowLink } = usePageRedirect();
+  const router = useRouter();
+  const [open, setOpen] = useState(false);
+  const [emojiText, setEmojiText] = useState('');
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [emojiSentError, setEmojiSentError] = useState(false);
+  const dialogRef = useRef<HTMLDivElement>(null);
+
+  const setLinks = () => {
+    setBackArrowLink("/");
+    setForwardArrowLink("/ssm/page2/");
+  }
+
+  useEffect(() => {
+    setLinks()
+  }, [])
+
+  useEnterKey(() => {
+    handleNextPageCheck()
+  });
+
+  // Setup drag-to-scroll for the emoji picker's scrollable area
+  useEffect(() => {
+    console.log('Effect running. pickerOpen:', pickerOpen, 'dialogRef.current:', !!dialogRef.current);
+    if (!pickerOpen) return;
+
+    let cleanupFn: (() => void) | null = null;
+    let attempts = 0;
+    const maxAttempts = 20;
+
+    // Poll for the dialog and emoji body to be ready
+    const intervalId = setInterval(() => {
+      attempts++;
+      console.log(`Attempt ${attempts}: Looking for dialog and .epr-body`);
+
+      if (!dialogRef.current) {
+        console.log('dialogRef.current is null, waiting...');
+        if (attempts >= maxAttempts) {
+          console.error('Failed to find dialogRef after', maxAttempts, 'attempts');
+          clearInterval(intervalId);
+        }
+        return;
+      }
+
+      const emojiBody = dialogRef.current.querySelector('.epr-body') as HTMLElement;
+      console.log('EmojiPicker body found:', !!emojiBody);
+
+      if (!emojiBody) {
+        console.log('epr-body not found yet, waiting...');
+        if (attempts >= maxAttempts) {
+          console.error('Failed to find .epr-body after', maxAttempts, 'attempts');
+          clearInterval(intervalId);
+        }
+        return;
+      }
+
+      // Success! Found both the dialog and the emoji body
+      console.log('Successfully found .epr-body, attaching event listeners');
+      clearInterval(intervalId);
+
+      let isDragging = false;
+      let hasMoved = false;
+      let startY = 0;
+      let startX = 0;
+      let scrollTop = 0;
+      const dragThreshold = 5; // pixels - if user moves more than this, it's a drag
+
+      const handlePointerDown = (e: PointerEvent) => {
+        console.log('PointerDown event fired', e.pointerType, e.button);
+        if (e.button !== 0) return; // Only left click
+
+        isDragging = true;
+        hasMoved = false;
+        startY = e.pageY;
+        startX = e.pageX;
+        scrollTop = emojiBody.scrollTop;
+        // Don't capture pointer - let events propagate normally
+      };
+
+      const handlePointerMove = (e: PointerEvent) => {
+        if (!isDragging) return;
+
+        const deltaY = Math.abs(e.pageY - startY);
+        const deltaX = Math.abs(e.pageX - startX);
+
+        // Check if user has moved beyond threshold
+        if (deltaY > dragThreshold || deltaX > dragThreshold) {
+          if (!hasMoved) {
+            console.log('Movement detected, starting scroll');
+            hasMoved = true;
+            emojiBody.style.cursor = 'grabbing';
+            emojiBody.style.userSelect = 'none';
+          }
+
+          e.preventDefault();
+          e.stopPropagation();
+
+          const y = e.pageY;
+          const walk = (y - startY) * 1.5; // scroll speed multiplier
+          emojiBody.scrollTop = scrollTop - walk;
+        }
+      };
+
+      const handlePointerUp = (e: PointerEvent) => {
+        if (isDragging) {
+          // If user dragged, prevent emoji clicks
+          if (hasMoved) {
+            // Prevent any clicks from firing for a brief moment
+            const preventClick = (clickEvent: Event) => {
+              clickEvent.preventDefault();
+              clickEvent.stopPropagation();
+              emojiBody.removeEventListener('click', preventClick, true);
+            };
+            emojiBody.addEventListener('click', preventClick, true);
+
+            setTimeout(() => {
+              emojiBody.removeEventListener('click', preventClick, true);
+            }, 100);
+          }
+        }
+        isDragging = false;
+        hasMoved = false;
+        emojiBody.style.cursor = 'grab';
+        emojiBody.style.userSelect = 'auto';
+      };
+
+      emojiBody.style.cursor = 'grab';
+      emojiBody.addEventListener('pointerdown', handlePointerDown as any);
+      emojiBody.addEventListener('pointermove', handlePointerMove as any);
+      emojiBody.addEventListener('pointerup', handlePointerUp as any);
+
+      cleanupFn = () => {
+        emojiBody.removeEventListener('pointerdown', handlePointerDown as any);
+        emojiBody.removeEventListener('pointermove', handlePointerMove as any);
+        emojiBody.removeEventListener('pointerup', handlePointerUp as any);
+      };
+    }, 100); // Check every 100ms
+
+    return () => {
+      clearInterval(intervalId);
+      if (cleanupFn) cleanupFn();
+    };
+  }, [pickerOpen]);
+
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  const handleEmojiClick = (emojiData: EmojiClickData) => {
+    setEmojiText(emojiData.emoji);
+    setPickerOpen(false);
+  };
+
+  const handleNextPageCheck = async () => {
+    if (!emojiText) {  // FIXME: probably want to have better validation here, make sure its character, make sure its an emoji, etc.
+      setSnackbarOpen(true);
+      return;
+    }
+
+    // Submit the emoji to the backend
+    const result = await submitQKDEmoji(emojiText);
+
+    if (!result.success) {
+      setEmojiSentError(true);
+      return;
+    }
+
+    router.push("/ssm/page2/");
+  }
+
+
+  return (<Container maxWidth="lg">
+    <Box
+      sx={{
+        my: 4, display: 'flex', flexDirection: 'column', top: '10'
+      }}
+    >
+      <Stack
+        display="flex"
+        flexDirection="column"
+        position="relative"
+        sx={{ width: '100%', }}
+      >
+
+        <Stack direction="row"
+          sx={{
+            minHeight: '8em', justifyContent: 'left', alignItems: 'flex-end', // Align items to the bottom of the row
+          }}
+        >
+
+          <Stack
+            display="flex"
+            flexDirection="column"
+            position="relative"
+            sx={{ width: '50%' }}
+          >
+            <Box
+              component="img"
+              src="/images/speech-bubble-white-small.png"
+              alt="Whobit welcomes you"
+              sx={{
+                width: 'auto',
+                height: '18em',
+                backgroundRepeat: 'no-repeat',
+                backgroundSize: 'contain',
+                backgroundPosition: 'left',
+              }}
+            />
+            <Typography
+              component="h1"
+              sx={{
+                position: 'absolute',
+                top: '23%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                color: '#000000',
+                width: '75%',
+                fontSize: '1.35em',
+              }}
+            >
+              {emojiSentError ? (
+                <p>There was an error sending your emoji to the backend. Please press the `START OVER` button and try again.</p>
+              ) : (
+                <>
+                  <p>Choose a message to send to your friend! To keep this a secret, you and your friend will send a secret emoji by answering questions.</p>
+                  <p>Try to guess the answer <b>YOU</b> think the other person will choose. Your friend will guess the answers they think <b>YOU</b> would answer
+                  </p>
+                </>
+              )}
+            </Typography>
+
+            <Dialog open={open} onClose={() => setOpen(false)}>
+              <DialogContent sx={{ padding: '2.8em', fontSize: '1.45em' }}>
+                Entangled photons are light particles that act as if they're connected, even if they
+                are very
+                &nbsp; far apart.
+              </DialogContent>
+            </Dialog>
+
+            <Box
+              component="img"
+              src="/images/whobit-arms-down.png"
+              alt="Whobit welcomes you"
+              sx={{
+                width: '14.3em',
+                height: 'auto',
+                backgroundRepeat: 'no-repeat',
+                backgroundSize: 'contain',
+                backgroundPosition: 'left',
+                paddingLeft: '4px',
+              }}
+            />
+
+          </Stack>
+
+          <Stack
+            display="flex"
+            flexDirection="column"
+            position="relative"
+            sx={{ width: '50%' }}
+          >
+            {emojiSentError ? (
+              <Box
+                component="img"
+                src="/images/broken-computer.png"
+                alt="Error submitting emoji"
+                sx={{
+                  position: 'relative',
+                  left: '70%',
+                  bottom: '150px',
+                  width: '200px',
+                  height: 'auto',
+                }}
+              />
+            ) : (
+              <Stack
+                direction="row"
+                sx={{
+                  backgroundImage: 'url(/images/circle.png)',
+                  Height: '560px',
+                  backgroundRepeat: 'no-repeat',
+                  width: '560px',
+                  backgroundPosition: 'center',
+                  position: 'relative',
+                  left: '40%',
+                }}
+              >
+                <Stack direction="row">
+                  <Stack
+                    direction="row"
+                    sx={{
+                      position: 'relative',
+                      zIndex: 2,
+                      minHeight: '560px',
+                      minWidth: '560px',
+                      alignContent: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        position: 'relative',
+                        zIndex: 2,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        height: '100%',
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          width: '200px',
+                          height: '200px',
+                          border: '3px solid #1976d2',
+                          borderRadius: '12px',
+                          padding: '20px',
+                          backgroundColor: '#f5f5f5',
+                          fontSize: '5rem',
+                          cursor: 'pointer',
+                          transition: 'all 0.2s',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          '&:hover': {
+                            backgroundColor: '#e3f2fd',
+                            transform: 'scale(1.05)',
+                          },
+                          '&:active': {
+                            transform: 'scale(0.95)',
+                          },
+                        }}
+                        onClick={() => setPickerOpen(true)}
+                      >
+                        {emojiText || <Typography sx={{ fontSize: '1rem', color: '#666' }}>Tap</Typography>}
+                      </Box>
+                    </Box>
+                  </Stack>
+
+                  <Stack
+                    sx={{
+                      position: 'relative',
+                      justifyContent: 'flex-end',
+                      paddingBottom: '60px'
+                    }}
+                  >
+                    <Button
+                      variant="contained"
+                      component="a"
+                      href="#"
+                      onClick={handleNextPageCheck}
+                      sx={{
+                        height: '4em',
+                        border: '1px solid #000',
+                        backgroundColor: '#FFFFFF',
+                        color: '#000000',
+                      }}
+                    >
+                      Next
+                    </Button>
+                  </Stack>
+                </Stack>
+              </Stack>
+            )}
+
+            <Dialog
+              open={pickerOpen}
+              onClose={() => setPickerOpen(false)}
+              maxWidth="md"
+              fullWidth
+            >
+              <DialogContent
+                ref={dialogRef}
+                sx={{
+                  padding: '20px',
+                  overflow: 'hidden',
+                  '& .epr-body': {
+                    overflowY: 'auto !important',
+                  }
+                }}
+              >
+                <EmojiPicker
+                  onEmojiClick={handleEmojiClick}
+                  width="100%"
+                  height="500px"
+                  searchDisabled
+                  emojiStyle={EmojiStyle.NATIVE}
+                  style={{
+                    '--epr-emoji-size': '48px',
+                  } as React.CSSProperties}
+                />
+              </DialogContent>
+            </Dialog>
+          </Stack>
+        </Stack>
+      </Stack>
+
+    </Box>
+
+    <Snackbar
+      open={snackbarOpen}
+      autoHideDuration={4000}
+      onClose={() => setSnackbarOpen(false)}
+      message="Please choose an emoji before going to the next page"
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      ContentProps={{
+        sx: {
+          fontSize: '1.2rem',
+        }
+      }}
+    />
+  </Container>);
+}

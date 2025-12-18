@@ -17,54 +17,44 @@ An interactive web interface designed for the general public to interact with qu
 
 ### Prerequisites
 
-- Node.js 18 or higher
-- npm package manager
+- Node.js 18 or higher and npm package manager (to install please follow the instructions in [this link](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 - A PQN Node API (see [pqn-stack](https://github.com/PublicQuantumNetwork/pqn-stack))
 
 ### Installation
 
-1. **Install NodeJs and npm**
+  If you've just installed the PQN Node API, make sure not to be in the pqn-stack directory. A convenient place to put the GUI is in the same place you cloned pqn-stack.
 
-To install NodeJs and npm please follow the instructions in [this link](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
-
-If you've just installed the PQN Node API, make sure not to be in the pqn-stack directory. A convenient place to put the GUI is in the same place you cloned pqn-stack.
-
-2. **Clone the repository**
+1. **Clone the repository**
 
    ```bash
    git clone https://github.com/PublicQuantumNetwork/pqn-gui.git
    cd pqn-gui
    ```
 
-3. **Install dependencies**
+2. **Install dependencies**
 
    ```bash
    npm install
    ```
 
-### Running the Development Server
+### Run the Development Server
 
 1. Run the PQN Node API.
   
-2. Open a new terminal window to run:
+2. Open a new terminal window to run the GUI. It can be run in development mode, which updates to live changes to code:
 
-```bash
-npm run dev
-# or
-pnpm dev
-```
+  ```bash
+  npm run dev
+  ```
+
+  or in production mode, which is faster than development mode:
+
+  ```bash
+  npm run build
+  npm run start
+  ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser to see the interface.
-
-### Building for Production
-
-```bash
-npm run build
-npm run start
-# or
-pnpm build
-pnpm start
-```
 
 ## Configuration
 

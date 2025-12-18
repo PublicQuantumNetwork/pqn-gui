@@ -211,20 +211,11 @@ import {useEnterKey} from "@/hooks/useEnterKey";
                                 Submit
                               </Button>
                               </Stack>
-
                               </Stack>
-
                             </Stack>
-
-
                         </Stack>
                     </Stack>
-
                 </Stack>
-
-
-
-
             </Box>
         </Container>
 

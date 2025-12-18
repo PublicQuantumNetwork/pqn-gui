@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:instance1": "dotenv -e .env.locala -- cross-env BUILD_DIR=.next-a next dev",
+    "dev:instance2": "dotenv -e .env.localb -- cross-env BUILD_DIR=.next-b next dev -p 3001",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -16,6 +18,8 @@
     "@mui/icons-material": "latest",
     "@mui/material": "latest",
     "@mui/material-nextjs": "latest",
+    "dotenv-cli": "^10.0.0",
+    "emoji-picker-react": "^4.15.0",
     "next": "^15.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
@@ -24,6 +28,7 @@
     "@types/node": "latest",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
+    "cross-env": "^10.1.0",
     "eslint": "latest",
     "eslint-config-next": "^15.0.0",
     "typescript": "latest"

@@ -63,11 +63,18 @@ The frontend expects the PQN Node API to be running at `http://127.0.0.1:8000` b
 To configure the API endpoints, create a `.env.local` file in the root of the project:
 
 ```bash
+NEXT_PUBLIC_API_ADDRESS=127.0.0.1:8000
 NEXT_PUBLIC_TIMETAGGER_ADDRESS=127.0.0.1:8000
 NEXT_PUBLIC_FOLLOWER_NODE_ADDRESS=127.0.0.1:8000
 ```
 
 Replace the addresses with your actual Node API endpoints if they differ from the defaults.
+
+### Environment Variables
+
+- `NEXT_PUBLIC_API_ADDRESS` - The base address of the PQN Node API (default: `127.0.0.1:8000`). Used for all HTTP and WebSocket connections.
+- `NEXT_PUBLIC_TIMETAGGER_ADDRESS` - The address of the timetagger device (default: `127.0.0.1:8000`).
+- `NEXT_PUBLIC_FOLLOWER_NODE_ADDRESS` - The address of the follower node (default: `127.0.0.1:8000`).
 
 ## Learn More
 

@@ -2,7 +2,7 @@
 
 import {useState, useEffect, SetStateAction} from 'react';
 import Container from '@mui/material/Container';
-import {Link, Dialog, DialogContent, Button, Box, Stack,TextField, Paper } from '@mui/material';
+import {Link, Dialog, DialogContent, Button, Box, Stack,TextField, Paper, Zoom } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import {usePageRedirect} from '@/app/contexts/PageRedirectContext';
 import CHSHTextbox from '@/components/CHSHTextbox';
@@ -15,7 +15,7 @@ import MovingIcon from '@mui/icons-material/Moving';
 import TrendingFlatIcon from '@mui/icons-material/TrendingFlat';
 import DoDisturbIcon from '@mui/icons-material/DoDisturb';
 import PolylineIcon from '@mui/icons-material/Polyline';
-import { chshPost } from '@/calls';
+import { chshPost, fetchRotatorAngle } from '@/calls';
 
 
 async function chshSubmit(currentAngle: number,
@@ -44,7 +44,7 @@ async function chshSubmit(currentAngle: number,
   }
 
  export default function MyComponent() {
-
+  
   const {setBackArrowLink, setForwardArrowLink} = usePageRedirect();
   const router = useRouter();
   //console.log("Unique", process.env)
@@ -61,18 +61,19 @@ async function chshSubmit(currentAngle: number,
     const [open, setOpen] = useState(false);
     const [openModal,setOpenModal] = useState(false);
     const [secondOpen, setSecondOpen] = useState(false);
-    const [data, setData] = useState(null);
     const [arrowRotation, setArrowRotation] = useState(0);
     const [currentAngle, setCurrentAngle] = useState(1); // Index of angle choice
     const [angleChoices, setAngleChoices] = useState<number []>([])
     const [textValue, setTextValue] = useState('');
     const [triggerSubmit, setTriggerSubmit] = useState(0);
-
+    
 
 
     useEffect(() => {
-      const interval = setInterval(() => {
-        fetchData();
+      const interval = setInterval(async () => {
+        const result = await fetchRotatorAngle();
+        console.log(result.theta);
+        setArrowRotation(result.theta * 2);
       }, 100);
 
       return () => clearInterval(interval);
@@ -88,19 +89,6 @@ async function chshSubmit(currentAngle: number,
     }
     }, [triggerSubmit])
 
-    const fetchData = async () => {
-      try {
-        const response = await fetch('http://127.0.0.1:8000/serial/');
-        const data = await response.json();
-        setData(data.theta);
-        console.log(data.theta);
-        setArrowRotation(data.theta || 0);
-      } catch (error) {
-        setArrowRotation(0);
-        console.error('Error fetching data:', error);
-      }
-    };
-
 
     const handleClick = () => {
       setOpen(true);
@@ -111,10 +99,7 @@ async function chshSubmit(currentAngle: number,
     };
 
     const handleSubmitClick = () => {
-      // chshPost(arrowRotation, currentAngle)
-      //console.log("here boi")
       setTriggerSubmit(triggerSubmit+1)
-
     };
 
     useEnterKey(() => {
@@ -136,7 +121,7 @@ async function chshSubmit(currentAngle: number,
               }}
             >
 
-              <Dialog open={openModal} onClose={()=>{}}>
+              <Dialog maxWidth="md" open={openModal} onClose={()=>{}}>
               <ModalBox />
               </Dialog>
 
@@ -217,6 +202,7 @@ async function chshSubmit(currentAngle: number,
                           position="relative"
                           sx={{ width:'50%'}}
                         >
+                          
                           <Stack
                               direction="row"
                               sx={{

@@ -1,4 +1,4 @@
-# PQN GUI
+# PQN Front-End
 
 **Web interface for Public Quantum Network (PQN) nodes**
 
@@ -22,7 +22,7 @@ An interactive web interface designed for the general public to interact with qu
 
 ### Installation
 
-  If you've just installed the PQN Node API, make sure not to be in the pqn-stack directory. A convenient place to put the GUI is in the same place you cloned pqn-stack.
+  If you've just installed the PQN Node API, make sure not to be in the pqn-stack directory. A convenient place to put the front-end is in the same place you cloned pqn-stack.
 
 1. **Clone the repository**
 
@@ -41,7 +41,7 @@ An interactive web interface designed for the general public to interact with qu
 
 1. Run the PQN Node API.
   
-2. Open a new terminal window to run the GUI. It can be run in development mode, which updates to live changes to code:
+2. Open a new terminal window to run the front-end. It can be run in development mode, which updates to live changes to code:
   
     ```bash
     npm run dev
@@ -58,7 +58,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to see the i
 
 ## Configuration
 
-To add additional nodes, follow the instructions for back-end and front-end installation. The PQN Node is built with the expectations that it has another Node to be its follower and vice-versa. At the moment we are not supporting a third node.
+To add additional nodes, follow the instructions for [back-end](https://github.com/PublicQuantumNetwork/pqn-stack) and [front-end](https://github.com/PublicQuantumNetwork/pqn-gui) installation. The PQN Node is built with the expectations that it has another Node to be its follower and vice-versa. At the moment we are not supporting a third node.
 
 To configure the API endpoints, create a `.env.local` file in the root of the project:
 

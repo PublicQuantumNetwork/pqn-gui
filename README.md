@@ -42,17 +42,17 @@ An interactive web interface designed for the general public to interact with qu
 1. Run the PQN Node API.
   
 2. Open a new terminal window to run the GUI. It can be run in development mode, which updates to live changes to code:
-
-  ```bash
-  npm run dev
-  ```
-
-  or in production mode, which is faster than development mode:
-
-  ```bash
-  npm run build
-  npm run start
-  ```
+  
+    ```bash
+    npm run dev
+    ```
+  
+    or in production mode, which is faster than development mode:
+  
+    ```bash
+    npm run build
+    npm run start
+    ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser to see the interface.
 
@@ -63,8 +63,8 @@ The PQN Node is built with the expectations that it has another Node to be its f
 To configure the API endpoints, create a `.env.local` file in the root of the project:
 
 ```bash
-NEXT_PUBLIC_API_ADDRESS=127.0.0.1:8000  # Address of the PQN Node running, change this to the ipaddress and port of the Node.
-NEXT_PUBLIC_TIMETAGGER_ADDRESS=127.0.0.1:8000  # Address of the PQN Node having a timetagger, the protocol will be using the timetagger in this Node.
+NEXT_PUBLIC_API_ADDRESS=127.0.0.1:8000  # Address of the PQN Node running
+NEXT_PUBLIC_TIMETAGGER_ADDRESS=127.0.0.1:8000  # Address of the PQN Node with a timetagger; the protocol will use the timetagger in this Node.
 NEXT_PUBLIC_FOLLOWER_NODE_ADDRESS=127.0.0.1:8000  # Address of the second PQN Node with which 2 player games will be performed.
 ```
 

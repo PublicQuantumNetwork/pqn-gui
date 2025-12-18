@@ -58,7 +58,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to see the i
 
 ## Configuration
 
-The PQN Node is built with the expectations that it has another Node to be its follower and vice-versa. At the moment we are not supporting a third node.
+To add additional nodes, follow the instructions for back-end and front-end installation. The PQN Node is built with the expectations that it has another Node to be its follower and vice-versa. At the moment we are not supporting a third node.
 
 To configure the API endpoints, create a `.env.local` file in the root of the project:
 
@@ -74,3 +74,7 @@ Replace the addresses with your actual Node API endpoints if they differ from th
 
 - [pqn-stack](https://github.com/PublicQuantumNetwork/pqn-stack) - Backend software stack and complete project documentation
 - [Public Quantum Network](https://publicquantumnetwork.org) - Learn more about the PQN project
+
+## Have questions?
+
+Feel free to contact the PQN team at publicquantumnetwork@gmail.com.

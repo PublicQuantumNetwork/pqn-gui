@@ -18,10 +18,12 @@ An interactive web interface designed for the general public to interact with qu
 ### Prerequisites
 
 - Node.js 18 or higher
-- npm or pnpm package manager
-- A running PQN Node API (see [pqn-stack](https://github.com/PublicQuantumNetwork/pqn-stack))
+- npm package manager
+- A PQN Node API (see [pqn-stack](https://github.com/PublicQuantumNetwork/pqn-stack))
 
 ### Installation
+
+If you've just installed the PQN Node API, make sure not to be in the pqn-stack directory. A convenient place to put the GUI is in the same place you cloned pqn-stack.
 
 1. **Clone the repository**
 
@@ -34,11 +36,13 @@ An interactive web interface designed for the general public to interact with qu
 
    ```bash
    npm install
-   # or
-   pnpm install
    ```
 
 ### Running the Development Server
+
+1. Run the PQN Node API.
+  
+2. Open a new terminal window to run:
 
 ```bash
 npm run dev

@@ -17,7 +17,7 @@ An interactive web interface designed for the general public to interact with qu
 
 ### Prerequisites
 
-- Node.js 18 or higher and npm package manager (to install please follow the instructions in [this link](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+- Node.js 18 or higher and npm package manager (to install please follow the instructions in [this link](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm))
 - A PQN Node API (see [pqn-stack](https://github.com/PublicQuantumNetwork/pqn-stack))
 
 ### Installation
@@ -58,13 +58,14 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to see the i
 
 ## Configuration
 
-The frontend expects the PQN Node API to be running at `http://127.0.0.1:8000` by default.
+The PQN Node is built with the expectations that it has another Node to be its follower and vice-versa. At the moment we are not supporting a third node.
 
 To configure the API endpoints, create a `.env.local` file in the root of the project:
 
 ```bash
-NEXT_PUBLIC_TIMETAGGER_ADDRESS=127.0.0.1:8000
-NEXT_PUBLIC_FOLLOWER_NODE_ADDRESS=127.0.0.1:8000
+NEXT_PUBLIC_API_ADDRESS=127.0.0.1:8000  # Address of the PQN Node running, change this to the ipaddress and port of the Node.
+NEXT_PUBLIC_TIMETAGGER_ADDRESS=127.0.0.1:8000  # Address of the PQN Node having a timetagger, the protocol will be using the timetagger in this Node.
+NEXT_PUBLIC_FOLLOWER_NODE_ADDRESS=127.0.0.1:8000  # Address of the second PQN Node with which 2 player games will be performed.
 ```
 
 Replace the addresses with your actual Node API endpoints if they differ from the defaults.

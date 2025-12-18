@@ -23,16 +23,20 @@ An interactive web interface designed for the general public to interact with qu
 
 ### Installation
 
+1. **Install NodeJs and npm**
+
+To install NodeJs and npm please follow the instructions in [this link](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+
 If you've just installed the PQN Node API, make sure not to be in the pqn-stack directory. A convenient place to put the GUI is in the same place you cloned pqn-stack.
 
-1. **Clone the repository**
+2. **Clone the repository**
 
    ```bash
    git clone https://github.com/PublicQuantumNetwork/pqn-gui.git
    cd pqn-gui
    ```
 
-2. **Install dependencies**
+3. **Install dependencies**
 
    ```bash
    npm install

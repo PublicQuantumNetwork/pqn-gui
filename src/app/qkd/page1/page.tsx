@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React from 'react';
 import { Typography, Box } from '@mui/material';
@@ -11,12 +11,10 @@ const QKDPage = () => {
         justifyContent: 'center',
         alignItems: 'center',
         height: '100vh',
-        color: "black"
+        color: 'black',
       }}
     >
-      <Typography variant="h2" >
-        Welcome to QKD 🧑‍🔬
-      </Typography>
+      <Typography variant="h2">Welcome to QKD 🧑‍🔬</Typography>
     </Box>
   );
 };

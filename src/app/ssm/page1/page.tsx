@@ -1,10 +1,17 @@
-"use client"
+'use client';
 import { useEffect, useState, useRef } from 'react';
 import Container from '@mui/material/Container';
-import { Box, Dialog, DialogContent, Stack, Button, Snackbar } from '@mui/material';
+import {
+  Box,
+  Dialog,
+  DialogContent,
+  Stack,
+  Button,
+  Snackbar,
+} from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { usePageRedirect } from '@/app/contexts/PageRedirectContext';
-import { useEnterKey } from "@/hooks/useEnterKey";
+import { useEnterKey } from '@/hooks/useEnterKey';
 import { useRouter } from 'next/navigation';
 import EmojiPicker, { EmojiClickData, EmojiStyle } from 'emoji-picker-react';
 import { submitQKDEmoji } from '@/calls';
@@ -20,21 +27,26 @@ export default function Home() {
   const dialogRef = useRef<HTMLDivElement>(null);
 
   const setLinks = () => {
-    setBackArrowLink("/");
-    setForwardArrowLink("/ssm/page2/");
-  }
+    setBackArrowLink('/');
+    setForwardArrowLink('/ssm/page2/');
+  };
 
   useEffect(() => {
-    setLinks()
-  }, [])
+    setLinks();
+  }, []);
 
   useEnterKey(() => {
-    handleNextPageCheck()
+    handleNextPageCheck();
   });
 
   // Setup drag-to-scroll for the emoji picker's scrollable area
   useEffect(() => {
-    console.log('Effect running. pickerOpen:', pickerOpen, 'dialogRef.current:', !!dialogRef.current);
+    console.log(
+      'Effect running. pickerOpen:',
+      pickerOpen,
+      'dialogRef.current:',
+      !!dialogRef.current
+    );
     if (!pickerOpen) return;
 
     let cleanupFn: (() => void) | null = null;
@@ -49,19 +61,29 @@ export default function Home() {
       if (!dialogRef.current) {
         console.log('dialogRef.current is null, waiting...');
         if (attempts >= maxAttempts) {
-          console.error('Failed to find dialogRef after', maxAttempts, 'attempts');
+          console.error(
+            'Failed to find dialogRef after',
+            maxAttempts,
+            'attempts'
+          );
           clearInterval(intervalId);
         }
         return;
       }
 
-      const emojiBody = dialogRef.current.querySelector('.epr-body') as HTMLElement;
+      const emojiBody = dialogRef.current.querySelector(
+        '.epr-body'
+      ) as HTMLElement;
       console.log('EmojiPicker body found:', !!emojiBody);
 
       if (!emojiBody) {
         console.log('epr-body not found yet, waiting...');
         if (attempts >= maxAttempts) {
-          console.error('Failed to find .epr-body after', maxAttempts, 'attempts');
+          console.error(
+            'Failed to find .epr-body after',
+            maxAttempts,
+            'attempts'
+          );
           clearInterval(intervalId);
         }
         return;
@@ -165,7 +187,8 @@ export default function Home() {
   };
 
   const handleNextPageCheck = async () => {
-    if (!emojiText) {  // FIXME: probably want to have better validation here, make sure its character, make sure its an emoji, etc.
+    if (!emojiText) {
+      // FIXME: probably want to have better validation here, make sure its character, make sure its an emoji, etc.
       setSnackbarOpen(true);
       return;
     }
@@ -178,248 +201,268 @@ export default function Home() {
       return;
     }
 
-    router.push("/ssm/page2/");
-  }
+    router.push('/ssm/page2/');
+  };
 
-
-  return (<Container maxWidth="lg">
-    <Box
-      sx={{
-        my: 4, display: 'flex', flexDirection: 'column', top: '10'
-      }}
-    >
-      <Stack
-        display="flex"
-        flexDirection="column"
-        position="relative"
-        sx={{ width: '100%', }}
+  return (
+    <Container maxWidth="lg">
+      <Box
+        sx={{
+          my: 4,
+          display: 'flex',
+          flexDirection: 'column',
+          top: '10',
+        }}
       >
-
-        <Stack direction="row"
-          sx={{
-            minHeight: '8em', justifyContent: 'left', alignItems: 'flex-end', // Align items to the bottom of the row
-          }}
+        <Stack
+          display="flex"
+          flexDirection="column"
+          position="relative"
+          sx={{ width: '100%' }}
         >
-
           <Stack
-            display="flex"
-            flexDirection="column"
-            position="relative"
-            sx={{ width: '50%' }}
+            direction="row"
+            sx={{
+              minHeight: '8em',
+              justifyContent: 'left',
+              alignItems: 'flex-end', // Align items to the bottom of the row
+            }}
           >
-            <Box
-              component="img"
-              src="/images/speech-bubble-white-small.png"
-              alt="Whobit welcomes you"
-              sx={{
-                width: 'auto',
-                height: '18em',
-                backgroundRepeat: 'no-repeat',
-                backgroundSize: 'contain',
-                backgroundPosition: 'left',
-              }}
-            />
-            <Typography
-              component="h1"
-              sx={{
-                position: 'absolute',
-                top: '23%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                color: '#000000',
-                width: '75%',
-                fontSize: '1.35em',
-              }}
+            <Stack
+              display="flex"
+              flexDirection="column"
+              position="relative"
+              sx={{ width: '50%' }}
             >
-              {emojiSentError ? (
-                <p>There was an error sending your emoji to the backend. Please press the `START OVER` button and try again.</p>
-              ) : (
-                <>
-                  <p>Choose a message to send to your friend! To keep this a secret, you and your friend will send a secret emoji by answering questions.</p>
-                  <p>Try to guess the answer <b>YOU</b> think the other person will choose. Your friend will guess the answers they think <b>YOU</b> would answer
-                  </p>
-                </>
-              )}
-            </Typography>
-
-            <Dialog open={open} onClose={() => setOpen(false)}>
-              <DialogContent sx={{ padding: '2.8em', fontSize: '1.45em' }}>
-                Entangled photons are light particles that act as if they're connected, even if they
-                are very
-                &nbsp; far apart.
-              </DialogContent>
-            </Dialog>
-
-            <Box
-              component="img"
-              src="/images/whobit-arms-down.png"
-              alt="Whobit welcomes you"
-              sx={{
-                width: '14.3em',
-                height: 'auto',
-                backgroundRepeat: 'no-repeat',
-                backgroundSize: 'contain',
-                backgroundPosition: 'left',
-                paddingLeft: '4px',
-              }}
-            />
-
-          </Stack>
-
-          <Stack
-            display="flex"
-            flexDirection="column"
-            position="relative"
-            sx={{ width: '50%' }}
-          >
-            {emojiSentError ? (
               <Box
                 component="img"
-                src="/images/broken-computer.png"
-                alt="Error submitting emoji"
+                src="/images/speech-bubble-white-small.png"
+                alt="Whobit welcomes you"
                 sx={{
-                  position: 'relative',
-                  left: '70%',
-                  bottom: '150px',
-                  width: '200px',
-                  height: 'auto',
+                  width: 'auto',
+                  height: '18em',
+                  backgroundRepeat: 'no-repeat',
+                  backgroundSize: 'contain',
+                  backgroundPosition: 'left',
                 }}
               />
-            ) : (
-              <Stack
-                direction="row"
+              <Typography
+                component="h1"
                 sx={{
-                  backgroundImage: 'url(/images/circle.png)',
-                  Height: '560px',
-                  backgroundRepeat: 'no-repeat',
-                  width: '560px',
-                  backgroundPosition: 'center',
-                  position: 'relative',
-                  left: '40%',
+                  position: 'absolute',
+                  top: '23%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  color: '#000000',
+                  width: '75%',
+                  fontSize: '1.35em',
                 }}
               >
-                <Stack direction="row">
-                  <Stack
-                    direction="row"
-                    sx={{
-                      position: 'relative',
-                      zIndex: 2,
-                      minHeight: '560px',
-                      minWidth: '560px',
-                      alignContent: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <Box
+                {emojiSentError ? (
+                  <p>
+                    There was an error sending your emoji to the backend. Please
+                    press the `START OVER` button and try again.
+                  </p>
+                ) : (
+                  <>
+                    <p>
+                      Choose a message to send to your friend! To keep this a
+                      secret, you and your friend will send a secret emoji by
+                      answering questions.
+                    </p>
+                    <p>
+                      Try to guess the answer <b>YOU</b> think the other person
+                      will choose. Your friend will guess the answers they think{' '}
+                      <b>YOU</b> would answer
+                    </p>
+                  </>
+                )}
+              </Typography>
+
+              <Dialog open={open} onClose={() => setOpen(false)}>
+                <DialogContent sx={{ padding: '2.8em', fontSize: '1.45em' }}>
+                  Entangled photons are light particles that act as if they're
+                  connected, even if they are very &nbsp; far apart.
+                </DialogContent>
+              </Dialog>
+
+              <Box
+                component="img"
+                src="/images/whobit-arms-down.png"
+                alt="Whobit welcomes you"
+                sx={{
+                  width: '14.3em',
+                  height: 'auto',
+                  backgroundRepeat: 'no-repeat',
+                  backgroundSize: 'contain',
+                  backgroundPosition: 'left',
+                  paddingLeft: '4px',
+                }}
+              />
+            </Stack>
+
+            <Stack
+              display="flex"
+              flexDirection="column"
+              position="relative"
+              sx={{ width: '50%' }}
+            >
+              {emojiSentError ? (
+                <Box
+                  component="img"
+                  src="/images/broken-computer.png"
+                  alt="Error submitting emoji"
+                  sx={{
+                    position: 'relative',
+                    left: '70%',
+                    bottom: '150px',
+                    width: '200px',
+                    height: 'auto',
+                  }}
+                />
+              ) : (
+                <Stack
+                  direction="row"
+                  sx={{
+                    backgroundImage: 'url(/images/circle.png)',
+                    Height: '560px',
+                    backgroundRepeat: 'no-repeat',
+                    width: '560px',
+                    backgroundPosition: 'center',
+                    position: 'relative',
+                    left: '40%',
+                  }}
+                >
+                  <Stack direction="row">
+                    <Stack
+                      direction="row"
                       sx={{
                         position: 'relative',
                         zIndex: 2,
-                        display: 'flex',
-                        alignItems: 'center',
+                        minHeight: '560px',
+                        minWidth: '560px',
+                        alignContent: 'center',
                         justifyContent: 'center',
-                        height: '100%',
                       }}
                     >
                       <Box
                         sx={{
-                          width: '200px',
-                          height: '200px',
-                          border: '3px solid #1976d2',
-                          borderRadius: '12px',
-                          padding: '20px',
-                          backgroundColor: '#f5f5f5',
-                          fontSize: '5rem',
-                          cursor: 'pointer',
-                          transition: 'all 0.2s',
+                          position: 'relative',
+                          zIndex: 2,
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
-                          '&:hover': {
-                            backgroundColor: '#e3f2fd',
-                            transform: 'scale(1.05)',
-                          },
-                          '&:active': {
-                            transform: 'scale(0.95)',
-                          },
+                          height: '100%',
                         }}
-                        onClick={() => setPickerOpen(true)}
                       >
-                        {emojiText || <Typography sx={{ fontSize: '1rem', color: '#666' }}>Tap</Typography>}
+                        <Box
+                          sx={{
+                            width: '200px',
+                            height: '200px',
+                            border: '3px solid #1976d2',
+                            borderRadius: '12px',
+                            padding: '20px',
+                            backgroundColor: '#f5f5f5',
+                            fontSize: '5rem',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            '&:hover': {
+                              backgroundColor: '#e3f2fd',
+                              transform: 'scale(1.05)',
+                            },
+                            '&:active': {
+                              transform: 'scale(0.95)',
+                            },
+                          }}
+                          onClick={() => setPickerOpen(true)}
+                        >
+                          {emojiText || (
+                            <Typography
+                              sx={{ fontSize: '1rem', color: '#666' }}
+                            >
+                              Tap
+                            </Typography>
+                          )}
+                        </Box>
                       </Box>
-                    </Box>
-                  </Stack>
+                    </Stack>
 
-                  <Stack
-                    sx={{
-                      position: 'relative',
-                      justifyContent: 'flex-end',
-                      paddingBottom: '60px'
-                    }}
-                  >
-                    <Button
-                      variant="contained"
-                      component="a"
-                      href="#"
-                      onClick={handleNextPageCheck}
+                    <Stack
                       sx={{
-                        height: '4em',
-                        border: '1px solid #000',
-                        backgroundColor: '#FFFFFF',
-                        color: '#000000',
+                        position: 'relative',
+                        justifyContent: 'flex-end',
+                        paddingBottom: '60px',
                       }}
                     >
-                      Next
-                    </Button>
+                      <Button
+                        variant="contained"
+                        component="a"
+                        href="#"
+                        onClick={handleNextPageCheck}
+                        sx={{
+                          height: '4em',
+                          border: '1px solid #000',
+                          backgroundColor: '#FFFFFF',
+                          color: '#000000',
+                        }}
+                      >
+                        Next
+                      </Button>
+                    </Stack>
                   </Stack>
                 </Stack>
-              </Stack>
-            )}
+              )}
 
-            <Dialog
-              open={pickerOpen}
-              onClose={() => setPickerOpen(false)}
-              maxWidth="md"
-              fullWidth
-            >
-              <DialogContent
-                ref={dialogRef}
-                sx={{
-                  padding: '20px',
-                  overflow: 'hidden',
-                  '& .epr-body': {
-                    overflowY: 'auto !important',
-                  }
-                }}
+              <Dialog
+                open={pickerOpen}
+                onClose={() => setPickerOpen(false)}
+                maxWidth="md"
+                fullWidth
               >
-                <EmojiPicker
-                  onEmojiClick={handleEmojiClick}
-                  width="100%"
-                  height="500px"
-                  searchDisabled
-                  emojiStyle={EmojiStyle.NATIVE}
-                  style={{
-                    '--epr-emoji-size': '48px',
-                  } as React.CSSProperties}
-                />
-              </DialogContent>
-            </Dialog>
+                <DialogContent
+                  ref={dialogRef}
+                  sx={{
+                    padding: '20px',
+                    overflow: 'hidden',
+                    '& .epr-body': {
+                      overflowY: 'auto !important',
+                    },
+                  }}
+                >
+                  <EmojiPicker
+                    onEmojiClick={handleEmojiClick}
+                    width="100%"
+                    height="500px"
+                    searchDisabled
+                    emojiStyle={EmojiStyle.NATIVE}
+                    style={
+                      {
+                        '--epr-emoji-size': '48px',
+                      } as React.CSSProperties
+                    }
+                  />
+                </DialogContent>
+              </Dialog>
+            </Stack>
           </Stack>
         </Stack>
-      </Stack>
+      </Box>
 
-    </Box>
-
-    <Snackbar
-      open={snackbarOpen}
-      autoHideDuration={4000}
-      onClose={() => setSnackbarOpen(false)}
-      message="Please choose an emoji before going to the next page"
-      anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-      ContentProps={{
-        sx: {
-          fontSize: '1.2rem',
-        }
-      }}
-    />
-  </Container>);
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={4000}
+        onClose={() => setSnackbarOpen(false)}
+        message="Please choose an emoji before going to the next page"
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        ContentProps={{
+          sx: {
+            fontSize: '1.2rem',
+          },
+        }}
+      />
+    </Container>
+  );
 }

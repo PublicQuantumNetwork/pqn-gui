@@ -1,8 +1,8 @@
-'use client'
+'use client';
 import * as React from 'react';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import { ThemeProvider, styled, keyframes } from '@mui/material/styles';
-import { Box, Stack, Icon, Button } from '@mui/material'
+import { Box, Stack, Icon, Button } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import theme from '@/theme';
 import InitColorSchemeScript from '@mui/material/InitColorSchemeScript';
@@ -13,23 +13,25 @@ import RedirectArrow from '@/components/RedirectArrow';
 import './globals.css';
 
 export default function RootLayout(props: { children: React.ReactNode }) {
-
- 
-  
-  
   return (
-    <html lang="en" suppressHydrationWarning style={{ touchAction: 'pan-y pan-x' }}>
-      <body style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100vh',
-        marginRight: 'auto',
-        marginLeft: 'auto',
-        touchAction: 'pan-y pan-x',
-        WebkitOverflowScrolling: 'touch',
-        overflowY: 'auto'
-      }}>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      style={{ touchAction: 'pan-y pan-x' }}
+    >
+      <body
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+          marginRight: 'auto',
+          marginLeft: 'auto',
+          touchAction: 'pan-y pan-x',
+          WebkitOverflowScrolling: 'touch',
+          overflowY: 'auto',
+        }}
+      >
         <InitColorSchemeScript attribute="class" />
         <AppRouterCacheProvider options={{ enableCssLayer: true }}>
           <ThemeProvider theme={theme}>
@@ -44,14 +46,15 @@ export default function RootLayout(props: { children: React.ReactNode }) {
                 sx={{
                   width: '100%',
                   touchAction: 'pan-y pan-x',
-                  WebkitOverflowScrolling: 'touch'
+                  WebkitOverflowScrolling: 'touch',
                 }}
               >
                 {/*<Stack direction="row" 
                 sx={{backgroundImage: 'url(images/PQN-blue-ufl-website-image-blue4-small.png)', minHeight: '8em', backgroundRepeat: 'no-repeat', backgroundSize: 'contain', backgroundPosition: 'center', marginTop: '2em',}}
                 >*/}
 
-                <Stack direction="row"
+                <Stack
+                  direction="row"
                   sx={{
                     minHeight: '8em',
                     marginTop: '2em',
@@ -68,7 +71,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
                       height: 'auto',
                       backgroundRepeat: 'no-repeat',
                       backgroundSize: 'contain',
-                      backgroundPosition: 'center'
+                      backgroundPosition: 'center',
                     }}
                   />
 
@@ -84,7 +87,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
                       backgroundSize: 'contain',
                       backgroundPosition: 'center bottom',
                       margin: '0 68.5em 20px 3em', // Add this line to set the padding
-                      border: '1px solid #000'
+                      border: '1px solid #000',
                     }}
                   />
 
@@ -103,7 +106,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
                       paddingTop: '15px',
                       border: '1px solid #000',
                       backgroundColor: '#FFFFFF;',
-                      color: '#000000;'
+                      color: '#000000;',
                     }}
                   >
                     Start Over
@@ -124,7 +127,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
                       paddingTop: '15px',
                       border: '1px solid #000',
                       backgroundColor: '#FFFFFF;',
-                      color: '#000000;'
+                      color: '#000000;',
                     }}
                   >
                     Survey
@@ -144,19 +147,23 @@ export default function RootLayout(props: { children: React.ReactNode }) {
                       margin: '0 0em 16px 4em', // Add this line to set the padding
                     }}
                   />
-
                 </Stack>
 
                 {/* </Stack>*/}
-                <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{
-                  backgroundImage: 'url(/images/GUI-background.png)',
-                  minHeight: '40em',
-                  backgroundRepeat: 'no-repeat',
-                  width: '100%',
-                  backgroundPosition: 'center',
-                  touchAction: 'pan-y pan-x',
-                  WebkitOverflowScrolling: 'touch'
-                }}>
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  sx={{
+                    backgroundImage: 'url(/images/GUI-background.png)',
+                    minHeight: '40em',
+                    backgroundRepeat: 'no-repeat',
+                    width: '100%',
+                    backgroundPosition: 'center',
+                    touchAction: 'pan-y pan-x',
+                    WebkitOverflowScrolling: 'touch',
+                  }}
+                >
                   {/*<RedirectArrow direction="back">
                     {<Icon sx={{height:'30px'}}><ArrowBackIosNewIcon /></Icon>}
                   </RedirectArrow>*/}

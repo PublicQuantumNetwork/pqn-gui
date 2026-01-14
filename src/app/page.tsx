@@ -1,29 +1,31 @@
-'use client'
+'use client';
 import * as React from 'react';
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-import {Box, Button, Stack} from '@mui/material';
-import {usePageRedirect} from '@/app/contexts/PageRedirectContext';
-import {useWebSocket} from '@/app/hooks/WebSocketHook';
+import { Box, Button, Stack } from '@mui/material';
+import { usePageRedirect } from '@/app/contexts/PageRedirectContext';
+import { useWebSocket } from '@/app/hooks/WebSocketHook';
 import FollowRequestEventModal from '@/components/FollowRequestEventModal';
-import {resetBackendState} from "@/calls";
-
+import { resetBackendState } from '@/calls';
 
 export default function Home() {
   const { setBackArrowLink, setForwardArrowLink } = usePageRedirect();
   const { lastMessage, sendMessage, connect, disconnect } = useWebSocket();
-  const [isFollowRequestModalOpen, setIsFollowRequestModalOpen] = useState(false);
-  const [followRequestModalMessage, setFollowRequestModalMessage] = useState<string | null>(null);
+  const [isFollowRequestModalOpen, setIsFollowRequestModalOpen] =
+    useState(false);
+  const [followRequestModalMessage, setFollowRequestModalMessage] = useState<
+    string | null
+  >(null);
 
   const setLinks = () => {
-    setForwardArrowLink("chsh/page1");
-  }
+    setForwardArrowLink('chsh/page1');
+  };
 
   useEffect(() => {
     setLinks();
     const ret = resetBackendState();
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (lastMessage) {
@@ -46,7 +48,12 @@ export default function Home() {
 
   return (
     <Container maxWidth="lg">
-      <FollowRequestEventModal isOpen={isFollowRequestModalOpen} onClose={handleCloseModal} message={followRequestModalMessage} sendMessage={sendMessage} />
+      <FollowRequestEventModal
+        isOpen={isFollowRequestModalOpen}
+        onClose={handleCloseModal}
+        message={followRequestModalMessage}
+        sendMessage={sendMessage}
+      />
       <Box
         sx={{
           my: 4,
@@ -62,8 +69,8 @@ export default function Home() {
           position="relative"
           sx={{ width: '100%' }}
         >
-
-          <Stack direction="row"
+          <Stack
+            direction="row"
             sx={{
               minHeight: '8em',
               justifyContent: 'left',
@@ -106,7 +113,6 @@ export default function Home() {
               position="relative"
               sx={{ width: '100%' }}
             >
-
               <Button
                 variant="contained"
                 component="a"
@@ -150,11 +156,11 @@ export default function Home() {
               >
                 Quantum Fortune (single player)
               </Button>
-
             </Stack>
           </Stack>
 
-          <Stack direction="row"
+          <Stack
+            direction="row"
             sx={{
               marginTop: '0em',
               justifyContent: 'left',
@@ -170,7 +176,7 @@ export default function Home() {
                 height: 'auto',
                 backgroundRepeat: 'no-repeat',
                 backgroundSize: 'contain',
-                backgroundPosition: 'left'
+                backgroundPosition: 'left',
               }}
             />
 
@@ -180,7 +186,6 @@ export default function Home() {
               position="relative"
               sx={{ width: '100%' }}
             >
-
               <Button
                 variant="contained"
                 component="a"
@@ -225,12 +230,9 @@ export default function Home() {
               >
                 Get to know someone (Coming soon)
               </Button>
-
             </Stack>
           </Stack>
         </Stack>
-
-
       </Box>
     </Container>
   );

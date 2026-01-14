@@ -1,9 +1,9 @@
-"use client"
+'use client';
 
 import { Typography, Link } from '@mui/material';
 
 function envStuff() {
-  return process.env
+  return process.env;
 }
 
 interface CHSHTextboxProps {
@@ -15,9 +15,9 @@ interface CHSHTextboxProps {
 export default function CHSHTextbox(
   props: CHSHTextboxProps
 ): React.ReactElement {
-    const handleClick = props.handleClick;
-    const handleSecondClick = props.handleSecondClick;
-    const angleNumber = props.angleNumber;
+  const handleClick = props.handleClick;
+  const handleSecondClick = props.handleSecondClick;
+  const angleNumber = props.angleNumber;
   return (
     <Typography
       variant="h5"
@@ -37,17 +37,24 @@ export default function CHSHTextbox(
           <Link href="#" onClick={handleClick}>
             polarization
           </Link>{' '}
-          to offer the <Link href="#" onClick={handleSecondClick}>photons</Link>.{' '}
+          to offer the{' '}
+          <Link href="#" onClick={handleSecondClick}>
+            photons
+          </Link>
+          . <br />
           <br />
-          <br />
-          Turn the wheel and press the button to choose <strong>angle #{angleNumber}</strong>!
+          Turn the wheel and press the button to choose{' '}
+          <strong>angle #{angleNumber}</strong>!
         </p>
-      )} 
-       {angleNumber === 2 && (
+      )}
+      {angleNumber === 2 && (
         <p>
-        Great job!<br /><br />Now choose <strong>angle #{angleNumber}</strong>!
+          Great job!
+          <br />
+          <br />
+          Now choose <strong>angle #{angleNumber}</strong>!
         </p>
-      )} 
+      )}
       <p>{envStuff().keys}</p>
     </Typography>
   );

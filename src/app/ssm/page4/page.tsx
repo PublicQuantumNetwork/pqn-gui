@@ -1,25 +1,27 @@
-"use client"
-import {useState, useEffect, Suspense} from 'react';
+'use client';
+import { useState, useEffect, Suspense } from 'react';
 import Container from '@mui/material/Container';
-import {Box, Stack } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import Typography from '@mui/material/Typography';
-import {usePageRedirect} from '@/app/contexts/PageRedirectContext';
+import { usePageRedirect } from '@/app/contexts/PageRedirectContext';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useEnterKey } from '@/hooks/useEnterKey';
 
 export default function Home() {
-  const {setBackArrowLink, setForwardArrowLink} = usePageRedirect();
+  const { setBackArrowLink, setForwardArrowLink } = usePageRedirect();
   const router = useRouter();
 
-  const setLinks=()=>{
-    setBackArrowLink("/ssm/page3/");
-    setForwardArrowLink("/survey/");
-  }
+  const setLinks = () => {
+    setBackArrowLink('/ssm/page3/');
+    setForwardArrowLink('/survey/');
+  };
 
-  useEffect(()=>{setLinks()},[])
+  useEffect(() => {
+    setLinks();
+  }, []);
 
   useEnterKey(() => {
-    router.push("/survey/");
+    router.push('/survey/');
   });
 
   function MyComponent() {
@@ -37,7 +39,10 @@ export default function Home() {
     const [message2, setMessage2] = useState('');
 
     // Calculate blur pixels based on matching bits ratio
-    const calculateBlurPixels = (matchingBits: string, totalBits: string): number => {
+    const calculateBlurPixels = (
+      matchingBits: string,
+      totalBits: string
+    ): number => {
       const minPixels = 0;
       const maxPixels = 25;
 
@@ -59,9 +64,13 @@ export default function Home() {
         setMessage2('Please try a different game.');
       } else {
         if (role === 'leader') {
-          setMessage('You sent the message now. If it is too blurry you might need to agree on more questions.');
+          setMessage(
+            'You sent the message now. If it is too blurry you might need to agree on more questions.'
+          );
         } else if (role === 'follower') {
-          setMessage('You have received this message. If it is too blurry you might need to agree on more questions.');
+          setMessage(
+            'You have received this message. If it is too blurry you might need to agree on more questions.'
+          );
         } else {
           setMessage('Your quantum key distribution result is...');
         }
@@ -83,9 +92,10 @@ export default function Home() {
             display="flex"
             flexDirection="column"
             position="relative"
-            sx={{ width:'100%'}}
+            sx={{ width: '100%' }}
           >
-            <Stack direction="row"
+            <Stack
+              direction="row"
               sx={{
                 justifyContent: 'left',
                 alignItems: 'flex-end',
@@ -95,7 +105,7 @@ export default function Home() {
                 display="flex"
                 flexDirection="column"
                 position="relative"
-                sx={{ width:'50%'}}
+                sx={{ width: '50%' }}
               >
                 <Box
                   component="img"
@@ -122,11 +132,14 @@ export default function Home() {
                   }}
                 >
                   {!success ? (
-                    <p>{message}<br /><br />{message2}</p>
-                  ) : (
-                    <div>
+                    <p>
                       {message}
-                    </div>
+                      <br />
+                      <br />
+                      {message2}
+                    </p>
+                  ) : (
+                    <div>{message}</div>
                   )}
                 </Typography>
 
@@ -140,8 +153,8 @@ export default function Home() {
                     backgroundRepeat: 'no-repeat',
                     backgroundSize: 'contain',
                     backgroundPosition: 'left',
-                    paddingLeft:'12px',
-                    marginLeft:'-10px'
+                    paddingLeft: '12px',
+                    marginLeft: '-10px',
                   }}
                 />
               </Stack>
@@ -150,9 +163,10 @@ export default function Home() {
                 display="flex"
                 flexDirection="column"
                 position="relative"
-                sx={{ width:'50%'}}
+                sx={{ width: '50%' }}
               >
-                <Stack direction="row"
+                <Stack
+                  direction="row"
                   sx={{
                     minHeight: '7em',
                     justifyContent: 'left',
@@ -163,7 +177,7 @@ export default function Home() {
                     display="flex"
                     flexDirection="column"
                     position="relative"
-                    sx={{ width:'100%', marginLeft:'232px'}}
+                    sx={{ width: '100%', marginLeft: '232px' }}
                   >
                     <Box
                       component="img"
@@ -190,9 +204,9 @@ export default function Home() {
                             transform: 'translate(-50%, -50%)',
                             color: '#000000',
                             width: '60%',
-                            fontSize:'7em',
-                            textAlign:'center',
-                            filter: `blur(${calculateBlurPixels(n_matching_bits, n_total_bits)}px)`
+                            fontSize: '7em',
+                            textAlign: 'center',
+                            filter: `blur(${calculateBlurPixels(n_matching_bits, n_total_bits)}px)`,
                           }}
                         >
                           {emoji}
@@ -208,8 +222,8 @@ export default function Home() {
                             transform: 'translate(-50%, -50%)',
                             color: '#000000',
                             width: '60%',
-                            fontSize:'1.2em',
-                            textAlign:'center'
+                            fontSize: '1.2em',
+                            textAlign: 'center',
                           }}
                         >
                           Matching bits: {n_matching_bits} / {n_total_bits}
@@ -225,11 +239,19 @@ export default function Home() {
                             transform: 'translate(-50%, -50%)',
                             color: '#000000',
                             width: '60%',
-                            fontSize:'1.1em',
-                            textAlign:'center'
+                            fontSize: '1.1em',
+                            textAlign: 'center',
                           }}
                         >
-                          Success rate: {n_total_bits !== '0' ? ((Number(n_matching_bits) / Number(n_total_bits)) * 100).toFixed(1) : '0'}%
+                          Success rate:{' '}
+                          {n_total_bits !== '0'
+                            ? (
+                                (Number(n_matching_bits) /
+                                  Number(n_total_bits)) *
+                                100
+                              ).toFixed(1)
+                            : '0'}
+                          %
                         </Typography>
                       </>
                     )}

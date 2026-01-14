@@ -1,29 +1,41 @@
-"use client"
+'use client';
 
-import {useState, useEffect, Suspense} from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Container from '@mui/material/Container';
-import {Dialog, DialogContent, Button, Box, Stack, CircularProgress} from '@mui/material';
+import {
+  Dialog,
+  DialogContent,
+  Button,
+  Box,
+  Stack,
+  CircularProgress,
+} from '@mui/material';
 import Typography from '@mui/material/Typography';
-import {usePageRedirect} from '@/app/contexts/PageRedirectContext';
+import { usePageRedirect } from '@/app/contexts/PageRedirectContext';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEnterKey } from '@/hooks/useEnterKey';
-import { fetchRotatorAngle, fetchQuestionOrder, submitSSMAnswers } from '@/calls';
+import {
+  fetchRotatorAngle,
+  fetchQuestionOrder,
+  submitSSMAnswers,
+} from '@/calls';
 import questions from './questions';
 import SSMModalBox from '@/components/SSMModalBox';
 
 function SSMPage3Content() {
-
-  const {setBackArrowLink, setForwardArrowLink} = usePageRedirect();
+  const { setBackArrowLink, setForwardArrowLink } = usePageRedirect();
   const router = useRouter();
   const searchParams = useSearchParams();
   const role = searchParams.get('role') || 'leader'; // Default to 'leader' if no role specified
 
-  const setLinks=()=>{
-    setBackArrowLink("/ssm/page2/");
-    setForwardArrowLink("/ssm/page3/");
-  }
+  const setLinks = () => {
+    setBackArrowLink('/ssm/page2/');
+    setForwardArrowLink('/ssm/page3/');
+  };
 
-  useEffect(()=>{setLinks()},[])
+  useEffect(() => {
+    setLinks();
+  }, []);
 
   const [open, setOpen] = useState(false);
   const [openModal, setOpenModal] = useState(false);
@@ -50,12 +62,14 @@ function SSMPage3Content() {
   }, []);
 
   const currentQuestionNumber = questionOrder[currentQuestionIndex];
-  const currentQuestionData = questions[currentQuestionNumber - 1] || questions[0];
+  const currentQuestionData =
+    questions[currentQuestionNumber - 1] || questions[0];
 
   // Get the appropriate question text based on role
-  const currentQuestion = role === 'leader'
-    ? currentQuestionData.leader_question
-    : currentQuestionData.follower_question;
+  const currentQuestion =
+    role === 'leader'
+      ? currentQuestionData.leader_question
+      : currentQuestionData.follower_question;
 
   // Fetch rotator angle continuously
   useEffect(() => {
@@ -71,13 +85,11 @@ function SSMPage3Content() {
     // Determine which answer based on arrow rotation
     // If arrow points left (180-360 degrees), select answer 'a'
     // If arrow points right (0-180 degrees), select answer 'b'
-    const answer = (arrowRotation >= 180 && arrowRotation < 360)
-      ? 'a'
-      : 'b';
+    const answer = arrowRotation >= 180 && arrowRotation < 360 ? 'a' : 'b';
 
-    console.log("the answer is: ", answer);
+    console.log('the answer is: ', answer);
     const newAnswers = [...answerChoices, answer];
-    console.log("all answers so far are:", newAnswers)
+    console.log('all answers so far are:', newAnswers);
     setAnswerChoices(newAnswers);
 
     if (currentQuestionIndex === questionOrder.length - 1) {
@@ -85,7 +97,9 @@ function SSMPage3Content() {
       const result = await submitSSMAnswers(newAnswers);
       if (result.success) {
         const { n_matching_bits, n_total_bits, emoji, role } = result.data;
-        router.push(`/ssm/page4?n_matching_bits=${n_matching_bits}&n_total_bits=${n_total_bits}&emoji=${encodeURIComponent(emoji)}&role=${encodeURIComponent(role)}&success=true`);
+        router.push(
+          `/ssm/page4?n_matching_bits=${n_matching_bits}&n_total_bits=${n_total_bits}&emoji=${encodeURIComponent(emoji)}&role=${encodeURIComponent(role)}&success=true`
+        );
       } else {
         router.push(`/ssm/page4?success=false`);
       }
@@ -114,9 +128,10 @@ function SSMPage3Content() {
           display="flex"
           flexDirection="column"
           position="relative"
-          sx={{ width:'100%'}}
+          sx={{ width: '100%' }}
         >
-          <Stack direction="row"
+          <Stack
+            direction="row"
             sx={{
               minHeight: '8em',
               justifyContent: 'left',
@@ -127,7 +142,7 @@ function SSMPage3Content() {
               display="flex"
               flexDirection="column"
               position="relative"
-              sx={{ width:'50%'}}
+              sx={{ width: '50%' }}
             >
               <Box
                 component="img"
@@ -155,7 +170,14 @@ function SSMPage3Content() {
                 }}
               >
                 {loading ? (
-                  <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      gap: 2,
+                    }}
+                  >
                     <CircularProgress
                       size={60}
                       thickness={4}
@@ -164,21 +186,33 @@ function SSMPage3Content() {
                     <p>Loading questions...</p>
                   </Box>
                 ) : error ? (
-                  <p>Error fetching questions. The question order is not available. Please try again.</p>
+                  <p>
+                    Error fetching questions. The question order is not
+                    available. Please try again.
+                  </p>
                 ) : (
                   <>
                     {currentQuestionIndex === 0 && (
-                      <p>Share your secret message by rotating the wheel to select your answer.</p>
+                      <p>
+                        Share your secret message by rotating the wheel to
+                        select your answer.
+                      </p>
                     )}
-                    <p>Question {currentQuestionIndex + 1} of {questionOrder.length}</p>
+                    <p>
+                      Question {currentQuestionIndex + 1} of{' '}
+                      {questionOrder.length}
+                    </p>
                   </>
                 )}
               </Typography>
 
               <Dialog open={open} onClose={() => setOpen(false)}>
-                <DialogContent sx={{ padding: '0em 2.8em', fontSize:'1.45em' }}>
+                <DialogContent
+                  sx={{ padding: '0em 2.8em', fontSize: '1.45em' }}
+                >
                   <p>&nbsp;</p>
-                  This game uses quantum entanglement to share secret messages between players!
+                  This game uses quantum entanglement to share secret messages
+                  between players!
                   <p>&nbsp;</p>
                 </DialogContent>
               </Dialog>
@@ -210,7 +244,7 @@ function SSMPage3Content() {
                 display="flex"
                 flexDirection="column"
                 position="relative"
-                sx={{ width:'50%'}}
+                sx={{ width: '50%' }}
               >
                 {/* Question at the top */}
                 <Typography
@@ -234,10 +268,10 @@ function SSMPage3Content() {
                     backgroundImage: 'url(/images/circle.png)',
                     Height: '560px',
                     backgroundRepeat: 'no-repeat',
-                    width:'560px',
+                    width: '560px',
                     backgroundPosition: 'center',
-                    position:'relative',
-                    left:'40%',
+                    position: 'relative',
+                    left: '40%',
                   }}
                 >
                   <Stack direction="row">
@@ -250,7 +284,7 @@ function SSMPage3Content() {
                         top: '50%',
                         left: '6%',
                         transform: 'translate(-100%, -50%)',
-                        fontSize:'1em',
+                        fontSize: '1em',
                         color: '#000000',
                         fontWeight: 'bold',
                         width: '150px',
@@ -269,7 +303,7 @@ function SSMPage3Content() {
                         top: '50%',
                         left: '94%',
                         transform: 'translate(-30%, -50%)',
-                        fontSize:'1em',
+                        fontSize: '1em',
                         color: '#000000',
                         fontWeight: 'bold',
                       }}
@@ -296,8 +330,8 @@ function SSMPage3Content() {
                       sx={{
                         position: 'relative',
                         zIndex: 2,
-                        minHeight:'560px',
-                        minWidth:'560px',
+                        minHeight: '560px',
+                        minWidth: '560px',
                         alignContent: 'center',
                         justifyContent: 'center',
                       }}
@@ -326,9 +360,9 @@ function SSMPage3Content() {
 
                     <Stack
                       sx={{
-                        position:'relative',
+                        position: 'relative',
                         justifyContent: 'flex-end',
-                        paddingBottom: '60px'
+                        paddingBottom: '60px',
                       }}
                     >
                       <Button
@@ -354,19 +388,28 @@ function SSMPage3Content() {
         </Stack>
       </Box>
     </Container>
-  )
+  );
 }
 
 export default function MyComponent() {
   return (
-    <Suspense fallback={
-      <Container maxWidth="lg">
-        <Box sx={{ my: 4, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <CircularProgress size={60} thickness={4} sx={{ color: 'black' }} />
-        </Box>
-      </Container>
-    }>
+    <Suspense
+      fallback={
+        <Container maxWidth="lg">
+          <Box
+            sx={{
+              my: 4,
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <CircularProgress size={60} thickness={4} sx={{ color: 'black' }} />
+          </Box>
+        </Container>
+      }
+    >
       <SSMPage3Content />
     </Suspense>
-  )
+  );
 }

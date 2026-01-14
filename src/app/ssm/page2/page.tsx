@@ -1,15 +1,13 @@
-"use client"
+'use client';
 
 import Container from '@mui/material/Container';
-import { Box, Stack, CircularProgress} from '@mui/material';
+import { Box, Stack, CircularProgress } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { requestFollower } from '@/calls';
 
-
 export default function MyComponent() {
-
   const router = useRouter();
   const [hasError, setHasError] = useState(false);
   const [wasAccepted, setWasAccepted] = useState<boolean | null>(null);
@@ -33,7 +31,6 @@ export default function MyComponent() {
 
   return (
     <Container maxWidth="lg">
-
       <Box
         sx={{
           my: 4,
@@ -47,20 +44,21 @@ export default function MyComponent() {
           display="flex"
           flexDirection="column"
           position="relative"
-          sx={{ width:'100%'}}
+          sx={{ width: '100%' }}
         >
-          <Stack direction="row"
-                 sx={{
-                   minHeight: '8em',
-                   justifyContent: 'left',
-                   alignItems: 'center', // Align items to the center of the row
-                 }}
+          <Stack
+            direction="row"
+            sx={{
+              minHeight: '8em',
+              justifyContent: 'left',
+              alignItems: 'center', // Align items to the center of the row
+            }}
           >
             <Stack
               display="flex"
               flexDirection="column"
               position="relative"
-              sx={{ width:'50%'}}
+              sx={{ width: '50%' }}
             >
               <Box
                 component="img"
@@ -88,13 +86,25 @@ export default function MyComponent() {
                 }}
               >
                 {hasError ? (
-                  <p>There was an error connecting to the other computer. Please press the `START OVER` button and try again.</p>
+                  <p>
+                    There was an error connecting to the other computer. Please
+                    press the `START OVER` button and try again.
+                  </p>
                 ) : wasAccepted === false ? (
-                  <p>Other computer has said no to playing the game, please press the `START OVER` button and try again</p>
+                  <p>
+                    Other computer has said no to playing the game, please press
+                    the `START OVER` button and try again
+                  </p>
                 ) : (
                   <>
-                    <p>Asking your friend to join. Please accept the popup that appears in the other computer.</p>
-                    <p>If no popup appeared please press the `START OVER` button and try again.</p>
+                    <p>
+                      Asking your friend to join. Please accept the popup that
+                      appears in the other computer.
+                    </p>
+                    <p>
+                      If no popup appeared please press the `START OVER` button
+                      and try again.
+                    </p>
                   </>
                 )}
               </Typography>
@@ -111,7 +121,6 @@ export default function MyComponent() {
                   backgroundPosition: 'left',
                 }}
               />
-
             </Stack>
 
             <Stack
@@ -119,7 +128,7 @@ export default function MyComponent() {
               flexDirection="column"
               position="relative"
               sx={{
-                width:'50%',
+                width: '50%',
                 justifyContent: 'center',
                 alignItems: 'flex-end',
                 pr: 4,
@@ -142,35 +151,33 @@ export default function MyComponent() {
                       height: 'auto',
                     }}
                   />
+                ) : wasAccepted === false ? (
+                  <Typography
+                    sx={{
+                      fontSize: '150px',
+                    }}
+                  >
+                    😞
+                  </Typography>
                 ) : (
-                  wasAccepted === false ? (
-                    <Typography
+                  <>
+                    <CircularProgress
+                      size={80}
+                      thickness={4}
                       sx={{
-                        fontSize: '150px',
+                        color: 'black',
+                      }}
+                    />
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        mt: 2,
+                        color: 'black',
                       }}
                     >
-                      😞
+                      Waiting for response...
                     </Typography>
-                    ) : (
-                    <>
-                      <CircularProgress
-                        size={80}
-                        thickness={4}
-                        sx={{
-                          color: 'black',
-                        }}
-                      />
-                      <Typography
-                        variant="h6"
-                        sx={{
-                          mt: 2,
-                          color: 'black',
-                        }}
-                      >
-                        Waiting for response...
-                      </Typography>
-                    </>
-                  )
+                  </>
                 )}
               </Box>
             </Stack>
@@ -178,11 +185,5 @@ export default function MyComponent() {
         </Stack>
       </Box>
     </Container>
-
-  )
+  );
 }
-
-
-
-
-

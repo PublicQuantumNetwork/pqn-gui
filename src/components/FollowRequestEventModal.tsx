@@ -1,5 +1,4 @@
-
-"use client";
+'use client';
 
 import React from 'react';
 import { Modal, Box, Typography, IconButton, Button } from '@mui/material';
@@ -25,12 +24,16 @@ const style = {
   p: 4,
 };
 
-const FollowRequestEventModal: React.FC<EventModalProps> = ({ isOpen, onClose, message, sendMessage }) => {
-
+const FollowRequestEventModal: React.FC<EventModalProps> = ({
+  isOpen,
+  onClose,
+  message,
+  sendMessage,
+}) => {
   const router = useRouter();
 
   const handleAccept = () => {
-    sendMessage("true");
+    sendMessage('true');
     // Add a short delay to allow the WebSocket message to be sent before navigating
     setTimeout(() => {
       router.push('/ssm/page3?role=follower');
@@ -39,7 +42,7 @@ const FollowRequestEventModal: React.FC<EventModalProps> = ({ isOpen, onClose, m
   };
 
   const handleReject = () => {
-    sendMessage("false");
+    sendMessage('false');
     onClose();
   };
 
@@ -64,7 +67,7 @@ const FollowRequestEventModal: React.FC<EventModalProps> = ({ isOpen, onClose, m
           <CloseIcon />
         </IconButton>
         <Typography id="modal-description" sx={{ mt: 2 }}>
-          {message || "No message content"}
+          {message || 'No message content'}
         </Typography>
         <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
           <Button onClick={handleReject} sx={{ mr: 1 }}>

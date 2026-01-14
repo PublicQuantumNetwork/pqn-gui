@@ -9,6 +9,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "post-update": "echo \"codesandbox preview only, need an update\" && pnpm update --latest"
   },
   "dependencies": {
@@ -31,6 +34,8 @@
     "cross-env": "^10.1.0",
     "eslint": "latest",
     "eslint-config-next": "^16.1.1",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.7.4",
     "typescript": "latest"
   }
 }

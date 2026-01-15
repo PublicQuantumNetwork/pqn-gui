@@ -31,7 +31,8 @@ export default function Whobit({ children, variant = 'left-wing-up' }: WhobitPro
           border: '2px solid #000000',
           padding: '30px 40px',
           marginBottom: '10px',
-          maxWidth: '500px',
+          width: '500px',
+          minHeight: '200px',
           '&::after': {
             content: '""',
             position: 'absolute',

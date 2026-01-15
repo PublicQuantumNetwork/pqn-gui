@@ -1,16 +1,25 @@
 'use client';
-import * as React from 'react';
 import { useEffect, useState } from 'react';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-import { Box, Button, Stack } from '@mui/material';
-import { usePageRedirect } from '@/app/contexts/PageRedirectContext';
+import { Box, Button, Stack, styled, ButtonProps } from '@mui/material';
 import { useWebSocket } from '@/app/hooks/WebSocketHook';
 import FollowRequestEventModal from '@/components/FollowRequestEventModal';
 import { resetBackendState } from '@/calls';
 
+interface StyledHomeButtonProps extends ButtonProps {
+  leftMargin?: string;
+}
+
+const StyledHomeButton = styled(Button, {
+  shouldForwardProp: (prop) => prop !== 'leftMargin',
+})<StyledHomeButtonProps>(({ leftMargin = '220px' }) => ({
+  height: '6em',
+  fontSize: '1.2em',
+  margin: `0 0 20px ${leftMargin}`,
+}));
+
 export default function Home() {
-  const { setBackArrowLink, setForwardArrowLink } = usePageRedirect();
   const { lastMessage, sendMessage, connect, disconnect } = useWebSocket();
   const [isFollowRequestModalOpen, setIsFollowRequestModalOpen] =
     useState(false);
@@ -18,13 +27,8 @@ export default function Home() {
     string | null
   >(null);
 
-  const setLinks = () => {
-    setForwardArrowLink('chsh/page1');
-  };
-
   useEffect(() => {
-    setLinks();
-    const ret = resetBackendState();
+    resetBackendState().then(() => {});
   }, []);
 
   useEffect(() => {
@@ -47,22 +51,14 @@ export default function Home() {
   };
 
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="lg"
+      sx={{my: 4,}}>
       <FollowRequestEventModal
         isOpen={isFollowRequestModalOpen}
         onClose={handleCloseModal}
         message={followRequestModalMessage}
         sendMessage={sendMessage}
       />
-      <Box
-        sx={{
-          my: 4,
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
         <Stack
           display="flex"
           flexDirection="column"
@@ -113,49 +109,21 @@ export default function Home() {
               position="relative"
               sx={{ width: '100%' }}
             >
-              <Button
+              <StyledHomeButton
                 variant="contained"
                 component="a"
                 href="/chsh/page1"
-                sx={{
-                  minWidth: '464px',
-                  height: '6em',
-                  fontSize: '1.2em',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  backgroundRepeat: 'no-repeat',
-                  backgroundSize: 'contain',
-                  margin: '0 0 20px 220px',
-                  border: '1px solid #000',
-                  backgroundColor: '#FFFFFF;',
-                  color: '#000000;',
-                }}
               >
                 Verify Quantum Link (single player)
-              </Button>
+              </StyledHomeButton>
 
-              <Button
+              <StyledHomeButton
                 variant="contained"
                 component="a"
                 href="/qf/page1"
-                sx={{
-                  minWidth: '464px',
-                  height: '6em',
-                  fontSize: '1.2em',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  backgroundRepeat: 'no-repeat',
-                  backgroundSize: 'contain',
-                  margin: '0 0 20px 220px',
-                  border: '1px solid #000',
-                  backgroundColor: '#FFFFFF;',
-                  color: '#000000;',
-                }}
               >
                 Quantum Fortune (single player)
-              </Button>
+              </StyledHomeButton>
             </Stack>
           </Stack>
 
@@ -186,54 +154,27 @@ export default function Home() {
               position="relative"
               sx={{ width: '100%' }}
             >
-              <Button
+              <StyledHomeButton
                 variant="contained"
                 component="a"
                 href="/ssm/page1"
-                sx={{
-                  minWidth: '464px',
-                  height: '6em',
-                  fontSize: '1.2em',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  backgroundRepeat: 'no-repeat',
-                  backgroundSize: 'contain',
-                  margin: '0 0 20px 368px',
-                  border: '1px solid #000',
-                  backgroundColor: '#FFFFFF;',
-                  color: '#000000;',
-                }}
+                leftMargin="368px"
               >
                 Share a secret message (Preview)
-              </Button>
+              </StyledHomeButton>
 
-              <Button
-                disabled
+              <StyledHomeButton
                 variant="contained"
                 component="a"
                 href="#"
-                sx={{
-                  minWidth: '464px',
-                  height: '6em',
-                  fontSize: '1.2em',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  backgroundRepeat: 'no-repeat',
-                  backgroundSize: 'contain',
-                  margin: '0 0 20px 368px',
-                  border: '1px solid #000',
-                  backgroundColor: '#FFFFFF;',
-                  color: '#000000;',
-                }}
+                leftMargin="368px"
+                disabled
               >
                 Get to know someone (Coming soon)
-              </Button>
+              </StyledHomeButton>
             </Stack>
           </Stack>
         </Stack>
-      </Box>
     </Container>
   );
 }

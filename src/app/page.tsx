@@ -1,23 +1,17 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
-import { Box, Button, Stack, styled, ButtonProps } from '@mui/material';
+import { Button, Stack, styled, ButtonProps } from '@mui/material';
 import { useWebSocket } from '@/app/hooks/WebSocketHook';
 import FollowRequestEventModal from '@/components/FollowRequestEventModal';
+import Whobit from '@/components/Whobit';
 import { resetBackendState } from '@/calls';
 
-interface StyledHomeButtonProps extends ButtonProps {
-  leftMargin?: string;
-}
-
-const StyledHomeButton = styled(Button, {
-  shouldForwardProp: (prop) => prop !== 'leftMargin',
-})<StyledHomeButtonProps>(({ leftMargin = '220px' }) => ({
+const StyledHomeButton = styled(Button)<ButtonProps>({
   height: '6em',
   fontSize: '1.2em',
-  margin: `0 0 20px ${leftMargin}`,
-}));
+  marginBottom: '20px',
+});
 
 export default function Home() {
   const { lastMessage, sendMessage, connect, disconnect } = useWebSocket();
@@ -59,122 +53,50 @@ export default function Home() {
         message={followRequestModalMessage}
         sendMessage={sendMessage}
       />
-        <Stack
-          display="flex"
-          flexDirection="column"
-          position="relative"
-          sx={{ width: '100%' }}
-        >
-          <Stack
-            direction="row"
-            sx={{
-              minHeight: '8em',
-              justifyContent: 'left',
-              alignItems: 'flex-end', // Align items to the bottom of the row
-            }}
+      <Stack direction="row" alignItems="flex-start" sx={{ width: '100%' }}>
+        <Whobit>
+          <p>Hi, Quantum Adventurer!</p>
+          <p>I'm Whobit.</p>
+          <p>What would you like to do?</p>
+        </Whobit>
+
+        {/* Right side: All buttons */}
+        <Stack flexDirection="column" flex={1} sx={{ paddingLeft: '150px' }}>
+          <StyledHomeButton
+            variant="contained"
+            component="a"
+            href="/chsh/page1"
           >
-            <Box
-              component="img"
-              src="/images/speech-bubble-white-small.png"
-              alt="Whobit welcomes you"
-              sx={{
-                maxWidth: '100%',
-                height: '18em',
-                backgroundRepeat: 'no-repeat',
-                backgroundSize: 'contain',
-                backgroundPosition: 'left',
-              }}
-            />
-            <Typography
-              variant="h5"
-              component="h1"
-              sx={{
-                position: 'absolute', // Add this line to position the text
-                top: '23%', // Adjust the top position as needed
-                left: '19%', // Adjust the left position as needed
-                transform: 'translate(-50%, -50%)', // Center the text
-                color: '#000000', // Set the text color
-              }}
-            >
-              <p>Hi, Quantum Adventurer!</p>
+            Verify Quantum Link (single player)
+          </StyledHomeButton>
 
-              <p>I'm Whobit.</p>
-
-              <p>What would you like to do?</p>
-            </Typography>
-
-            <Stack
-              display="flex"
-              flexDirection="column"
-              position="relative"
-              sx={{ width: '100%' }}
-            >
-              <StyledHomeButton
-                variant="contained"
-                component="a"
-                href="/chsh/page1"
-              >
-                Verify Quantum Link (single player)
-              </StyledHomeButton>
-
-              <StyledHomeButton
-                variant="contained"
-                component="a"
-                href="/qf/page1"
-              >
-                Quantum Fortune (single player)
-              </StyledHomeButton>
-            </Stack>
-          </Stack>
-
-          <Stack
-            direction="row"
-            sx={{
-              marginTop: '0em',
-              justifyContent: 'left',
-              alignItems: 'flex-end', // Align items to the bottom of the row
-            }}
+          <StyledHomeButton
+            variant="contained"
+            component="a"
+            href="/qf/page1"
           >
-            <Box
-              component="img"
-              src="/images/whobit-left-wing-up.png"
-              alt="Whobit welcomes you"
-              sx={{
-                width: '18em',
-                height: 'auto',
-                backgroundRepeat: 'no-repeat',
-                backgroundSize: 'contain',
-                backgroundPosition: 'left',
-              }}
-            />
+            Quantum Fortune (single player)
+          </StyledHomeButton>
 
-            <Stack
-              display="flex"
-              flexDirection="column"
-              position="relative"
-              sx={{ width: '100%' }}
-            >
-              <StyledHomeButton
-                variant="contained"
-                component="a"
-                href="/ssm/page1"
-                leftMargin="368px"
-              >
-                Share a secret message (Preview)
-              </StyledHomeButton>
+          <StyledHomeButton
+            variant="contained"
+            component="a"
+            href="/ssm/page1"
+            sx={{ marginTop: '40px' }}
+          >
+            Share a secret message (Preview)
+          </StyledHomeButton>
 
-              <StyledHomeButton
-                variant="contained"
-                component="a"
-                href="#"
-                leftMargin="368px"
-                disabled
-              >
-                Get to know someone (Coming soon)
-              </StyledHomeButton>
-            </Stack>
-          </Stack>
+          <StyledHomeButton
+            variant="contained"
+            component="a"
+            href="#"
+            disabled
+          >
+            Get to know someone (Coming soon)
+          </StyledHomeButton>
         </Stack>
+      </Stack>
     </Container>
   );
 }

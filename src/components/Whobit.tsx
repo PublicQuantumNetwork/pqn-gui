@@ -1,0 +1,73 @@
+import { Box, Stack, Typography } from '@mui/material';
+import { ReactNode } from 'react';
+
+interface WhobitProps {
+  children: ReactNode;
+}
+
+export default function Whobit({ children }: WhobitProps) {
+  return (
+    <Stack position="relative" sx={{ minWidth: '500px' }}>
+      {/* Speech bubble */}
+      <Box
+        sx={{
+          position: 'relative',
+          backgroundColor: '#FFFFFF',
+          borderRadius: '20px',
+          border: '2px solid #000000',
+          padding: '30px 40px',
+          marginBottom: '10px',
+          maxWidth: '500px',
+          '&::after': {
+            content: '""',
+            position: 'absolute',
+            bottom: '-20px',
+            left: '240px',
+            width: '0',
+            height: '0',
+            borderLeft: '20px solid transparent',
+            borderRight: '20px solid transparent',
+            borderTop: '20px solid #FFFFFF',
+            filter: 'drop-shadow(0px 2px 0px #000000)',
+          },
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            bottom: '-23px',
+            left: '118px',
+            width: '0',
+            height: '0',
+            borderLeft: '22px solid transparent',
+            borderRight: '22px solid transparent',
+            borderTop: '23px solid #000000',
+            zIndex: -1,
+          },
+        }}
+      >
+        <Typography
+          variant="h5"
+          component="div"
+          sx={{
+            color: '#000000',
+          }}
+        >
+          {children}
+        </Typography>
+      </Box>
+
+      {/* Whobit character */}
+      <Box
+        component="img"
+        src="/images/whobit-left-wing-up.png"
+        alt="Whobit welcomes you"
+        sx={{
+          width: '18em',
+          height: 'auto',
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: 'contain',
+          backgroundPosition: 'left',
+        }}
+      />
+    </Stack>
+  );
+}

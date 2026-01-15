@@ -28,8 +28,8 @@ export default function RootLayout(props: { children: React.ReactNode }) {
                 display="flex"
                 flexDirection="column"
                 position="relative"
-                justifyContent="center"
                 sx={{
+                  pt: 16,
                   width: '100%',
                   minHeight: '100vh',
                   touchAction: 'pan-y pan-x',
@@ -41,7 +41,12 @@ export default function RootLayout(props: { children: React.ReactNode }) {
                   sx={{
                     backgroundImage: 'url(/images/GUI-background.png)',
                     backgroundRepeat: 'no-repeat',
-                    backgroundPosition: 'center',
+                    backgroundPosition: 'center top',
+                    backgroundSize: '100% 100%',
+                    position: 'relative',
+                    width: '100%',
+                    height: '60vh',
+                    overflow: 'hidden',
                   }}
                 >
                   {props.children}

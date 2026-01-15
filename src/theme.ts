@@ -106,6 +106,20 @@ const theme = createTheme({
         }),
       },
     },
+    MuiLink: {
+      styleOverrides: {
+        root: {
+          color: 'royalblue',
+          textDecorationColor: 'royalblue',
+          '&:hover': {
+            color: 'royalblue',
+          },
+          '&:visited': {
+            color: 'royalblue',
+          },
+        },
+      },
+    },
   },
 });
 

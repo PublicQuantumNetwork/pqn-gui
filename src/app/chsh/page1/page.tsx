@@ -1,11 +1,11 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Container from '@mui/material/Container';
-import { Link, Dialog, DialogContent, Box, Stack, Button } from '@mui/material';
-import Typography from '@mui/material/Typography';
+import { Link, Dialog, DialogContent, Stack, Button } from '@mui/material';
 import { usePageRedirect } from '@/app/contexts/PageRedirectContext';
 import { useEnterKey } from '@/hooks/useEnterKey';
 import { useRouter } from 'next/navigation';
+import Whobit from '@/components/Whobit';
 
 export default function Home() {
   const { setBackArrowLink, setForwardArrowLink } = usePageRedirect();
@@ -34,122 +34,45 @@ export default function Home() {
   });
 
   return (
-    <Container maxWidth="lg">
-      <Box
-        sx={{
-          my: 4,
-          display: 'flex',
-          flexDirection: 'column',
-          top: '10',
-        }}
-      >
-        <Stack
-          display="flex"
-          flexDirection="column"
-          position="relative"
-          sx={{ width: '100%' }}
-        >
-          <Stack
-            direction="row"
+    <Container maxWidth="lg" sx={{ my: 4 }}>
+      <Dialog open={open} onClose={() => setOpen(false)}>
+        <DialogContent sx={{ padding: '2.8em', fontSize: '1.45em' }}>
+          Entangled photons are light particles that act as if they&apos;re
+          connected, even if they are very far apart.
+        </DialogContent>
+      </Dialog>
+
+      <Stack direction="row" justifyContent="space-between" sx={{ width: '100%', height: '100%' }}>
+        <Whobit variant="arms-down">
+          <p>
+            <Link component="button" onClick={handleClick} sx={{ cursor: 'pointer' }}>
+              Entangled photons
+            </Link>
+            &nbsp;are flying through the library.
+          </p>
+          <p>
+            We are going to check that they are entangled using a Bell Test.
+          </p>
+        </Whobit>
+
+        <Stack flex={1} justifyContent="flex-end" alignItems="flex-end">
+          <Button
+            variant="contained"
+            component="a"
+            href="#"
+            onClick={handleNextPageClick}
             sx={{
-              minHeight: '8em',
-              justifyContent: 'left',
-              alignItems: 'flex-end', // Align items to the bottom of the row
+              height: '5em',
+              width: '8em',
+              fontSize: '1.2rem',
+              bottom: 50,
+              left: 200,
             }}
           >
-            <Stack
-              display="flex"
-              flexDirection="column"
-              position="relative"
-              sx={{ width: '50%' }}
-            >
-              <Box
-                component="img"
-                src="/images/speech-bubble-white-small.png"
-                alt="Whobit welcomes you"
-                sx={{
-                  width: 'auto',
-                  height: '18em',
-                  backgroundRepeat: 'no-repeat',
-                  backgroundSize: 'contain',
-                  backgroundPosition: 'left',
-                }}
-              />
-              <Typography
-                variant="h5"
-                component="h1"
-                sx={{
-                  position: 'absolute',
-                  top: '23%',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                  color: '#000000',
-                  width: '75%',
-                }}
-              >
-                <p>
-                  <Link href="#" onClick={handleClick}>
-                    Entangled photons
-                  </Link>
-                  &nbsp;are flying through the library.
-                </p>
-                <p>
-                  We are going to check that they are entangled using a Bell
-                  Test.{' '}
-                </p>
-              </Typography>
-
-              <Dialog open={open} onClose={() => setOpen(false)}>
-                <DialogContent sx={{ padding: '2.8em', fontSize: '1.45em' }}>
-                  Entangled photons are light particles that act as if they're
-                  connected, even if they are very &nbsp; far apart.
-                </DialogContent>
-              </Dialog>
-
-              <Box
-                component="img"
-                src="/images/whobit-arms-down.png"
-                alt="Whobit welcomes you"
-                sx={{
-                  width: '14.3em',
-                  height: 'auto',
-                  backgroundRepeat: 'no-repeat',
-                  backgroundSize: 'contain',
-                  backgroundPosition: 'left',
-                  paddingLeft: '4px',
-                }}
-              />
-            </Stack>
-
-            <Stack
-              display="flex"
-              flexDirection="column"
-              position="relative"
-              justifyContent="flex-end"
-              alignItems="flex-end"
-              sx={{ width: '50%', paddingBottom: '60px' }}
-            >
-              <Button
-                variant="contained"
-                component="a"
-                href="#"
-                onClick={handleNextPageClick}
-                sx={{
-                  height: '5em',
-                  width: '8em',
-                  fontSize: '1.2rem',
-                  border: '1px solid #000',
-                  backgroundColor: '#FFFFFF',
-                  color: '#000000',
-                  marginRight: '-200px',
-                }}
-              >
-                Next
-              </Button>
-            </Stack>
-          </Stack>
+            Next
+          </Button>
         </Stack>
-      </Box>
+      </Stack>
     </Container>
   );
 }

@@ -1,13 +1,27 @@
 import { Box, Stack, Typography } from '@mui/material';
 import { ReactNode } from 'react';
 
+type WhobitVariant = 'left-wing-up' | 'arms-up' | 'arms-down';
+
 interface WhobitProps {
   children: ReactNode;
+  variant?: WhobitVariant;
 }
 
-export default function Whobit({ children }: WhobitProps) {
+export default function Whobit({ children, variant = 'left-wing-up' }: WhobitProps) {
+  const getWhobitImage = () => {
+    switch (variant) {
+      case 'arms-up':
+        return '/images/whobit-arms-up.svg';
+      case 'arms-down':
+        return '/images/whobit-arms-down.svg';
+      case 'left-wing-up':
+      default:
+        return '/images/whobit-left-wing-up.svg';
+    }
+  };
   return (
-    <Stack position="relative" sx={{ minWidth: '500px' }}>
+    <Stack position="relative" sx={{ minWidth: 'fit-content' }}>
       {/* Speech bubble */}
       <Box
         sx={{
@@ -58,14 +72,11 @@ export default function Whobit({ children }: WhobitProps) {
       {/* Whobit character */}
       <Box
         component="img"
-        src="/images/whobit-left-wing-up.png"
-        alt="Whobit welcomes you"
+        src={getWhobitImage()}
+        alt="Whobit"
         sx={{
-          width: '18em',
-          height: 'auto',
-          backgroundRepeat: 'no-repeat',
-          backgroundSize: 'contain',
-          backgroundPosition: 'left',
+          width: '288px',
+          height: '288px',
         }}
       />
     </Stack>

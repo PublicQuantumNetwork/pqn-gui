@@ -1,19 +1,32 @@
 'use client';
 
-import { Box, styled } from '@mui/material';
-import { ReactNode } from 'react';
+import { Box } from '@mui/material';
+import { ReactNode, useEffect, useState } from 'react';
+import { fetchRotatorAngle } from '@/calls';
 
 interface RotatorCircleProps {
-  rotation: number;
   angleMultiplier?: number;
   children?: ReactNode;
+  onRotationChange?: (rotation: number) => void;
 }
 
 export default function RotatorCircle({
-  rotation,
   angleMultiplier = 1,
   children,
+  onRotationChange,
 }: RotatorCircleProps) {
+  const [rotation, setRotation] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      const result = await fetchRotatorAngle();
+      const newRotation = result.theta * 2;
+      setRotation(newRotation);
+      onRotationChange?.(newRotation);
+    }, 100);
+
+    return () => clearInterval(interval);
+  }, [onRotationChange]);
   return (
     <Box
       sx={{

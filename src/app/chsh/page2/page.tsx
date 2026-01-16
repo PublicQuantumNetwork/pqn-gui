@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, SetStateAction } from 'react';
+import { useState } from 'react';
 import Container from '@mui/material/Container';
 import {
   Dialog,
@@ -21,7 +21,7 @@ import MovingIcon from '@mui/icons-material/Moving';
 import TrendingFlatIcon from '@mui/icons-material/TrendingFlat';
 import DoDisturbIcon from '@mui/icons-material/DoDisturb';
 import PolylineIcon from '@mui/icons-material/Polyline';
-import { chshPost, fetchRotatorAngle } from '@/calls';
+import { chshPost } from '@/calls';
 
 const AngleLabel = styled(Box)<{ top: string; left: string }>(
   ({ top, left }) => ({
@@ -35,18 +35,10 @@ const AngleLabel = styled(Box)<{ top: string; left: string }>(
 );
 
 async function chshSubmit(
-  currentAngle: number,
-  setAngleChoices: React.Dispatch<SetStateAction<number[]>>,
-  arrowRotation: number,
   angleChoices: number[],
-  setCurrentAngle: React.Dispatch<SetStateAction<number>>,
   router: AppRouterInstance
 ) {
-  if (currentAngle == 1) {
-    setAngleChoices([arrowRotation]);
-  } else if (currentAngle == 2) {
-    setAngleChoices([...angleChoices, arrowRotation]);
-    const response = await chshPost([...angleChoices, arrowRotation]);
+    const response = await chshPost([...angleChoices]);
 
     if (response.status == 200) {
       const data = await response.json();
@@ -56,49 +48,18 @@ async function chshSubmit(
     } else {
       router.push(`/chsh/page3?fail=true`);
     }
-  } else {
-    console.error('Something went wrong please refresh the page');
-  }
-
-  setCurrentAngle(currentAngle + 1);
 }
 
 export default function Page() {
   const router = useRouter();
+
   const [openMeasuringModal, setOpenMeasuringModal] = useState(false);
   const [openPolarizationModal, setOpenPolarizationModal] = useState(false);
   const [openPhotonModal, setOpenPhotonModal] = useState(false);
 
-  const [arrowRotation, setArrowRotation] = useState(0);
+  const [currentRotation, setCurrentRotation] = useState(0);
   const [currentAngle, setCurrentAngle] = useState(1); // Index of angle choice
   const [angleChoices, setAngleChoices] = useState<number[]>([]);
-  const [triggerSubmit, setTriggerSubmit] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(async () => {
-      const result = await fetchRotatorAngle();
-      console.log(result.theta);
-      setArrowRotation(result.theta * 2);
-    }, 100);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    if (triggerSubmit != 0) {
-      chshSubmit(
-        currentAngle,
-        setAngleChoices,
-        arrowRotation,
-        angleChoices,
-        setCurrentAngle,
-        router
-      );
-      if (currentAngle == 2) {
-        setOpenMeasuringModal(true);
-      }
-    }
-  }, [triggerSubmit]);
 
   const handleClick = () => {
     setOpenPolarizationModal(true);
@@ -108,8 +69,16 @@ export default function Page() {
     setOpenPhotonModal(true);
   };
 
-  const handleSubmitClick = () => {
-    setTriggerSubmit(triggerSubmit + 1);
+  const handleSubmitClick = async () => {
+    const updatedChoices = [...angleChoices, currentRotation];
+    setAngleChoices(updatedChoices);
+
+    if (currentAngle === 2) {
+      setOpenMeasuringModal(true);
+      await chshSubmit(updatedChoices, router);
+    }
+
+    setCurrentAngle(currentAngle + 1);
   };
 
   useEnterKey(() => {
@@ -194,7 +163,7 @@ export default function Page() {
         </Whobit>
 
         <Box sx={{ position: 'relative' }}>
-          <RotatorCircle rotation={arrowRotation}>
+          <RotatorCircle onRotationChange={setCurrentRotation}>
             <AngleLabel top="20%" left="18%">A</AngleLabel>
             <AngleLabel top="6%" left="50%">V</AngleLabel>
             <AngleLabel top="20%" left="82%">D</AngleLabel>

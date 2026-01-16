@@ -13,7 +13,7 @@ const StyledHomeButton = styled(Button)<ButtonProps>({
   marginBottom: '20px',
 });
 
-export default function Home() {
+export default function Page() {
   const { lastMessage, sendMessage, connect, disconnect } = useWebSocket();
   const [isFollowRequestModalOpen, setIsFollowRequestModalOpen] =
     useState(false);

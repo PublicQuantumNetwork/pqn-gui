@@ -1,25 +1,14 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Container from '@mui/material/Container';
 import { Link, Dialog, DialogContent, Stack, Button } from '@mui/material';
-import { usePageRedirect } from '@/app/contexts/PageRedirectContext';
 import { useEnterKey } from '@/hooks/useEnterKey';
 import { useRouter } from 'next/navigation';
 import Whobit from '@/components/Whobit';
 
-export default function Home() {
-  const { setBackArrowLink, setForwardArrowLink } = usePageRedirect();
+export default function Page() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
-
-  const setLinks = () => {
-    setBackArrowLink('/');
-    setForwardArrowLink('/chsh/page2/');
-  };
-
-  useEffect(() => {
-    setLinks();
-  }, []);
 
   const handleClick = () => {
     setOpen(true);

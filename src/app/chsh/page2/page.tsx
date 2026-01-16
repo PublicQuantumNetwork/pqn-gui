@@ -8,12 +8,11 @@ import {
   Button,
   Box,
   Stack,
-  Link,
-  styled,
+  Link, styled,
 } from '@mui/material';
-import Typography from '@mui/material/Typography';
 import Whobit from '@/components/Whobit';
 import ModalBox from '@/components/ModalBox';
+import RotatorCircle from '@/components/RotatorCircle';
 import { useRouter } from 'next/navigation';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import { useEnterKey } from '@/hooks/useEnterKey';
@@ -24,7 +23,7 @@ import DoDisturbIcon from '@mui/icons-material/DoDisturb';
 import PolylineIcon from '@mui/icons-material/Polyline';
 import { chshPost, fetchRotatorAngle } from '@/calls';
 
-const AngleLabel = styled(Typography)<{ top: string; left: string }>(
+const AngleLabel = styled(Box)<{ top: string; left: string }>(
   ({ top, left }) => ({
     position: 'absolute',
     top,
@@ -33,7 +32,7 @@ const AngleLabel = styled(Typography)<{ top: string; left: string }>(
     fontSize: '2.5em',
     color: '#000000',
   })
-)
+);
 
 async function chshSubmit(
   currentAngle: number,
@@ -64,12 +63,12 @@ async function chshSubmit(
   setCurrentAngle(currentAngle + 1);
 }
 
-export default function MyComponent() {
-
+export default function Page() {
   const router = useRouter();
-  const [open, setOpen] = useState(false);
-  const [openModal, setOpenModal] = useState(false);
-  const [secondOpen, setSecondOpen] = useState(false);
+  const [openMeasuringModal, setOpenMeasuringModal] = useState(false);
+  const [openPolarizationModal, setOpenPolarizationModal] = useState(false);
+  const [openPhotonModal, setOpenPhotonModal] = useState(false);
+
   const [arrowRotation, setArrowRotation] = useState(0);
   const [currentAngle, setCurrentAngle] = useState(1); // Index of angle choice
   const [angleChoices, setAngleChoices] = useState<number[]>([]);
@@ -96,17 +95,17 @@ export default function MyComponent() {
         router
       );
       if (currentAngle == 2) {
-        setOpenModal(true);
+        setOpenMeasuringModal(true);
       }
     }
   }, [triggerSubmit]);
 
   const handleClick = () => {
-    setOpen(true);
+    setOpenPolarizationModal(true);
   };
 
   const handleSecondClick = () => {
-    setSecondOpen(true);
+    setOpenPhotonModal(true);
   };
 
   const handleSubmitClick = () => {
@@ -123,11 +122,11 @@ export default function MyComponent() {
                  my: 4,
     }}>
 
-      <Dialog maxWidth="md" open={openModal} onClose={() => {}}>
+      <Dialog maxWidth="md" open={openMeasuringModal} onClose={() => {}}>
         <ModalBox />
       </Dialog>
 
-      <Dialog open={open} onClose={() => setOpen(false)}>
+      <Dialog open={openPolarizationModal} onClose={() => setOpenPolarizationModal(false)}>
         <DialogContent
           sx={{ padding: '0em 2.8em', fontSize: '1.45em' }}
         >
@@ -146,7 +145,7 @@ export default function MyComponent() {
         </DialogContent>
       </Dialog>
 
-      <Dialog open={secondOpen} onClose={() => setSecondOpen(false)}>
+      <Dialog open={openPhotonModal} onClose={() => setOpenPhotonModal(false)}>
         <DialogContent
           sx={{ padding: '0em 2.8em', fontSize: '1.45em' }}
         >
@@ -194,52 +193,13 @@ export default function MyComponent() {
           )}
         </Whobit>
 
-        <Box
-          sx={{
-            backgroundImage: 'url(/images/circle.png)',
-            height: '560px',
-            width: '560px',
-            position: 'relative',
-            left: '20%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <AngleLabel variant="h5" top="20%" left="18%">
-            A
-          </AngleLabel>
-
-          <AngleLabel variant="h5" top="6%" left="50%">
-            V
-          </AngleLabel>
-
-          <AngleLabel variant="h5" top="20%" left="82%">
-            D
-          </AngleLabel>
-
-          <AngleLabel variant="h5" top="50%" left="94%">
-            H
-          </AngleLabel>
-
-          <Box
-            sx={{
-              position: 'absolute',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <img
-              src="/images/arrow.png"
-              alt="Arrow"
-              height={'432px'}
-              style={{
-                transform: `rotate(${arrowRotation}deg)`,
-                transformOrigin: 'center center',
-              }}
-            />
-          </Box>
+        <Box sx={{ position: 'relative' }}>
+          <RotatorCircle rotation={arrowRotation}>
+            <AngleLabel top="20%" left="18%">A</AngleLabel>
+            <AngleLabel top="6%" left="50%">V</AngleLabel>
+            <AngleLabel top="20%" left="82%">D</AngleLabel>
+            <AngleLabel top="50%" left="94%">H</AngleLabel>
+          </RotatorCircle>
 
           <Button
             variant="contained"

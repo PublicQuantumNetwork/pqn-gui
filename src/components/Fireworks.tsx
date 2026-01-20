@@ -4,6 +4,7 @@ import confetti from 'canvas-confetti';
 
 const Fireworks = () => {
   useEffect(() => {
+    let isActive = true;
     const colorSchemes = [
       ['#00ff00', '#66ff66', '#33ff33'],
       ['#ff0000', '#ff6666', '#ff3333'],
@@ -14,6 +15,8 @@ const Fireworks = () => {
     ];
 
     const fireFirework = (x: number, y: number, colors: string[]) => {
+      if (!isActive) return;
+
       const count = 80;
       const defaults = {
         origin: { x, y },
@@ -33,6 +36,7 @@ const Fireworks = () => {
 
       // Secondary burst for more dramatic effect
       setTimeout(() => {
+        if (!isActive) return;
         confetti({
           ...defaults,
           particleCount: count / 2,
@@ -47,47 +51,42 @@ const Fireworks = () => {
     };
 
     const scheduleRandomFirework = () => {
-      const randomX = 0.2 + Math.random() * 0.6; // Between 0.2 and 0.8
-      const randomY = 0.35 + Math.random() * 0.3; // Between 0.35 and 0.65
+      if (!isActive) return;
+
+      const randomX = 0.2 + Math.random() * 0.6;
+      const randomY = 0.35 + Math.random() * 0.3;
       const randomColors =
         colorSchemes[Math.floor(Math.random() * colorSchemes.length)];
-      const randomDelay = 800 + Math.random() * 1200; // Between 800ms and 2000ms
+      const randomDelay = 800 + Math.random() * 1200;
 
-      return setTimeout(() => {
+      setTimeout(() => {
+        if (!isActive) return;
         fireFirework(randomX, randomY, randomColors);
         scheduleRandomFirework();
       }, randomDelay);
     };
 
     // Start with initial burst of fireworks
-    const initialTimers: NodeJS.Timeout[] = [];
+    setTimeout(() => {
+      fireFirework(0.2, 0.4, colorSchemes[0]);
+    }, 100);
 
-    initialTimers.push(
-      setTimeout(() => {
-        fireFirework(0.2, 0.4, colorSchemes[0]);
-      }, 100)
-    );
+    setTimeout(() => {
+      fireFirework(0.8, 0.35, colorSchemes[1]);
+    }, 800);
 
-    initialTimers.push(
-      setTimeout(() => {
-        fireFirework(0.8, 0.35, colorSchemes[1]);
-      }, 800)
-    );
-
-    initialTimers.push(
-      setTimeout(() => {
-        fireFirework(0.5, 0.45, colorSchemes[2]);
-      }, 1600)
-    );
+    setTimeout(() => {
+      fireFirework(0.5, 0.45, colorSchemes[2]);
+    }, 1600);
 
     // Start continuous random fireworks after initial burst
-    const continuousTimer = setTimeout(() => {
-      scheduleRandomFirework();
+    setTimeout(() => {
+      if (isActive) scheduleRandomFirework();
     }, 2500);
 
     return () => {
-      initialTimers.forEach((timer) => clearTimeout(timer));
-      clearTimeout(continuousTimer);
+      isActive = false;
+      confetti.reset();
     };
   }, []);
 

@@ -21,6 +21,7 @@
     "@mui/icons-material": "latest",
     "@mui/material": "latest",
     "@mui/material-nextjs": "latest",
+    "canvas-confetti": "^1.9.4",
     "dotenv-cli": "^10.0.0",
     "emoji-picker-react": "^4.15.0",
     "next": "^16.1.1",
@@ -28,6 +29,7 @@
     "react-dom": "^19.2.3"
   },
   "devDependencies": {
+    "@types/canvas-confetti": "^1.9.0",
     "@types/node": "latest",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",

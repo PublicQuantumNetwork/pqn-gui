@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, Suspense } from 'react';
+import { Suspense } from 'react';
 import Container from '@mui/material/Container';
 import { Box, Stack } from '@mui/material';
 import Typography from '@mui/material/Typography';
@@ -7,6 +7,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { useEnterKey } from '@/hooks/useEnterKey';
 import Whobit from '@/components/Whobit';
 import CircleContainer from '@/components/CircleContainer';
+import Fireworks from '@/components/Fireworks';
 
 export default function Home() {
   const router = useRouter();
@@ -18,53 +19,16 @@ export default function Home() {
   function MyComponent() {
     const searchParams = useSearchParams();
 
-    const value = Number(searchParams.get('value')).toFixed(2) ?? 0;
-    const error = Number(searchParams.get('error')).toFixed(2) ?? 0;
+    const value = Number(searchParams.get('value')) ?? 0;
+    const error = Number(searchParams.get('error')) ?? 0;
 
     const failParam = searchParams.get('fail');
     const fail = failParam ? failParam.replace(/\}/g, '') : true;
 
-    const [message, setMessage] = useState('');
-    const [message2, setMessage2] = useState('');
-
-    const [showFireworks, setShowFireworks] = useState(false);
-    const [showFireworks2, setShowFireworks2] = useState(false);
-
-    // Set the message based on the 'fail' prop
-    useEffect(() => {
-      if (fail === 'true') {
-        setMessage('There was an error, we will work on this.');
-        setMessage2('Please try a different game.');
-      } else {
-        if (parseFloat(value) >= 2) {
-          setMessage('Woo!! Hoo!!');
-        } else {
-          setMessage('Some angles are better than others for this test.');
-          setMessage2('Try different angles to see this for yourself!');
-        }
-      }
-    }, [fail]);
-
-    useEffect(() => {
-      const timer = setTimeout(() => {
-        setShowFireworks(true);
-      }, 1000);
-
-      return () => clearTimeout(timer);
-    }, []);
-
-    useEffect(() => {
-      const timer = setTimeout(() => {
-        setShowFireworks2(true);
-      }, 3000);
-
-      return () => clearTimeout(timer);
-    }, []);
-
     // Determine Whobit variant based on results
     const getWhobitVariant = () => {
       if (fail === 'true') return 'arms-down';
-      if (parseFloat(value) >= 2) return 'arms-up';
+      if (value >= 2) return 'arms-up';
       return 'arms-down';
     };
 
@@ -92,71 +56,25 @@ export default function Home() {
               >
                 {fail === 'true' ? (
                   <p>
-                    {message}
+                    There was an error, we will work on this.
                     <br />
                     <br />
-                    {message2}
+                    Please try a different game.
                   </p>
-                ) : parseFloat(value) >= 2 ? (
-                  <p>{message}</p>
+                ) : value >= 2 ? (
+                  <p>Woo!! Hoo!!</p>
                 ) : (
                   <p>
-                    {message}
+                    Some angles are better than others for this test.
                     <br />
                     <br />
-                    {message2}
+                    Try different angles to see this for yourself!
                   </p>
                 )}
               </Whobit>
 
               {/* Fireworks positioned as siblings to Whobit */}
-              {parseFloat(value) >= 2 && showFireworks && (
-                <Box
-                  component="img"
-                  src="/images/red-fireworks.gif"
-                  alt="Entanglement was achieved!!"
-                  sx={{
-                    position: 'absolute',
-                    top: '0px',
-                    left: '-300px',
-                    width: '12em',
-                    height: '10em',
-                    zIndex: 0,
-                  }}
-                />
-              )}
-
-              {parseFloat(value) >= 2 && (
-                <Box
-                  component="img"
-                  src="/images/green-fireworks.gif"
-                  alt="Entanglement was achieved!!"
-                  sx={{
-                    position: 'absolute',
-                    top: '0px',
-                    left: '420px',
-                    width: '12em',
-                    height: '10em',
-                    zIndex: 0,
-                  }}
-                />
-              )}
-
-              {parseFloat(value) >= 2 && showFireworks2 && (
-                <Box
-                  component="img"
-                  src="/images/yellow-fireworks.gif"
-                  alt="Entanglement was achieved!!"
-                  sx={{
-                    position: 'absolute',
-                    top: '200px',
-                    left: '180px',
-                    width: '12em',
-                    height: '10em',
-                    zIndex: 0,
-                  }}
-                />
-              )}
+              {value >= 2 && <Fireworks />}
             </Box>
 
             {/* Right side: Results circle */}
@@ -175,7 +93,8 @@ export default function Home() {
                       fontSize: '2em',
                     }}
                   >
-                    Your value was {value} with an error of {error}
+                    Your value was {value.toFixed(2)} with an error of{' '}
+                    {error.toFixed(2)}
                   </Typography>
 
                   <Typography
@@ -195,7 +114,7 @@ export default function Home() {
                         <br />
                         to show the photons are entangled.
                       </>
-                    ) : parseFloat(value) >= 2 ? (
+                    ) : value >= 2 ? (
                       <>
                         This result means the test was able to
                         <br />

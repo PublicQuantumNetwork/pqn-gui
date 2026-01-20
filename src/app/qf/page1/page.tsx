@@ -1,32 +1,19 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import Container from '@mui/material/Container';
-import { Dialog, DialogContent, Button, Box, Stack } from '@mui/material';
-import Typography from '@mui/material/Typography';
-import { usePageRedirect } from '@/app/contexts/PageRedirectContext';
+import { Dialog, Button, Box, Stack } from '@mui/material';
 import QFTextbox from '@/components/QFTextbox';
 import ModalBox from '@/components/ModalBox';
+import Whobit from '@/components/Whobit';
 import { useRouter } from 'next/navigation';
 import { submitFortune } from '@/calls';
 import { useEnterKey } from '@/hooks/useEnterKey';
 
 export default function MyComponent() {
-  const { setBackArrowLink, setForwardArrowLink } = usePageRedirect();
   const router = useRouter();
 
-  const setLinks = () => {
-    setBackArrowLink('/');
-    setForwardArrowLink('/qf/page2/');
-  };
-
-  useEffect(() => {
-    setLinks();
-  }, []);
-
-  const [open, setOpen] = useState(false);
   const [openModal, setOpenModal] = useState(false);
-  const [secondOpen, setSecondOpen] = useState(false);
   const [currentAngle, setCurrentAngle] = useState(1); // Index of angle choice
 
   const enterOnRef = useRef(true); // Controls if the enter key press is executed. Needs to be a ref to avoid async updates.
@@ -56,163 +43,61 @@ export default function MyComponent() {
 
   return (
     <Container maxWidth="lg">
-      <Box
-        sx={{
-          my: 4,
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
+      <Box sx={{ mt: 9, mb: 4, display: 'flex', alignItems: 'center' }}>
         <Dialog open={openModal} onClose={() => {}}>
           <ModalBox />
         </Dialog>
-        <Stack
-          display="flex"
-          flexDirection="column"
-          position="relative"
-          sx={{ width: '100%' }}
-        >
-          <Stack
-            direction="row"
+
+        <Stack direction="row" alignItems="center" sx={{ width: '100%' }}>
+          <Whobit variant="left-wing-up">
+            <p>
+              Press the red button seven times to generate your fortune.
+            </p>
+          </Whobit>
+
+          <Box
             sx={{
-              minHeight: '8em',
-              justifyContent: 'left',
-              alignItems: 'flex-end', // Align items to the bottom of the row
+              flex: 1,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingLeft: '150px',
             }}
           >
-            <Stack
-              display="flex"
-              flexDirection="column"
-              position="relative"
-              sx={{ width: '50%' }}
+            <Box
+              sx={{
+                position: 'relative',
+                backgroundImage: 'url(/images/circle.png)',
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'center',
+                width: '560px',
+                height: '560px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
             >
-              <Box
-                component="img"
-                src="/images/speech-bubble-white-small.png"
-                alt="Whobit welcomes you"
-                sx={{
-                  width: 'auto',
-                  height: '18em',
-                  backgroundRepeat: 'no-repeat',
-                  backgroundSize: 'contain',
-                  backgroundPosition: 'left',
-                }}
-              />
+              <QFTextbox questionNumber={currentAngle} />
 
-              <Typography
-                variant="h5"
-                component="h1"
+              <Button
+                variant="contained"
+                onClick={handleSubmitClick}
                 sx={{
                   position: 'absolute',
-                  top: '23%',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)',
+                  bottom: '60px',
+                  right: '-100px',
+                  height: '5em',
+                  width: '10em',
+                  fontSize: '1.2em',
+                  border: '1px solid #000',
+                  backgroundColor: '#FFFFFF',
                   color: '#000000',
-                  width: '75%',
                 }}
               >
-                <p>
-                  Press the red button seven times to generate your
-                  fortune.{' '}
-                </p>
-              </Typography>
-
-              <Box
-                component="img"
-                src="/images/whobit-left-wing-up.png"
-                alt="Whobit welcomes you"
-                sx={{
-                  width: '18em',
-                  height: 'auto',
-                  backgroundRepeat: 'no-repeat',
-                  backgroundSize: 'contain',
-                  backgroundPosition: 'left',
-                }}
-              />
-            </Stack>
-
-            <Stack
-              display="flex"
-              flexDirection="column"
-              position="relative"
-              sx={{ width: '50%' }}
-            >
-              <Stack
-                direction="row"
-                sx={{
-                  backgroundImage: 'url(/images/circle.png)',
-                  Height: '560px',
-                  backgroundRepeat: 'no-repeat',
-                  width: '560px',
-                  backgroundPosition: 'center',
-                  position: 'relative',
-                  left: '40%',
-                }}
-              >
-                <Stack direction="row">
-                  <Stack
-                    direction="row"
-                    sx={{
-                      position: 'relative',
-                      zIndex: 2,
-                      minHeight: '560px',
-                      minWidth: '560px',
-                      alignContent: 'center',
-                      justifyContent: 'center', // Center the content horizontally
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        position: 'relative',
-                        zIndex: 2,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        height: '100%',
-                      }}
-                    >
-                      <QFTextbox questionNumber={currentAngle} />
-
-                      <Dialog open={open} onClose={() => setOpen(false)}>
-                        <DialogContent
-                          sx={{ padding: '0em 2.8em', fontSize: '1.45em' }}
-                        >
-                          <p>&nbsp;</p>
-
-                          <p>&nbsp;</p>
-                        </DialogContent>
-                      </Dialog>
-                    </Box>
-                  </Stack>
-
-                  <Stack
-                    sx={{
-                      position: 'relative',
-                      justifyContent: 'flex-end',
-                      paddingBottom: '60px',
-                    }}
-                  >
-                    <Button
-                      variant="contained"
-                      component="a"
-                      href="#"
-                      onClick={handleSubmitClick}
-                      sx={{
-                        height: '4em',
-                        border: '1px solid #000',
-                        backgroundColor: '#FFFFFF;',
-                        color: '#000000;',
-                      }}
-                    >
-                      Submit
-                    </Button>
-                  </Stack>
-                </Stack>
-              </Stack>
-            </Stack>
-          </Stack>
+                Submit
+              </Button>
+            </Box>
+          </Box>
         </Stack>
       </Box>
     </Container>

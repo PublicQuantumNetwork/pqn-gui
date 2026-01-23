@@ -1,24 +1,25 @@
 'use client';
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect, Suspense, useCallback, useRef } from 'react';
 import Container from '@mui/material/Container';
 import { Box, Stack } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { usePageRedirect } from '@/app/contexts/PageRedirectContext';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useEnterKey } from '@/hooks/useEnterKey';
+import confetti from 'canvas-confetti';
 
 export default function Home() {
   const { setBackArrowLink, setForwardArrowLink } = usePageRedirect();
   const router = useRouter();
 
-  const setLinks = () => {
+  const setLinks = useCallback(() => {
     setBackArrowLink('/ssm/page3/');
     setForwardArrowLink('/survey/');
-  };
+  }, [setBackArrowLink, setForwardArrowLink]);
 
   useEffect(() => {
     setLinks();
-  }, []);
+  }, [setLinks]);
 
   useEnterKey(() => {
     router.push('/survey/');
@@ -37,6 +38,8 @@ export default function Home() {
 
     const [message, setMessage] = useState('');
     const [message2, setMessage2] = useState('');
+    const emojiRef = useRef<HTMLDivElement>(null);
+    const confettiFiredRef = useRef(false);
 
     // Calculate blur pixels based on matching bits ratio
     const calculateBlurPixels = (
@@ -52,9 +55,7 @@ export default function Home() {
       if (total === 0) return maxPixels;
 
       const matchRatio = matching / total;
-      const blurPixels = (1 - matchRatio) * (maxPixels - minPixels) + minPixels;
-
-      return blurPixels;
+      return (1 - matchRatio) * (maxPixels - minPixels) + minPixels;
     };
 
     // Set the message based on the 'success' prop and role
@@ -76,6 +77,39 @@ export default function Home() {
         }
       }
     }, [success, role]);
+
+    // Trigger emoji explosion when bits match perfectly
+    useEffect(() => {
+      if (success && emoji && n_matching_bits === n_total_bits && Number(n_total_bits) > 0 && !confettiFiredRef.current) {
+        confettiFiredRef.current = true;
+
+        // Wait for DOM to be ready
+        setTimeout(() => {
+          if (emojiRef.current) {
+            const rect = emojiRef.current.getBoundingClientRect();
+            const scalar = 2;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const emojiShape = (confetti as any).shapeFromText({ text: emoji, scalar });
+
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (confetti as any)({
+              particleCount: 80,
+              spread: 360,
+              ticks: 60,
+              gravity: 0,
+              decay: 0.96,
+              startVelocity: 20,
+              shapes: [emojiShape],
+              scalar,
+              origin: {
+                x: (rect.left + rect.width / 2) / window.innerWidth,
+                y: (rect.top + rect.height / 2) / window.innerHeight,
+              },
+            });
+          }
+        }, 100);
+      }
+    }, [success, emoji, n_matching_bits, n_total_bits]);
 
     return (
       <Container maxWidth="lg">
@@ -195,6 +229,7 @@ export default function Home() {
                     {success && (
                       <>
                         <Typography
+                          ref={emojiRef}
                           variant="h5"
                           component="h1"
                           sx={{

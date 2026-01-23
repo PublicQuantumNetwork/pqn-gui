@@ -175,8 +175,12 @@ export async function submitSSMAnswers(answers: string[]) {
     );
 
     if (!response.ok) {
-      console.error(`Error submitting SSM answers: HTTP ${response.status}`);
-      return { success: false, error: `HTTP ${response.status}` };
+      console.warn(`Error submitting SSM answers: HTTP ${response.status}`);
+      return {
+        success: false,
+        error: `HTTP ${response.status}`,
+        statusCode: response.status,
+      };
     }
 
     const data = await response.json();

@@ -14,6 +14,7 @@ import Typography from '@mui/material/Typography';
 import { usePageRedirect } from '@/app/contexts/PageRedirectContext';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEnterKey } from '@/hooks/useEnterKey';
+import { useSSE } from '@/app/hooks/useSSE';
 import {
   fetchRotatorAngle,
   fetchQuestionOrder,
@@ -45,6 +46,13 @@ function SSMPage3Content() {
   const [answerChoices, setAnswerChoices] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [submissionInProgress, setSubmissionInProgress] = useState(false);
+
+  // SSE hook for receiving protocol cancellation events
+  const { lastMessage: sseMessage } = useSSE(
+    '/coordination/state_events',
+    !submissionInProgress
+  );
 
   // Fetch question order on component mount
   useEffect(() => {
@@ -60,6 +68,14 @@ function SSMPage3Content() {
     };
     getQuestionOrder();
   }, []);
+
+  // Handle protocol cancellation from SSE
+  useEffect(() => {
+    if (sseMessage?.event === 'protocol_cancelled') {
+      alert('The other player cancelled the protocol. Returning to home.');
+      router.push('/');
+    }
+  }, [sseMessage, router]);
 
   const currentQuestionNumber = questionOrder[currentQuestionIndex];
   const currentQuestionData =
@@ -94,12 +110,18 @@ function SSMPage3Content() {
 
     if (currentQuestionIndex === questionOrder.length - 1) {
       setOpenModal(true);
+      setSubmissionInProgress(true);
       const result = await submitSSMAnswers(newAnswers);
       if (result.success) {
         const { n_matching_bits, n_total_bits, emoji, role } = result.data;
         router.push(
           `/ssm/page4?n_matching_bits=${n_matching_bits}&n_total_bits=${n_total_bits}&emoji=${encodeURIComponent(emoji)}&role=${encodeURIComponent(role)}&success=true`
         );
+      } else if (result.statusCode === 409) {
+        setOpenModal(false);
+        setSubmissionInProgress(false);
+        alert('The other player has already submitted. Please try again later.');
+        router.push('/');
       } else {
         router.push(`/ssm/page4?success=false`);
       }

@@ -7,7 +7,7 @@ import Whobit from '@/components/Whobit';
 import fortune from '@/app/qf/page2/fortunes';
 import { useEnterKey } from '@/hooks/useEnterKey';
 
-export default function Home() {
+function FortuneContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -25,81 +25,87 @@ export default function Home() {
   )?.description;
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <Container maxWidth="lg">
-        <Box sx={{ mt: 9, mb: 4 }}>
-          <Stack direction="row" alignItems="center" sx={{ width: '100%' }}>
-            <Whobit variant="arms-down">
-              {fail === 'true' ? (
-                <p>
-                  There was an error, we will work on this.
-                  <br />
-                  <br />
-                  Please try a different game.
-                </p>
-              ) : (
-                <p>Your fortune is...</p>
-              )}
-            </Whobit>
+    <Container maxWidth="lg">
+      <Box sx={{ mt: 9, mb: 4 }}>
+        <Stack direction="row" alignItems="center" sx={{ width: '100%' }}>
+          <Whobit variant="arms-down">
+            {fail === 'true' ? (
+              <p>
+                There was an error, we will work on this.
+                <br />
+                <br />
+                Please try a different game.
+              </p>
+            ) : (
+              <p>Your fortune is...</p>
+            )}
+          </Whobit>
 
+          <Box
+            sx={{
+              flex: 1,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingLeft: '150px',
+            }}
+          >
             <Box
               sx={{
-                flex: 1,
+                position: 'relative',
+                backgroundImage: 'url(/images/circle.png)',
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'center',
+                width: '560px',
+                height: '560px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                paddingLeft: '150px',
               }}
             >
-              <Box
+              <Typography
+                variant="h5"
+                component="h1"
                 sx={{
-                  position: 'relative',
-                  backgroundImage: 'url(/images/circle.png)',
-                  backgroundRepeat: 'no-repeat',
-                  backgroundPosition: 'center',
-                  width: '560px',
-                  height: '560px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
+                  position: 'absolute',
+                  top: '35%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  color: '#000000',
+                  fontSize: '5em',
                 }}
               >
-                <Typography
-                  variant="h5"
-                  component="h1"
-                  sx={{
-                    position: 'absolute',
-                    top: '35%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    color: '#000000',
-                    fontSize: '5em',
-                  }}
-                >
-                  #{value}
-                </Typography>
+                #{value}
+              </Typography>
 
-                <Typography
-                  variant="h5"
-                  component="h1"
-                  sx={{
-                    position: 'absolute',
-                    top: '62%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    color: '#000000',
-                    width: '60%',
-                    fontSize: '1.2em',
-                    textAlign: 'center',
-                  }}
-                >
-                  {fortuneText}
-                </Typography>
-              </Box>
+              <Typography
+                variant="h5"
+                component="h1"
+                sx={{
+                  position: 'absolute',
+                  top: '62%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  color: '#000000',
+                  width: '60%',
+                  fontSize: '1.2em',
+                  textAlign: 'center',
+                }}
+              >
+                {fortuneText}
+              </Typography>
             </Box>
-          </Stack>
-        </Box>
-      </Container>
+          </Box>
+        </Stack>
+      </Box>
+    </Container>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <FortuneContent />
     </Suspense>
   );
 }

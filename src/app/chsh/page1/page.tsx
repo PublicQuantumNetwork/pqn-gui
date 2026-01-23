@@ -1,7 +1,7 @@
 "use client"
 import {useState, useEffect} from 'react';
 import Container from '@mui/material/Container';
-import {Link, Dialog, DialogContent, styled, Box, Stack } from '@mui/material';
+import {Link, Dialog, DialogContent, Box, Stack, Button } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import {usePageRedirect} from '@/app/contexts/PageRedirectContext';
 import { useEnterKey} from "@/hooks/useEnterKey";
@@ -19,13 +19,17 @@ export default function Home() {
 
   useEffect(()=>{setLinks()},[])
 
-  useEnterKey(() => {
-    router.push("/chsh/page2/");
-  });
-
   const handleClick = () => {
     setOpen(true);
   };
+
+  const handleNextPageClick = () => {
+    router.push("/chsh/page2/");
+  };
+
+  useEnterKey(() => {
+    handleNextPageClick();
+  });
 
   return (
     <Container maxWidth="lg">
@@ -119,10 +123,27 @@ export default function Home() {
                 display="flex"
                 flexDirection="column"
                 position="relative"
-                sx={{ width:'50%'}}
+                justifyContent="flex-end"
+                alignItems="flex-end"
+                sx={{ width:'50%', paddingBottom: '60px'}}
               >
-
-                
+                <Button
+                  variant="contained"
+                  component="a"
+                  href="#"
+                  onClick={handleNextPageClick}
+                  sx={{
+                    height: '5em',
+                    width: '8em',
+                    fontSize: '1.2rem',
+                    border: '1px solid #000',
+                    backgroundColor: '#FFFFFF',
+                    color: '#000000',
+                    marginRight: '-200px',
+                  }}
+                >
+                  Next
+                </Button>
               </Stack>
             </Stack>
       </Stack>

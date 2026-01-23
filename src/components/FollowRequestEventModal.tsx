@@ -25,7 +25,7 @@ const style = {
   p: 4,
 };
 
-const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, message, sendMessage }) => {
+const FollowRequestEventModal: React.FC<EventModalProps> = ({ isOpen, onClose, message, sendMessage }) => {
 
   const router = useRouter();
 
@@ -33,7 +33,7 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, message, sendM
     sendMessage("true");
     // Add a short delay to allow the WebSocket message to be sent before navigating
     setTimeout(() => {
-      router.push('/qkd');
+      router.push('/ssm/page3?role=follower');
       onClose();
     }, 500);
   };
@@ -79,4 +79,4 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, message, sendM
   );
 };
 
-export default EventModal;
+export default FollowRequestEventModal;

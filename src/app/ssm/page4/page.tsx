@@ -39,7 +39,6 @@ export default function Home() {
     const [message, setMessage] = useState('');
     const [message2, setMessage2] = useState('');
     const emojiRef = useRef<HTMLDivElement>(null);
-    const confettiFiredRef = useRef(false);
 
     // Calculate blur pixels based on matching bits ratio
     const calculateBlurPixels = (
@@ -78,16 +77,13 @@ export default function Home() {
       }
     }, [success, role]);
 
-    // Trigger emoji explosion when bits match perfectly
+    // Trigger emoji explosion continuously when bits match perfectly
     useEffect(() => {
-      if (success && emoji && n_matching_bits === n_total_bits && Number(n_total_bits) > 0 && !confettiFiredRef.current) {
-        confettiFiredRef.current = true;
-
-        // Wait for DOM to be ready
-        setTimeout(() => {
+      if (success && emoji && n_matching_bits === n_total_bits && Number(n_total_bits) > 0) {
+        const triggerConfetti = () => {
           if (emojiRef.current) {
             const rect = emojiRef.current.getBoundingClientRect();
-            const scalar = 2;
+            const scalar = 4;
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const emojiShape = (confetti as any).shapeFromText({ text: emoji, scalar });
 
@@ -107,7 +103,20 @@ export default function Home() {
               },
             });
           }
+        };
+
+        // Wait for DOM to be ready, then start interval
+        const initialTimeout = setTimeout(() => {
+          triggerConfetti();
+          const interval = setInterval(triggerConfetti, 1500);
+          return () => {
+            clearInterval(interval);
+          };
         }, 100);
+
+        return () => {
+          clearTimeout(initialTimeout);
+        };
       }
     }, [success, emoji, n_matching_bits, n_total_bits]);
 

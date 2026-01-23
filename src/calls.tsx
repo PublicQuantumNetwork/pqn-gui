@@ -164,7 +164,7 @@ export async function fetchQuestionOrder() {
 export async function submitSSMAnswers(answers: string[]) {
   try {
     const response = await fetch(
-      `http://${process.env.NEXT_PUBLIC_API_ADDRESS}/qkd/submit_selection_and_start_qkd?timetagger_address=${process.env.NEXT_PUBLIC_TIMETAGGER_ADDRESS}`,
+      `http://${process.env.NEXT_PUBLIC_API_ADDRESS}/qkd/submit_selection_and_start?timetagger_address=${process.env.NEXT_PUBLIC_TIMETAGGER_ADDRESS}`,
       {
         method: 'POST',
         headers: {
@@ -190,7 +190,7 @@ export async function submitSSMAnswers(answers: string[]) {
 export async function submitQKDEmoji(emoji: string) {
   try {
     const response = await fetch(
-      `http://${process.env.NEXT_PUBLIC_API_ADDRESS}/qkd/set_qkd_emoji?emoji=${encodeURIComponent(emoji)}`,
+      `http://${process.env.NEXT_PUBLIC_API_ADDRESS}/qkd/set_emoji?emoji=${encodeURIComponent(emoji)}`,
       {
         method: 'POST',
         headers: {

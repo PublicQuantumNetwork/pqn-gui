@@ -74,7 +74,7 @@ export default function Home() {
               </Whobit>
 
               {/* Fireworks positioned as siblings to Whobit */}
-              {value >= 2 && <Fireworks />}
+              {value >= 2 && fail !== 'true' && <Fireworks />}
             </Box>
 
             {/* Right side: Results circle */}

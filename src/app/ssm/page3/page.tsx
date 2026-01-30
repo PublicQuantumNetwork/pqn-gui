@@ -11,7 +11,6 @@ import {
   CircularProgress,
 } from '@mui/material';
 import Typography from '@mui/material/Typography';
-import { usePageRedirect } from '@/app/contexts/PageRedirectContext';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEnterKey } from '@/hooks/useEnterKey';
 import { useSSE } from '@/app/hooks/useSSE';
@@ -22,23 +21,13 @@ import {
 } from '@/calls';
 import questions from './questions';
 import SSMModalBox from '@/components/SSMModalBox';
+import Whobit from '@/components/Whobit';
 
 function SSMPage3Content() {
-  const { setBackArrowLink, setForwardArrowLink } = usePageRedirect();
   const router = useRouter();
   const searchParams = useSearchParams();
   const role = searchParams.get('role') || 'leader'; // Default to 'leader' if no role specified
 
-  const setLinks = () => {
-    setBackArrowLink('/ssm/page2/');
-    setForwardArrowLink('/ssm/page3/');
-  };
-
-  useEffect(() => {
-    setLinks();
-  }, []);
-
-  const [open, setOpen] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [arrowRotation, setArrowRotation] = useState(0);
   const [questionOrder, setQuestionOrder] = useState<number[]>([]);
@@ -136,279 +125,200 @@ function SSMPage3Content() {
   });
 
   return (
-    <Container maxWidth="lg" sx={{}}>
-      <Box
-        sx={{
-          my: 4,
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <Stack
-          display="flex"
-          flexDirection="column"
-          position="relative"
-          sx={{ width: '100%' }}
-        >
-          <Stack
-            direction="row"
-            sx={{
-              minHeight: '8em',
-              justifyContent: 'left',
-              alignItems: 'flex-end',
-            }}
-          >
-            <Stack
-              display="flex"
-              flexDirection="column"
-              position="relative"
-              sx={{ width: '50%' }}
-            >
+    <Container maxWidth="lg" sx={{ my: 4 }}>
+      <Stack direction="row" alignItems="flex-start" sx={{ width: '100%' }}>
+        <Whobit variant="left-wing-up" speechBubbleHeight="250px">
+          <Box sx={{ fontSize: '1em' }}>
+            {loading ? (
               <Box
-                component="img"
-                src="/images/speech-bubble-white-small.png"
-                alt="Whobit welcomes you"
                 sx={{
-                  width: 'auto',
-                  height: '18em',
-                  backgroundRepeat: 'no-repeat',
-                  backgroundSize: 'contain',
-                  backgroundPosition: 'left',
-                }}
-              />
-
-              <Typography
-                variant="h5"
-                component="h1"
-                sx={{
-                  position: 'absolute',
-                  top: '23%',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                  color: '#000000',
-                  width: '75%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: 2,
                 }}
               >
-                {loading ? (
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      gap: 2,
-                    }}
-                  >
-                    <CircularProgress
-                      size={60}
-                      thickness={4}
-                      sx={{ color: 'black' }}
-                    />
-                    <p>Loading questions...</p>
-                  </Box>
-                ) : error ? (
-                  <p>
-                    Error fetching questions. The question order is not
-                    available. Please try again.
-                  </p>
-                ) : (
-                  <>
-                    {currentQuestionIndex === 0 && (
-                      <p>
-                        Share your secret message by rotating the wheel to
-                        select your answer.
-                      </p>
-                    )}
-                    <p>
-                      Question {currentQuestionIndex + 1} of{' '}
-                      {questionOrder.length}
-                    </p>
-                  </>
-                )}
-              </Typography>
-
-              <Dialog open={open} onClose={() => setOpen(false)}>
-                <DialogContent
-                  sx={{ padding: '0em 2.8em', fontSize: '1.45em' }}
-                >
-                  <p>&nbsp;</p>
-                  This game uses quantum entanglement to share secret messages
-                  between players!
-                  <p>&nbsp;</p>
-                </DialogContent>
-              </Dialog>
-
-              {/* Modal for when all questions are answered */}
-              <Dialog maxWidth="md" open={openModal} onClose={() => {}}>
-                <SSMModalBox
-                  title="Your secret message is being encoded and transmitted"
-                  description="The entangled photons are being measured at the first angle you chose for one photon and at a slightly offset angle for the other photon. These measurements are repeated for the second angle. By comparing the results, we can tell whether the photons are entangled."
+                <CircularProgress
+                  size={60}
+                  thickness={4}
+                  sx={{ color: 'black' }}
                 />
-              </Dialog>
+                <p>Loading questions...</p>
+              </Box>
+            ) : error ? (
+              <p>
+                Error fetching questions. The question order is not available.
+                Please try again.
+              </p>
+            ) : (
+              <>
+                {currentQuestionIndex === 0 && (
+                  <p>
+                    Share your secret message by rotating the wheel to select
+                    your answer.
+                  </p>
+                )}
+                <p>
+                  Question {currentQuestionIndex + 1} of {questionOrder.length}
+                </p>
+              </>
+            )}
+          </Box>
+        </Whobit>
 
-              <Box
-                component="img"
-                src="/images/whobit-left-wing-up.png"
-                alt="Whobit welcomes you"
-                sx={{
-                  width: '18em',
-                  height: 'auto',
-                  backgroundRepeat: 'no-repeat',
-                  backgroundSize: 'contain',
-                  backgroundPosition: 'left',
-                }}
-              />
-            </Stack>
+        {/* Modal for when all questions are answered */}
+        <Dialog maxWidth="md" open={openModal} onClose={() => {}}>
+          <SSMModalBox
+            title="Your secret message is being encoded and transmitted"
+            description="The entangled photons are being measured at the first angle you chose for one photon and at a slightly offset angle for the other photon. These measurements are repeated for the second angle. By comparing the results, we can tell whether the photons are entangled."
+          />
+        </Dialog>
 
-            {!loading && !error && (
-              <Stack
-                display="flex"
-                flexDirection="column"
-                position="relative"
-                sx={{ width: '50%' }}
-              >
-                {/* Question at the top */}
+        {!loading && !error && (
+          <Stack
+            flexDirection="column"
+            flex={1}
+            sx={{ paddingRight: '40px' }}
+          >
+            {/* Question at the top */}
+            <Typography
+              variant="h5"
+              component="h1"
+              sx={{
+                transform: 'translate(40%, 45%)',
+                textAlign: 'center',
+                mb: 2,
+                color: '#000000',
+
+                fontWeight: 'bold',
+              }}
+            >
+              {currentQuestion}
+            </Typography>
+
+            <Stack
+              direction="row"
+              sx={{
+                backgroundImage: 'url(/images/circle.png)',
+                Height: '560px',
+                backgroundRepeat: 'no-repeat',
+                width: '560px',
+                backgroundPosition: 'center',
+                position: 'relative',
+                left: '40%',
+              }}
+            >
+              <Stack direction="row">
+                {/* Left answer (a) */}
                 <Typography
                   variant="h5"
                   component="h1"
                   sx={{
-                    transform: 'translate(40%, 45%)',
-                    textAlign: 'center',
-                    mb: 2,
+                    position: 'absolute',
+                    top: '50%',
+                    left: '6%',
+                    transform: 'translate(-100%, -50%)',
+                    fontSize: '1em',
                     color: '#000000',
+                    fontWeight: 'bold',
+                    width: '150px',
+                    textAlign: 'right',
+                  }}
+                >
+                  {currentQuestionData.a}
+                </Typography>
 
+                {/* Right answer (b) */}
+                <Typography
+                  variant="h5"
+                  component="h1"
+                  sx={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '94%',
+                    transform: 'translate(-30%, -50%)',
+                    fontSize: '1em',
+                    color: '#000000',
                     fontWeight: 'bold',
                   }}
                 >
-                  {currentQuestion}
+                  {currentQuestionData.b}
                 </Typography>
+
+                {/* Vertical divider line to split circle in half */}
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    height: '430px',
+                    width: '4px',
+                    backgroundColor: 'grey',
+                    zIndex: 1,
+                  }}
+                />
 
                 <Stack
                   direction="row"
                   sx={{
-                    backgroundImage: 'url(/images/circle.png)',
-                    Height: '560px',
-                    backgroundRepeat: 'no-repeat',
-                    width: '560px',
-                    backgroundPosition: 'center',
                     position: 'relative',
-                    left: '40%',
+                    zIndex: 2,
+                    minHeight: '560px',
+                    minWidth: '560px',
+                    alignContent: 'center',
+                    justifyContent: 'center',
                   }}
                 >
-                  <Stack direction="row">
-                    {/* Left answer (a) */}
-                    <Typography
-                      variant="h5"
-                      component="h1"
-                      sx={{
-                        position: 'absolute',
-                        top: '50%',
-                        left: '6%',
-                        transform: 'translate(-100%, -50%)',
-                        fontSize: '1em',
-                        color: '#000000',
-                        fontWeight: 'bold',
-                        width: '150px',
-                        textAlign: 'right',
-                      }}
-                    >
-                      {currentQuestionData.a}
-                    </Typography>
-
-                    {/* Right answer (b) */}
-                    <Typography
-                      variant="h5"
-                      component="h1"
-                      sx={{
-                        position: 'absolute',
-                        top: '50%',
-                        left: '94%',
-                        transform: 'translate(-30%, -50%)',
-                        fontSize: '1em',
-                        color: '#000000',
-                        fontWeight: 'bold',
-                      }}
-                    >
-                      {currentQuestionData.b}
-                    </Typography>
-
-                    {/* Vertical divider line to split circle in half */}
-                    <Box
-                      sx={{
-                        position: 'absolute',
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        height: '430px',
-                        width: '4px',
-                        backgroundColor: 'grey',
-                        zIndex: 1,
+                  <Box
+                    sx={{
+                      position: 'relative',
+                      zIndex: 2,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      height: '100%',
+                    }}
+                  >
+                    <img
+                      src="/images/arrow.png"
+                      alt="Arrow"
+                      height={'432px'}
+                      style={{
+                        transform: `rotate(${arrowRotation}deg)`,
+                        transformOrigin: 'center center',
                       }}
                     />
+                  </Box>
+                </Stack>
 
-                    <Stack
-                      direction="row"
-                      sx={{
-                        position: 'relative',
-                        zIndex: 2,
-                        minHeight: '560px',
-                        minWidth: '560px',
-                        alignContent: 'center',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      <Box
-                        sx={{
-                          position: 'relative',
-                          zIndex: 2,
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          height: '100%',
-                        }}
-                      >
-                        <img
-                          src="/images/arrow.png"
-                          alt="Arrow"
-                          height={'432px'}
-                          style={{
-                            transform: `rotate(${arrowRotation}deg)`,
-                            transformOrigin: 'center center',
-                          }}
-                        />
-                      </Box>
-                    </Stack>
-
-                    <Stack
-                      sx={{
-                        position: 'relative',
-                        justifyContent: 'flex-end',
-                        paddingBottom: '60px',
-                      }}
-                    >
-                      <Button
-                        variant="contained"
-                        component="a"
-                        href="#"
-                        onClick={handleSubmitClick}
-                        sx={{
-                          height: '4em',
-                          border: '1px solid #000',
-                          backgroundColor: '#FFFFFF;',
-                          color: '#000000;',
-                        }}
-                      >
-                        Submit
-                      </Button>
-                    </Stack>
-                  </Stack>
+                <Stack
+                  sx={{
+                    position: 'relative',
+                    justifyContent: 'flex-end',
+                    paddingBottom: '60px',
+                  }}
+                >
+                  <Button
+                    variant="contained"
+                    component="a"
+                    href="#"
+                    onClick={handleSubmitClick}
+                    sx={{
+                      height: '4em',
+                      border: '1px solid #000',
+                      backgroundColor: '#FFFFFF;',
+                      color: '#000000;',
+                    }}
+                  >
+                    Submit
+                  </Button>
                 </Stack>
               </Stack>
-            )}
+            </Stack>
           </Stack>
-        </Stack>
-      </Box>
+        )}
+      </Stack>
     </Container>
   );
 }

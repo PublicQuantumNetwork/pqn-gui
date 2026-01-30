@@ -304,6 +304,8 @@ function SSMPage3Content() {
 
 export default function MyComponent() {
   return (
+    // We need to keep SSMPage3Content in a separate Suspense boundary to avoid
+    // hydration issues with useSearchParams in Next.js 13
     <Suspense
       fallback={
         <Container maxWidth="lg">

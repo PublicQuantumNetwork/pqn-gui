@@ -4,7 +4,6 @@ import { useState, useEffect, Suspense } from 'react';
 import Container from '@mui/material/Container';
 import {
   Dialog,
-  DialogContent,
   Button,
   Box,
   Stack,
@@ -23,6 +22,8 @@ import questions from './questions';
 import SSMModalBox from '@/components/SSMModalBox';
 import Whobit from '@/components/Whobit';
 
+// TODO: Remove the rotating arrow and cirle. Make it into a re-usable component that can be used with chsh.
+// TODO: Make the selected option highlighted when the arrow enter its section.
 function SSMPage3Content() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -178,19 +179,22 @@ function SSMPage3Content() {
           <Stack
             flexDirection="column"
             flex={1}
-            sx={{ paddingRight: '40px' }}
+            sx={{ paddingRight: '0px', position: 'relative' }}
           >
             {/* Question at the top */}
             <Typography
               variant="h5"
               component="h1"
               sx={{
-                transform: 'translate(40%, 45%)',
+                position: 'absolute',
+                top: '0px',
+                left: '50%',
+                transform: 'translateX(-50%)',
                 textAlign: 'center',
-                mb: 2,
                 color: '#000000',
-
                 fontWeight: 'bold',
+                width: '80%',
+                zIndex: 10,
               }}
             >
               {currentQuestion}
@@ -200,121 +204,96 @@ function SSMPage3Content() {
               direction="row"
               sx={{
                 backgroundImage: 'url(/images/circle.png)',
-                Height: '560px',
                 backgroundRepeat: 'no-repeat',
-                width: '560px',
                 backgroundPosition: 'center',
+                width: '560px',
+                height: '560px',
                 position: 'relative',
-                left: '40%',
+                marginTop: '50px',
+                marginLeft: 'auto',
+                marginRight: 'auto',
               }}
             >
-              <Stack direction="row">
-                {/* Left answer (a) */}
-                <Typography
-                  variant="h5"
-                  component="h1"
-                  sx={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '6%',
-                    transform: 'translate(-100%, -50%)',
-                    fontSize: '1em',
-                    color: '#000000',
-                    fontWeight: 'bold',
-                    width: '150px',
-                    textAlign: 'right',
-                  }}
-                >
-                  {currentQuestionData.a}
-                </Typography>
+              {/* Left answer (a) */}
+              <Typography
+                variant="h5"
+                component="h1"
+                sx={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '6%',
+                  transform: 'translate(-100%, -50%)',
+                  fontSize: '1em',
+                  color: '#000000',
+                  fontWeight: 'bold',
+                  width: '150px',
+                  textAlign: 'right',
+                }}
+              >
+                {currentQuestionData.a}
+              </Typography>
 
-                {/* Right answer (b) */}
-                <Typography
-                  variant="h5"
-                  component="h1"
-                  sx={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '94%',
-                    transform: 'translate(-30%, -50%)',
-                    fontSize: '1em',
-                    color: '#000000',
-                    fontWeight: 'bold',
-                  }}
-                >
-                  {currentQuestionData.b}
-                </Typography>
+              {/* Right answer (b) */}
+              <Typography
+                variant="h5"
+                component="h1"
+                sx={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '94%',
+                  transform: 'translate(-30%, -50%)',
+                  fontSize: '1em',
+                  color: '#000000',
+                  fontWeight: 'bold',
+                }}
+              >
+                {currentQuestionData.b}
+              </Typography>
 
-                {/* Vertical divider line to split circle in half */}
-                <Box
-                  sx={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    height: '430px',
-                    width: '4px',
-                    backgroundColor: 'grey',
-                    zIndex: 1,
-                  }}
-                />
+              {/* Vertical divider line to split circle in half */}
+              <Box
+                sx={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  height: '430px',
+                  width: '4px',
+                  backgroundColor: 'grey',
+                  zIndex: 1,
+                }}
+              />
 
-                <Stack
-                  direction="row"
-                  sx={{
-                    position: 'relative',
-                    zIndex: 2,
-                    minHeight: '560px',
-                    minWidth: '560px',
-                    alignContent: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <Box
-                    sx={{
-                      position: 'relative',
-                      zIndex: 2,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      height: '100%',
-                    }}
-                  >
-                    <img
-                      src="/images/arrow.png"
-                      alt="Arrow"
-                      height={'432px'}
-                      style={{
-                        transform: `rotate(${arrowRotation}deg)`,
-                        transformOrigin: 'center center',
-                      }}
-                    />
-                  </Box>
-                </Stack>
+              <Box
+                component="img"
+                src="/images/arrow.png"
+                alt="Arrow"
+                sx={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: `translate(-50%, -50%) rotate(${arrowRotation}deg)`,
+                  transformOrigin: 'center center',
+                  height: '432px',
+                  zIndex: 2,
+                }}
+              />
 
-                <Stack
-                  sx={{
-                    position: 'relative',
-                    justifyContent: 'flex-end',
-                    paddingBottom: '60px',
-                  }}
-                >
-                  <Button
-                    variant="contained"
-                    component="a"
-                    href="#"
-                    onClick={handleSubmitClick}
-                    sx={{
-                      height: '4em',
-                      border: '1px solid #000',
-                      backgroundColor: '#FFFFFF;',
-                      color: '#000000;',
-                    }}
-                  >
-                    Submit
-                  </Button>
-                </Stack>
-              </Stack>
+              <Button
+                variant="contained"
+                onClick={handleSubmitClick}
+                sx={{
+                  position: 'absolute',
+                  bottom: '60px',
+                  right: '-50px',
+                  height: '4em',
+                  border: '1px solid #000',
+                  backgroundColor: '#FFFFFF;',
+                  color: '#000000;',
+                }}
+              >
+                Submit
+              </Button>
             </Stack>
           </Stack>
         )}

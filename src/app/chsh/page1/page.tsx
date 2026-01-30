@@ -32,7 +32,7 @@ export default function Page() {
       </Dialog>
 
       <Stack direction="row" justifyContent="space-between" sx={{ width: '100%', height: '100%' }}>
-        <Whobit variant="arms-down">
+        <Whobit variant="arms-down" speechBubbleHeight="250px">
           <p>
             <Link component="button" onClick={handleClick} sx={{ cursor: 'pointer' }}>
               Entangled photons

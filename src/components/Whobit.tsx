@@ -6,13 +6,13 @@ type WhobitVariant = 'left-wing-up' | 'arms-up' | 'arms-down';
 interface WhobitProps {
   children: ReactNode;
   variant?: WhobitVariant;
-  speechBubbleMinHeight?: string;
+  speechBubbleHeight?: string;
 }
 
 export default function Whobit({
   children,
   variant = 'left-wing-up',
-  speechBubbleMinHeight = '200px',
+  speechBubbleHeight = '250px',
 }: WhobitProps) {
   const getWhobitImage = () => {
     switch (variant) {
@@ -34,10 +34,10 @@ export default function Whobit({
           backgroundColor: '#FFFFFF',
           borderRadius: '20px',
           border: '2px solid #000000',
-          padding: '30px 40px',
+          padding: '0px 40px',
           marginBottom: '10px',
           width: '500px',
-          minHeight: speechBubbleMinHeight,
+          height: speechBubbleHeight,
           '&::after': {
             content: '""',
             position: 'absolute',
@@ -69,6 +69,10 @@ export default function Whobit({
           component="div"
           sx={{
             color: '#000000',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            height: '100%',
           }}
         >
           {children}
@@ -83,7 +87,7 @@ export default function Whobit({
         sx={{
           width: '288px',
           height: '288px',
-          transform: variant === 'arms-up' ? 'scale(1.2)' : 'none',
+          transform: variant === 'arms-up' ? 'scale(1.2)' : variant === 'left-wing-up' ? 'scale(1.1)' : 'none',
           transformOrigin: 'top center',
         }}
       />

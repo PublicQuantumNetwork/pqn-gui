@@ -29,9 +29,8 @@ export default function RootLayout(props: { children: React.ReactNode }) {
                 flexDirection="column"
                 position="relative"
                 sx={{
-                  pt: 16,
                   width: '100%',
-                  minHeight: '100vh',
+                  height: '100vh',
                   touchAction: 'pan-y pan-x',
                   WebkitOverflowScrolling: 'touch',
                 }}

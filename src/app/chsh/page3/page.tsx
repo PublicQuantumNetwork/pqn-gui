@@ -52,7 +52,7 @@ export default function Home() {
             <Box sx={{ position: 'relative' }}>
               <Whobit
                 variant={getWhobitVariant()}
-                speechBubbleMinHeight="250px"
+                speechBubbleHeight="250px"
               >
                 {fail === 'true' ? (
                   <p>

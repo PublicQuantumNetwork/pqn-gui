@@ -10,30 +10,19 @@ import {
   Snackbar,
 } from '@mui/material';
 import Typography from '@mui/material/Typography';
-import { usePageRedirect } from '@/app/contexts/PageRedirectContext';
 import { useEnterKey } from '@/hooks/useEnterKey';
 import { useRouter } from 'next/navigation';
 import EmojiPicker, { EmojiClickData, EmojiStyle } from 'emoji-picker-react';
 import { submitQKDEmoji } from '@/calls';
+import Whobit from '@/components/Whobit';
 
 export default function Home() {
-  const { setBackArrowLink, setForwardArrowLink } = usePageRedirect();
   const router = useRouter();
-  const [open, setOpen] = useState(false);
   const [emojiText, setEmojiText] = useState('');
   const [pickerOpen, setPickerOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [emojiSentError, setEmojiSentError] = useState(false);
   const dialogRef = useRef<HTMLDivElement>(null);
-
-  const setLinks = () => {
-    setBackArrowLink('/');
-    setForwardArrowLink('/ssm/page2/');
-  };
-
-  useEffect(() => {
-    setLinks();
-  }, []);
 
   useEnterKey(() => {
     handleNextPageCheck();
@@ -136,7 +125,7 @@ export default function Home() {
         }
       };
 
-      const handlePointerUp = (e: PointerEvent) => {
+      const handlePointerUp = () => {
         if (isDragging) {
           // If user dragged, prevent emoji clicks
           if (hasMoved) {
@@ -160,14 +149,32 @@ export default function Home() {
       };
 
       emojiBody.style.cursor = 'grab';
-      emojiBody.addEventListener('pointerdown', handlePointerDown as any);
-      emojiBody.addEventListener('pointermove', handlePointerMove as any);
-      emojiBody.addEventListener('pointerup', handlePointerUp as any);
+      emojiBody.addEventListener(
+        'pointerdown',
+        handlePointerDown as EventListener
+      );
+      emojiBody.addEventListener(
+        'pointermove',
+        handlePointerMove as EventListener
+      );
+      emojiBody.addEventListener(
+        'pointerup',
+        handlePointerUp as EventListener
+      );
 
       cleanupFn = () => {
-        emojiBody.removeEventListener('pointerdown', handlePointerDown as any);
-        emojiBody.removeEventListener('pointermove', handlePointerMove as any);
-        emojiBody.removeEventListener('pointerup', handlePointerUp as any);
+        emojiBody.removeEventListener(
+          'pointerdown',
+          handlePointerDown as EventListener
+        );
+        emojiBody.removeEventListener(
+          'pointermove',
+          handlePointerMove as EventListener
+        );
+        emojiBody.removeEventListener(
+          'pointerup',
+          handlePointerUp as EventListener
+        );
       };
     }, 100); // Check every 100ms
 
@@ -177,10 +184,6 @@ export default function Home() {
     };
   }, [pickerOpen]);
 
-  const handleClick = () => {
-    setOpen(true);
-  };
-
   const handleEmojiClick = (emojiData: EmojiClickData) => {
     setEmojiText(emojiData.emoji);
     setPickerOpen(false);
@@ -188,12 +191,10 @@ export default function Home() {
 
   const handleNextPageCheck = async () => {
     if (!emojiText) {
-      // FIXME: probably want to have better validation here, make sure its character, make sure its an emoji, etc.
       setSnackbarOpen(true);
       return;
     }
 
-    // Submit the emoji to the backend
     const result = await submitQKDEmoji(emojiText);
 
     if (!result.success) {
@@ -205,251 +206,152 @@ export default function Home() {
   };
 
   return (
-    <Container maxWidth="lg">
-      <Box
-        sx={{
-          my: 4,
-          display: 'flex',
-          flexDirection: 'column',
-          top: '10',
-        }}
-      >
+    <Container maxWidth="lg" sx={{ my: 4 }}>
+      <Stack direction="row" alignItems="flex-start" sx={{ width: '100%' }}>
+        <Whobit variant="arms-down" speechBubbleHeight="250px">
+          <Box sx={{ fontSize: '0.85em' }}>
+            {emojiSentError ? (
+              <p>
+                There was an error sending your emoji to the backend. Please
+                press the `START OVER` button and try again.
+              </p>
+            ) : (
+              <>
+                <p>
+                  Choose a message to send to your friend! To keep this a
+                  secret, you and your friend will send a secret emoji by
+                  answering questions.
+                </p>
+                <p>
+                  Try to guess the answer <b>YOU</b> think the other person
+                  will choose. Your friend will guess the answers they think{' '}
+                  <b>YOU</b> would answer
+                </p>
+              </>
+            )}
+          </Box>
+        </Whobit>
+
         <Stack
-          display="flex"
           flexDirection="column"
-          position="relative"
-          sx={{ width: '100%' }}
+          flex={1}
+          alignItems="center"
+          justifyContent="center"
+          sx={{ paddingLeft: '150px' }}
         >
-          <Stack
-            direction="row"
-            sx={{
-              minHeight: '8em',
-              justifyContent: 'left',
-              alignItems: 'flex-end', // Align items to the bottom of the row
-            }}
-          >
+          {emojiSentError ? (
+            <Box
+              component="img"
+              src="/images/broken-computer.png"
+              alt="Error submitting emoji"
+              sx={{
+                width: '200px',
+                height: 'auto',
+              }}
+            />
+          ) : (
             <Stack
-              display="flex"
-              flexDirection="column"
-              position="relative"
-              sx={{ width: '50%' }}
+              direction="row"
+              alignItems="flex-end"
+              spacing={4}
+              sx={{
+                backgroundImage: 'url(/images/circle.png)',
+                backgroundRepeat: 'no-repeat',
+                backgroundSize: 'contain',
+                backgroundPosition: 'center',
+                width: '560px',
+                height: '560px',
+                position: 'relative',
+              }}
             >
               <Box
-                component="img"
-                src="/images/speech-bubble-white-small.png"
-                alt="Whobit welcomes you"
-                sx={{
-                  width: 'auto',
-                  height: '18em',
-                  backgroundRepeat: 'no-repeat',
-                  backgroundSize: 'contain',
-                  backgroundPosition: 'left',
-                }}
-              />
-              <Typography
-                component="h1"
                 sx={{
                   position: 'absolute',
-                  top: '23%',
+                  top: '50%',
                   left: '50%',
                   transform: 'translate(-50%, -50%)',
-                  color: '#000000',
-                  width: '75%',
-                  fontSize: '1.35em',
+                  width: '200px',
+                  height: '200px',
+                  border: '3px solid #1976d2',
+                  borderRadius: '12px',
+                  padding: '20px',
+                  backgroundColor: '#f5f5f5',
+                  fontSize: '5rem',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  '&:hover': {
+                    backgroundColor: '#e3f2fd',
+                    transform: 'translate(-50%, -50%) scale(1.05)',
+                  },
+                  '&:active': {
+                    transform: 'translate(-50%, -50%) scale(0.95)',
+                  },
                 }}
+                onClick={() => setPickerOpen(true)}
               >
-                {emojiSentError ? (
-                  <p>
-                    There was an error sending your emoji to the backend. Please
-                    press the `START OVER` button and try again.
-                  </p>
-                ) : (
-                  <>
-                    <p>
-                      Choose a message to send to your friend! To keep this a
-                      secret, you and your friend will send a secret emoji by
-                      answering questions.
-                    </p>
-                    <p>
-                      Try to guess the answer <b>YOU</b> think the other person
-                      will choose. Your friend will guess the answers they think{' '}
-                      <b>YOU</b> would answer
-                    </p>
-                  </>
+                {emojiText || (
+                  <Typography sx={{ fontSize: '1rem', color: '#666' }}>
+                    Tap
+                  </Typography>
                 )}
-              </Typography>
+              </Box>
 
-              <Dialog open={open} onClose={() => setOpen(false)}>
-                <DialogContent sx={{ padding: '2.8em', fontSize: '1.45em' }}>
-                  Entangled photons are light particles that act as if they're
-                  connected, even if they are very &nbsp; far apart.
-                </DialogContent>
-              </Dialog>
-
-              <Box
-                component="img"
-                src="/images/whobit-arms-down.png"
-                alt="Whobit welcomes you"
+              <Button
+                variant="contained"
+                component="a"
+                href="#"
+                onClick={handleNextPageCheck}
                 sx={{
-                  width: '14.3em',
-                  height: 'auto',
-                  backgroundRepeat: 'no-repeat',
-                  backgroundSize: 'contain',
-                  backgroundPosition: 'left',
-                  paddingLeft: '4px',
+                  position: 'absolute',
+                  bottom: 0,
+                  right: -50,
+                  height: '4em',
+                  width: '8em',
+                  border: '1px solid #000',
+                  backgroundColor: '#FFFFFF',
+                  color: '#000000',
                 }}
-              />
-            </Stack>
-
-            <Stack
-              display="flex"
-              flexDirection="column"
-              position="relative"
-              sx={{ width: '50%' }}
-            >
-              {emojiSentError ? (
-                <Box
-                  component="img"
-                  src="/images/broken-computer.png"
-                  alt="Error submitting emoji"
-                  sx={{
-                    position: 'relative',
-                    left: '70%',
-                    bottom: '150px',
-                    width: '200px',
-                    height: 'auto',
-                  }}
-                />
-              ) : (
-                <Stack
-                  direction="row"
-                  sx={{
-                    backgroundImage: 'url(/images/circle.png)',
-                    Height: '560px',
-                    backgroundRepeat: 'no-repeat',
-                    width: '560px',
-                    backgroundPosition: 'center',
-                    position: 'relative',
-                    left: '40%',
-                  }}
-                >
-                  <Stack direction="row">
-                    <Stack
-                      direction="row"
-                      sx={{
-                        position: 'relative',
-                        zIndex: 2,
-                        minHeight: '560px',
-                        minWidth: '560px',
-                        alignContent: 'center',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      <Box
-                        sx={{
-                          position: 'relative',
-                          zIndex: 2,
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          height: '100%',
-                        }}
-                      >
-                        <Box
-                          sx={{
-                            width: '200px',
-                            height: '200px',
-                            border: '3px solid #1976d2',
-                            borderRadius: '12px',
-                            padding: '20px',
-                            backgroundColor: '#f5f5f5',
-                            fontSize: '5rem',
-                            cursor: 'pointer',
-                            transition: 'all 0.2s',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            '&:hover': {
-                              backgroundColor: '#e3f2fd',
-                              transform: 'scale(1.05)',
-                            },
-                            '&:active': {
-                              transform: 'scale(0.95)',
-                            },
-                          }}
-                          onClick={() => setPickerOpen(true)}
-                        >
-                          {emojiText || (
-                            <Typography
-                              sx={{ fontSize: '1rem', color: '#666' }}
-                            >
-                              Tap
-                            </Typography>
-                          )}
-                        </Box>
-                      </Box>
-                    </Stack>
-
-                    <Stack
-                      sx={{
-                        position: 'relative',
-                        justifyContent: 'flex-end',
-                        paddingBottom: '60px',
-                      }}
-                    >
-                      <Button
-                        variant="contained"
-                        component="a"
-                        href="#"
-                        onClick={handleNextPageCheck}
-                        sx={{
-                          height: '4em',
-                          border: '1px solid #000',
-                          backgroundColor: '#FFFFFF',
-                          color: '#000000',
-                        }}
-                      >
-                        Next
-                      </Button>
-                    </Stack>
-                  </Stack>
-                </Stack>
-              )}
-
-              <Dialog
-                open={pickerOpen}
-                onClose={() => setPickerOpen(false)}
-                maxWidth="md"
-                fullWidth
               >
-                <DialogContent
-                  ref={dialogRef}
-                  sx={{
-                    padding: '20px',
-                    overflow: 'hidden',
-                    '& .epr-body': {
-                      overflowY: 'auto !important',
-                    },
-                  }}
-                >
-                  <EmojiPicker
-                    onEmojiClick={handleEmojiClick}
-                    width="100%"
-                    height="500px"
-                    searchDisabled
-                    emojiStyle={EmojiStyle.NATIVE}
-                    style={
-                      {
-                        '--epr-emoji-size': '48px',
-                      } as React.CSSProperties
-                    }
-                  />
-                </DialogContent>
-              </Dialog>
+                Next
+              </Button>
             </Stack>
-          </Stack>
+          )}
         </Stack>
-      </Box>
+      </Stack>
+
+      <Dialog
+        open={pickerOpen}
+        onClose={() => setPickerOpen(false)}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogContent
+          ref={dialogRef}
+          sx={{
+            padding: '20px',
+            overflow: 'hidden',
+            '& .epr-body': {
+              overflowY: 'auto !important',
+            },
+          }}
+        >
+          <EmojiPicker
+            onEmojiClick={handleEmojiClick}
+            width="100%"
+            height="500px"
+            searchDisabled
+            emojiStyle={EmojiStyle.NATIVE}
+            style={
+              {
+                '--epr-emoji-size': '48px',
+              } as React.CSSProperties
+            }
+          />
+        </DialogContent>
+      </Dialog>
 
       <Snackbar
         open={snackbarOpen}
@@ -457,9 +359,11 @@ export default function Home() {
         onClose={() => setSnackbarOpen(false)}
         message="Please choose an emoji before going to the next page"
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-        ContentProps={{
-          sx: {
-            fontSize: '1.2rem',
+        slotProps={{
+          content: {
+            sx: {
+              fontSize: '1.2rem',
+            },
           },
         }}
       />

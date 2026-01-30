@@ -17,7 +17,7 @@ const Fireworks = () => {
     const fireFirework = (x: number, y: number, colors: string[]) => {
       if (!isActive) return;
 
-      const count = 80;
+      const count = 40;
       const defaults = {
         origin: { x, y },
         zIndex: 1000,
@@ -57,7 +57,7 @@ const Fireworks = () => {
       const randomY = 0.35 + Math.random() * 0.3;
       const randomColors =
         colorSchemes[Math.floor(Math.random() * colorSchemes.length)];
-      const randomDelay = 800 + Math.random() * 1200;
+      const randomDelay = 2000 + Math.random() * 1500;
 
       setTimeout(() => {
         if (!isActive) return;

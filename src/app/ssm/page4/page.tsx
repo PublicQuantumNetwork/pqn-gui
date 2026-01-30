@@ -89,7 +89,7 @@ export default function Home() {
 
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (confetti as any)({
-              particleCount: 80,
+              particleCount: 40,
               spread: 360,
               ticks: 60,
               gravity: 0,
@@ -108,7 +108,7 @@ export default function Home() {
         // Wait for DOM to be ready, then start interval
         const initialTimeout = setTimeout(() => {
           triggerConfetti();
-          const interval = setInterval(triggerConfetti, 1500);
+          const interval = setInterval(triggerConfetti, 2000);
           return () => {
             clearInterval(interval);
           };

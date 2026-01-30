@@ -66,6 +66,7 @@ To configure the API endpoints, create a `.env.local` file in the root of the pr
 NEXT_PUBLIC_API_ADDRESS=127.0.0.1:8000  # Address of the PQN Node running
 NEXT_PUBLIC_TIMETAGGER_ADDRESS=127.0.0.1:8000  # Address of the PQN Node with a timetagger; the protocol will use the timetagger in this Node.
 NEXT_PUBLIC_FOLLOWER_NODE_ADDRESS=127.0.0.1:8000  # Address of the second PQN Node with which 2 player games will be performed.
+NEXT_PUBLIC_SURVEY_FORM_URL=https://surveys.illinois.edu/sec/1160990162  # URL for the survey form displayed after experiments (optional).
 ```
 
 Replace the addresses with your actual Node API endpoints if they differ from the defaults.

@@ -110,7 +110,10 @@ export default function Home() {
                 }}
               >
                 <iframe
-                  src="https://docs.google.com/forms/d/e/1FAIpQLSfdGIL2c6nmcvaOU4PKZwy5imlwrGXgCu6nASd1tla6-DvtGQ/viewform?usp=sharing&ouid=104503430832388474561"
+                  src={
+                    process.env.NEXT_PUBLIC_SURVEY_FORM_URL ||
+                    'https://surveys.illinois.edu/sec/1160990162'
+                  }
                   width="143%"
                   height="570"
                   style={{ border: '3.5px solid #000' }}

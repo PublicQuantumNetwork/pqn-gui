@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import Container from '@mui/material/Container';
 import { Button, Stack, styled, ButtonProps } from '@mui/material';
-import { useWebSocket } from '@/app/hooks/WebSocketHook';
+import { useWebSocket } from '@/hooks/WebSocketHook';
 import FollowRequestEventModal from '@/components/FollowRequestEventModal';
 import Whobit from '@/components/Whobit';
 import { resetBackendState } from '@/calls';

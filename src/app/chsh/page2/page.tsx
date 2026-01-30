@@ -135,7 +135,7 @@ export default function Page() {
           alignItems: 'center',
         }}
       >
-        <Whobit variant="left-wing-up" speechBubbleHeight="250px">
+        <Whobit variant="right-wing-up" speechBubbleHeight="250px">
           {currentAngle === 1 && (
             <p>
               By turning the wheel, you choose which{' '}

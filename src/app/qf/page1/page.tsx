@@ -49,7 +49,7 @@ export default function MyComponent() {
         </Dialog>
 
         <Stack direction="row" alignItems="center" sx={{ width: '100%' }}>
-          <Whobit variant="left-wing-up">
+          <Whobit variant="right-wing-up">
             <p>
               Press the red button seven times to generate your fortune.
             </p>

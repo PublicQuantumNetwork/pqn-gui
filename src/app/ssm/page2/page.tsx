@@ -33,7 +33,7 @@ export default function MyComponent() {
   return (
     <Container maxWidth="lg" sx={{ my: 4 }}>
       <Stack direction="row" alignItems="center" sx={{ width: '100%' }}>
-        <Whobit variant="left-wing-up" speechBubbleHeight="250px">
+        <Whobit variant="right-wing-up" speechBubbleHeight="250px">
           <Box sx={{ fontSize: '1em' }}>
             {hasError ? (
               <p>

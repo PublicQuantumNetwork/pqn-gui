@@ -12,7 +12,7 @@ import {
 import Typography from '@mui/material/Typography';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEnterKey } from '@/hooks/useEnterKey';
-import { useSSE } from '@/app/hooks/useSSE';
+import { useSSE } from '@/hooks/useSSE';
 import {
   fetchRotatorAngle,
   fetchQuestionOrder,
@@ -128,7 +128,7 @@ function SSMPage3Content() {
   return (
     <Container maxWidth="lg" sx={{ my: 4 }}>
       <Stack direction="row" alignItems="flex-start" sx={{ width: '100%' }}>
-        <Whobit variant="left-wing-up" speechBubbleHeight="250px">
+        <Whobit variant="right-wing-up" speechBubbleHeight="250px">
           <Box sx={{ fontSize: '1em' }}>
             {loading ? (
               <Box

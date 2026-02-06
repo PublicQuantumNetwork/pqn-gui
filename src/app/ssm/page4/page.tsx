@@ -7,6 +7,7 @@ import { usePageRedirect } from '@/app/contexts/PageRedirectContext';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useEnterKey } from '@/hooks/useEnterKey';
 import EmojiConfetti from '@/components/EmojiConfetti';
+import Fireworks from '@/components/Fireworks';
 import Whobit from '@/components/Whobit';
 
 export default function Home() {
@@ -64,6 +65,12 @@ export default function Home() {
       if (!success) {
         setMessage('There was an error, we will work on this.');
         setMessage2('Please try a different game.');
+      } else if (
+        Number(n_matching_bits) === Number(n_total_bits) &&
+        Number(n_total_bits) > 0
+      ) {
+        setMessage('Woo!! Hoo!!');
+        setMessage2('You and your friend are in perfect sync!');
       } else {
         if (role === 'leader') {
           setMessage(
@@ -77,24 +84,27 @@ export default function Home() {
           setMessage('Your quantum key distribution result is...');
         }
       }
-    }, [success, role]);
+    }, [success, role, n_matching_bits, n_total_bits]);
 
     // Trigger emoji explosion continuously when bits match perfectly
     useEffect(() => {
-      if (success && emoji && n_matching_bits === n_total_bits && Number(n_total_bits) > 0) {
-        // Wait for DOM to be ready, then start interval
+      if (
+        success &&
+        emoji &&
+        Number(n_matching_bits) === Number(n_total_bits) &&
+        Number(n_total_bits) > 0
+      ) {
+        let interval: NodeJS.Timeout | null = null;
         const initialTimeout = setTimeout(() => {
           setConfettiTrigger((prev) => prev + 1);
-          const interval = setInterval(() => {
+          interval = setInterval(() => {
             setConfettiTrigger((prev) => prev + 1);
           }, 2000);
-          return () => {
-            clearInterval(interval);
-          };
         }, 100);
 
         return () => {
           clearTimeout(initialTimeout);
+          if (interval) clearInterval(interval);
         };
       }
     }, [success, emoji, n_matching_bits, n_total_bits]);
@@ -102,9 +112,24 @@ export default function Home() {
     return (
       <Container maxWidth="lg" sx={{ my: 4 }}>
         <Stack direction="row" alignItems="flex-start" sx={{ width: '100%' }}>
-          <Whobit variant="arms-down" speechBubbleHeight="250px">
+          <Whobit
+            variant={
+              success &&
+              Number(n_matching_bits) === Number(n_total_bits) &&
+              Number(n_total_bits) > 0
+                ? 'arms-up'
+                : 'arms-down'
+            }
+            speechBubbleHeight="250px"
+          >
             <Box sx={{ fontSize: '0.85em' }}>
               {!success ? (
+                <>
+                  <p>{message}</p>
+                  <p>{message2}</p>
+                </>
+              ) : Number(n_matching_bits) === Number(n_total_bits) &&
+                Number(n_total_bits) > 0 ? (
                 <>
                   <p>{message}</p>
                   <p>{message2}</p>
@@ -199,13 +224,19 @@ export default function Home() {
             </Box>
           </Stack>
         </Stack>
-        {success && emoji && (
-          <EmojiConfetti
-            emoji={emoji}
-            triggerKey={confettiTrigger}
-            emojiRef={emojiRef}
-          />
-        )}
+        {success &&
+          emoji &&
+          Number(n_matching_bits) === Number(n_total_bits) &&
+          Number(n_total_bits) > 0 && (
+            <>
+              <EmojiConfetti
+                emoji={emoji}
+                triggerKey={confettiTrigger}
+                emojiRef={emojiRef}
+              />
+              <Fireworks />
+            </>
+          )}
       </Container>
     );
   }

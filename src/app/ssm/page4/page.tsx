@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import { usePageRedirect } from '@/app/contexts/PageRedirectContext';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useEnterKey } from '@/hooks/useEnterKey';
-import confetti from 'canvas-confetti';
+import EmojiConfetti from '@/components/EmojiConfetti';
 import Whobit from '@/components/Whobit';
 
 export default function Home() {
@@ -40,6 +40,7 @@ export default function Home() {
     const [message, setMessage] = useState('');
     const [message2, setMessage2] = useState('');
     const emojiRef = useRef<HTMLDivElement>(null);
+    const [confettiTrigger, setConfettiTrigger] = useState(0);
 
     // Calculate blur pixels based on matching bits ratio
     const calculateBlurPixels = (
@@ -81,35 +82,12 @@ export default function Home() {
     // Trigger emoji explosion continuously when bits match perfectly
     useEffect(() => {
       if (success && emoji && n_matching_bits === n_total_bits && Number(n_total_bits) > 0) {
-        const triggerConfetti = () => {
-          if (emojiRef.current) {
-            const rect = emojiRef.current.getBoundingClientRect();
-            const scalar = 4;
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const emojiShape = (confetti as any).shapeFromText({ text: emoji, scalar });
-
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (confetti as any)({
-              particleCount: 40,
-              spread: 360,
-              ticks: 60,
-              gravity: 0,
-              decay: 0.96,
-              startVelocity: 20,
-              shapes: [emojiShape],
-              scalar,
-              origin: {
-                x: (rect.left + rect.width / 2) / window.innerWidth,
-                y: (rect.top + rect.height / 2) / window.innerHeight,
-              },
-            });
-          }
-        };
-
         // Wait for DOM to be ready, then start interval
         const initialTimeout = setTimeout(() => {
-          triggerConfetti();
-          const interval = setInterval(triggerConfetti, 2000);
+          setConfettiTrigger((prev) => prev + 1);
+          const interval = setInterval(() => {
+            setConfettiTrigger((prev) => prev + 1);
+          }, 2000);
           return () => {
             clearInterval(interval);
           };
@@ -221,6 +199,13 @@ export default function Home() {
             </Box>
           </Stack>
         </Stack>
+        {success && emoji && (
+          <EmojiConfetti
+            emoji={emoji}
+            triggerKey={confettiTrigger}
+            emojiRef={emojiRef}
+          />
+        )}
       </Container>
     );
   }

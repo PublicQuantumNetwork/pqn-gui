@@ -7,6 +7,7 @@ import { usePageRedirect } from '@/app/contexts/PageRedirectContext';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useEnterKey } from '@/hooks/useEnterKey';
 import confetti from 'canvas-confetti';
+import Whobit from '@/components/Whobit';
 
 export default function Home() {
   const { setBackArrowLink, setForwardArrowLink } = usePageRedirect();
@@ -121,190 +122,105 @@ export default function Home() {
     }, [success, emoji, n_matching_bits, n_total_bits]);
 
     return (
-      <Container maxWidth="lg">
-        <Box
-          sx={{
-            my: 4,
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
+      <Container maxWidth="lg" sx={{ my: 4 }}>
+        <Stack direction="row" alignItems="flex-start" sx={{ width: '100%' }}>
+          <Whobit variant="arms-down" speechBubbleHeight="250px">
+            <Box sx={{ fontSize: '0.85em' }}>
+              {!success ? (
+                <>
+                  <p>{message}</p>
+                  <p>{message2}</p>
+                </>
+              ) : (
+                <p>{message}</p>
+              )}
+            </Box>
+          </Whobit>
+
           <Stack
-            display="flex"
             flexDirection="column"
-            position="relative"
-            sx={{ width: '100%' }}
+            flex={1}
+            alignItems="center"
+            justifyContent="center"
+            sx={{ paddingLeft: '150px' }}
           >
-            <Stack
-              direction="row"
+            <Box
               sx={{
-                justifyContent: 'left',
-                alignItems: 'flex-end',
+                backgroundImage: 'url(/images/circle.png)',
+                backgroundRepeat: 'no-repeat',
+                backgroundSize: 'contain',
+                backgroundPosition: 'center',
+                width: '560px',
+                height: '560px',
+                position: 'relative',
               }}
             >
-              <Stack
-                display="flex"
-                flexDirection="column"
-                position="relative"
-                sx={{ width: '50%' }}
-              >
-                <Box
-                  component="img"
-                  src="/images/speech-bubble-white-small.png"
-                  alt="Whobit welcomes you"
-                  sx={{
-                    width: 'auto',
-                    height: '18em',
-                    backgroundRepeat: 'no-repeat',
-                    backgroundSize: 'contain',
-                    backgroundPosition: 'left',
-                  }}
-                />
-                <Typography
-                  variant="h5"
-                  component="h1"
-                  sx={{
-                    position: 'absolute',
-                    top: '23%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    color: '#000000',
-                    width: '75%',
-                  }}
-                >
-                  {!success ? (
-                    <p>
-                      {message}
-                      <br />
-                      <br />
-                      {message2}
-                    </p>
-                  ) : (
-                    <div>{message}</div>
-                  )}
-                </Typography>
-
-                <Box
-                  component="img"
-                  src="/images/whobit-arms-down.png"
-                  alt="Whobit showing results"
-                  sx={{
-                    width: '14.8em',
-                    height: 'auto',
-                    backgroundRepeat: 'no-repeat',
-                    backgroundSize: 'contain',
-                    backgroundPosition: 'left',
-                    paddingLeft: '12px',
-                    marginLeft: '-10px',
-                  }}
-                />
-              </Stack>
-
-              <Stack
-                display="flex"
-                flexDirection="column"
-                position="relative"
-                sx={{ width: '50%' }}
-              >
-                <Stack
-                  direction="row"
-                  sx={{
-                    minHeight: '7em',
-                    justifyContent: 'left',
-                    alignItems: 'flex-end',
-                  }}
-                >
-                  <Stack
-                    display="flex"
-                    flexDirection="column"
-                    position="relative"
-                    sx={{ width: '100%', marginLeft: '232px' }}
+              {success && (
+                <>
+                  <Typography
+                    ref={emojiRef}
+                    variant="h5"
+                    component="h1"
+                    sx={{
+                      position: 'absolute',
+                      top: '30%',
+                      left: '50%',
+                      transform: 'translate(-50%, -50%)',
+                      color: '#000000',
+                      width: '60%',
+                      fontSize: '7em',
+                      textAlign: 'center',
+                      filter: `blur(${calculateBlurPixels(n_matching_bits, n_total_bits)}px)`,
+                    }}
                   >
-                    <Box
-                      component="img"
-                      src="/images/circle.png"
-                      alt="Circle background"
-                      sx={{
-                        width: '560px',
-                        height: '560px',
-                        backgroundRepeat: 'no-repeat',
-                        backgroundSize: 'contain',
-                        backgroundPosition: 'right',
-                      }}
-                    />
+                    {emoji}
+                  </Typography>
 
-                    {success && (
-                      <>
-                        <Typography
-                          ref={emojiRef}
-                          variant="h5"
-                          component="h1"
-                          sx={{
-                            position: 'absolute',
-                            top: '30%',
-                            left: '50%',
-                            transform: 'translate(-50%, -50%)',
-                            color: '#000000',
-                            width: '60%',
-                            fontSize: '7em',
-                            textAlign: 'center',
-                            filter: `blur(${calculateBlurPixels(n_matching_bits, n_total_bits)}px)`,
-                          }}
-                        >
-                          {emoji}
-                        </Typography>
+                  <Typography
+                    variant="h5"
+                    component="h1"
+                    sx={{
+                      position: 'absolute',
+                      top: '60%',
+                      left: '50%',
+                      transform: 'translate(-50%, -50%)',
+                      color: '#000000',
+                      width: '60%',
+                      fontSize: '1.2em',
+                      textAlign: 'center',
+                    }}
+                  >
+                    Matching bits: {n_matching_bits} / {n_total_bits}
+                  </Typography>
 
-                        <Typography
-                          variant="h5"
-                          component="h1"
-                          sx={{
-                            position: 'absolute',
-                            top: '60%',
-                            left: '50%',
-                            transform: 'translate(-50%, -50%)',
-                            color: '#000000',
-                            width: '60%',
-                            fontSize: '1.2em',
-                            textAlign: 'center',
-                          }}
-                        >
-                          Matching bits: {n_matching_bits} / {n_total_bits}
-                        </Typography>
-
-                        <Typography
-                          variant="h5"
-                          component="h1"
-                          sx={{
-                            position: 'absolute',
-                            top: '70%',
-                            left: '50%',
-                            transform: 'translate(-50%, -50%)',
-                            color: '#000000',
-                            width: '60%',
-                            fontSize: '1.1em',
-                            textAlign: 'center',
-                          }}
-                        >
-                          Success rate:{' '}
-                          {n_total_bits !== '0'
-                            ? (
-                                (Number(n_matching_bits) /
-                                  Number(n_total_bits)) *
-                                100
-                              ).toFixed(1)
-                            : '0'}
-                          %
-                        </Typography>
-                      </>
-                    )}
-                  </Stack>
-                </Stack>
-              </Stack>
-            </Stack>
+                  <Typography
+                    variant="h5"
+                    component="h1"
+                    sx={{
+                      position: 'absolute',
+                      top: '70%',
+                      left: '50%',
+                      transform: 'translate(-50%, -50%)',
+                      color: '#000000',
+                      width: '60%',
+                      fontSize: '1.1em',
+                      textAlign: 'center',
+                    }}
+                  >
+                    Success rate:{' '}
+                    {n_total_bits !== '0'
+                      ? (
+                          (Number(n_matching_bits) / Number(n_total_bits)) *
+                          100
+                        ).toFixed(1)
+                      : '0'}
+                    %
+                  </Typography>
+                </>
+              )}
+            </Box>
           </Stack>
-        </Box>
+        </Stack>
       </Container>
     );
   }

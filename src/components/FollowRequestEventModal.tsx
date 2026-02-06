@@ -1,8 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Modal, Box, Typography, IconButton, Button } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import { Modal, Box, Typography, Button } from '@mui/material';
 import { useRouter } from 'next/navigation';
 
 interface EventModalProps {
@@ -49,23 +48,17 @@ const FollowRequestEventModal: React.FC<EventModalProps> = ({
   return (
     <Modal
       open={isOpen}
-      onClose={onClose}
+      onClose={(_, reason) => {
+        if (reason === 'backdropClick' || reason === 'escapeKeyDown') {
+          return;
+        }
+        onClose();
+      }}
       aria-labelledby="modal-title"
       aria-describedby="modal-description"
+      disableEscapeKeyDown
     >
       <Box sx={style}>
-        <IconButton
-          aria-label="close"
-          onClick={onClose}
-          sx={{
-            position: 'absolute',
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
-          }}
-        >
-          <CloseIcon />
-        </IconButton>
         <Typography id="modal-description" sx={{ mt: 2 }}>
           {message || 'No message content'}
         </Typography>

@@ -110,7 +110,7 @@ function SSMPage3Content() {
       } else if (result.statusCode === 409) {
         setOpenModal(false);
         setSubmissionInProgress(false);
-        alert('The other player has already submitted. Please try again later.');
+        alert('The other player has cancelled the game. Please try again later.');
         router.push('/');
       } else {
         router.push(`/ssm/page4?success=false`);

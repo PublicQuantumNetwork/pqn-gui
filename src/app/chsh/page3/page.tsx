@@ -43,17 +43,10 @@ export default function Home() {
             alignItems: 'center',
           }}
         >
-          <Stack
-            direction="row"
-            alignItems="flex-start"
-            sx={{ width: '100%' }}
-          >
+          <Stack direction="row" alignItems="flex-start" sx={{ width: '100%' }}>
             {/* Left side: Whobit with message and fireworks */}
             <Box sx={{ position: 'relative' }}>
-              <Whobit
-                variant={getWhobitVariant()}
-                speechBubbleHeight="250px"
-              >
+              <Whobit variant={getWhobitVariant()} speechBubbleHeight="250px">
                 {fail === 'true' ? (
                   <p>
                     There was an error, we will work on this.
@@ -80,50 +73,50 @@ export default function Home() {
             {/* Right side: Results circle */}
             <Box sx={{ flex: 1 }}>
               <CircleContainer sx={{ left: '20%' }}>
-                  <Typography
-                    variant="h5"
-                    component="h1"
-                    sx={{
-                      position: 'absolute',
-                      top: '45%',
-                      left: '55%',
-                      transform: 'translate(-50%, -50%)',
-                      color: '#000000',
-                      width: '50%',
-                      fontSize: '2em',
-                    }}
-                  >
-                    Your value was {value.toFixed(2)} with an error of{' '}
-                    {error.toFixed(2)}
-                  </Typography>
+                <Typography
+                  variant="h5"
+                  component="h1"
+                  sx={{
+                    position: 'absolute',
+                    top: '45%',
+                    left: '55%',
+                    transform: 'translate(-50%, -50%)',
+                    color: '#000000',
+                    width: '50%',
+                    fontSize: '2em',
+                  }}
+                >
+                  Your value was {value.toFixed(2)} with an error of{' '}
+                  {error.toFixed(2)}
+                </Typography>
 
-                  <Typography
-                    variant="h5"
-                    sx={{
-                      position: 'absolute',
-                      top: '60%',
-                      left: '29%',
-                      color: '#000000',
-                      fontSize: '.85em',
-                      textAlign: 'center',
-                    }}
-                  >
-                    {fail === 'true' ? (
-                      <>
-                        This result means the test was unable
-                        <br />
-                        to show the photons are entangled.
-                      </>
-                    ) : value >= 2 ? (
-                      <>
-                        This result means the test was able to
-                        <br />
-                        show the photons are entangled.
-                      </>
-                    ) : (
-                      ''
-                    )}
-                  </Typography>
+                <Typography
+                  variant="h5"
+                  sx={{
+                    position: 'absolute',
+                    top: '60%',
+                    left: '29%',
+                    color: '#000000',
+                    fontSize: '.85em',
+                    textAlign: 'center',
+                  }}
+                >
+                  {fail === 'true' ? (
+                    <>
+                      This result means the test was unable
+                      <br />
+                      to show the photons are entangled.
+                    </>
+                  ) : value >= 2 ? (
+                    <>
+                      This result means the test was able to
+                      <br />
+                      show the photons are entangled.
+                    </>
+                  ) : (
+                    ''
+                  )}
+                </Typography>
               </CircleContainer>
             </Box>
           </Stack>

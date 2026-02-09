@@ -2,12 +2,12 @@
 import * as React from 'react';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import { ThemeProvider } from '@mui/material/styles';
-import { Box, Stack} from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import theme from '@/theme';
 import InitColorSchemeScript from '@mui/material/InitColorSchemeScript';
 import { PageRedirectProvider } from '@/app/contexts/PageRedirectContext';
-import HeaderBar from "@/components/HeaderBar";
+import HeaderBar from '@/components/HeaderBar';
 import './globals.css';
 
 export default function RootLayout(props: { children: React.ReactNode }) {
@@ -17,14 +17,13 @@ export default function RootLayout(props: { children: React.ReactNode }) {
       suppressHydrationWarning
       style={{ touchAction: 'pan-y pan-x' }}
     >
-      <body
-      >
+      <body>
         <InitColorSchemeScript attribute="class" />
         <AppRouterCacheProvider options={{ enableCssLayer: true }}>
           <ThemeProvider theme={theme}>
             <CssBaseline />
             <PageRedirectProvider>
-              <Stack  // Main component
+              <Stack // Main component
                 display="flex"
                 flexDirection="column"
                 position="relative"

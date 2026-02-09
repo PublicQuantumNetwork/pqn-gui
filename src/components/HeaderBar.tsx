@@ -54,11 +54,7 @@ export default function HeaderBar() {
           Start Over
         </Button>
 
-        <Button
-          variant="contained"
-          component="a"
-          href="/survey"
-        >
+        <Button variant="contained" component="a" href="/survey">
           Survey
         </Button>
 

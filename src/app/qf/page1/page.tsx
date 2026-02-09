@@ -50,9 +50,7 @@ export default function MyComponent() {
 
         <Stack direction="row" alignItems="center" sx={{ width: '100%' }}>
           <Whobit variant="right-wing-up">
-            <p>
-              Press the red button seven times to generate your fortune.
-            </p>
+            <p>Press the red button seven times to generate your fortune.</p>
           </Whobit>
 
           <Box

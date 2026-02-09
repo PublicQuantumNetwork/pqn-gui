@@ -157,10 +157,7 @@ export default function Home() {
         'pointermove',
         handlePointerMove as EventListener
       );
-      emojiBody.addEventListener(
-        'pointerup',
-        handlePointerUp as EventListener
-      );
+      emojiBody.addEventListener('pointerup', handlePointerUp as EventListener);
 
       cleanupFn = () => {
         emojiBody.removeEventListener(
@@ -223,8 +220,8 @@ export default function Home() {
                   answering questions.
                 </p>
                 <p>
-                  Try to guess the answer <b>YOU</b> think the other person
-                  will choose. Your friend will guess the answers they think{' '}
+                  Try to guess the answer <b>YOU</b> think the other person will
+                  choose. Your friend will guess the answers they think{' '}
                   <b>YOU</b> would answer
                 </p>
               </>

@@ -45,8 +45,7 @@ export default function Page() {
   };
 
   return (
-    <Container maxWidth="lg"
-      sx={{my: 4,}}>
+    <Container maxWidth="lg" sx={{ my: 4 }}>
       <FollowRequestEventModal
         isOpen={isFollowRequestModalOpen}
         onClose={handleCloseModal}
@@ -70,11 +69,7 @@ export default function Page() {
             Verify Quantum Link (single player)
           </StyledHomeButton>
 
-          <StyledHomeButton
-            variant="contained"
-            component="a"
-            href="/qf/page1"
-          >
+          <StyledHomeButton variant="contained" component="a" href="/qf/page1">
             Quantum Fortune (single player)
           </StyledHomeButton>
 
@@ -84,17 +79,12 @@ export default function Page() {
             href="/ssm/page1"
             sx={{ marginTop: '40px' }}
           >
-            Share a secret message (Preview)
+            Share a secret message (Two players)
           </StyledHomeButton>
 
-          <StyledHomeButton
-            variant="contained"
-            component="a"
-            href="#"
-            disabled
-          >
-            Get to know someone (Coming soon)
-          </StyledHomeButton>
+          {/*<StyledHomeButton variant="contained" component="a" href="#" disabled>*/}
+          {/*  Get to know someone (Coming soon)*/}
+          {/*</StyledHomeButton>*/}
         </Stack>
       </Stack>
     </Container>

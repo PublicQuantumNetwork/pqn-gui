@@ -94,7 +94,7 @@ const theme = createTheme({
         root: ({ theme }) => ({
           backgroundColor: theme.palette.background.default,
           color: theme.palette.text.primary,
-          border: "1px solid black",
+          border: '1px solid black',
           height: theme.spacing(7),
           '&:hover': {
             backgroundColor: '#F5F5F5',

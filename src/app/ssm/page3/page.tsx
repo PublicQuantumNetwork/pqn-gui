@@ -2,13 +2,7 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import Container from '@mui/material/Container';
-import {
-  Dialog,
-  Button,
-  Box,
-  Stack,
-  CircularProgress,
-} from '@mui/material';
+import { Dialog, Button, Box, Stack, CircularProgress } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEnterKey } from '@/hooks/useEnterKey';
@@ -110,7 +104,9 @@ function SSMPage3Content() {
       } else if (result.statusCode === 409) {
         setOpenModal(false);
         setSubmissionInProgress(false);
-        alert('The other player has cancelled the game. Please try again later.');
+        alert(
+          'The other player has cancelled the game. Please try again later.'
+        );
         router.push('/');
       } else {
         router.push(`/ssm/page4?success=false`);

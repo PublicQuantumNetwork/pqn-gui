@@ -8,7 +8,8 @@ import {
   Button,
   Box,
   Stack,
-  Link, styled,
+  Link,
+  styled,
 } from '@mui/material';
 import Whobit from '@/components/Whobit';
 import ModalBox from '@/components/ModalBox';
@@ -34,20 +35,17 @@ const AngleLabel = styled(Box)<{ top: string; left: string }>(
   })
 );
 
-async function chshSubmit(
-  angleChoices: number[],
-  router: AppRouterInstance
-) {
-    const response = await chshPost([...angleChoices]);
+async function chshSubmit(angleChoices: number[], router: AppRouterInstance) {
+  const response = await chshPost([...angleChoices]);
 
-    if (response.status == 200) {
-      const data = await response.json();
-      const value = data.chsh_value;
-      const error = data.chsh_error;
-      router.push(`/chsh/page3?fail=false&value=${value}&error=${error}`);
-    } else {
-      router.push(`/chsh/page3?fail=true`);
-    }
+  if (response.status == 200) {
+    const data = await response.json();
+    const value = data.chsh_value;
+    const error = data.chsh_error;
+    router.push(`/chsh/page3?fail=false&value=${value}&error=${error}`);
+  } else {
+    router.push(`/chsh/page3?fail=true`);
+  }
 }
 
 export default function Page() {
@@ -86,38 +84,37 @@ export default function Page() {
   });
 
   return (
-    <Container maxWidth="lg"
-               sx={{
-                 my: 4,
-    }}>
-
+    <Container
+      maxWidth="lg"
+      sx={{
+        my: 4,
+      }}
+    >
       <Dialog maxWidth="md" open={openMeasuringModal} onClose={() => {}}>
         <ModalBox />
       </Dialog>
 
-      <Dialog open={openPolarizationModal} onClose={() => setOpenPolarizationModal(false)}>
-        <DialogContent
-          sx={{ padding: '0em 2.8em', fontSize: '1.45em' }}
-        >
+      <Dialog
+        open={openPolarizationModal}
+        onClose={() => setOpenPolarizationModal(false)}
+      >
+        <DialogContent sx={{ padding: '0em 2.8em', fontSize: '1.45em' }}>
           <p>&nbsp;</p>
           Polarization is the direction light wiggles.{' '}
           <MovingIcon fontSize="large" /> <br></br>
           <br></br>
-          The wheel has a polarizer that asks the photons if they are
-          wiggling a certain direction or not. <TrendingFlatIcon />{' '}
-          <DoDisturbIcon />
+          The wheel has a polarizer that asks the photons if they are wiggling a
+          certain direction or not. <TrendingFlatIcon /> <DoDisturbIcon />
           <br></br>
           <br></br>
-          Because the photons are entangled, their answers should be
-          connected. <PolylineIcon />
+          Because the photons are entangled, their answers should be connected.{' '}
+          <PolylineIcon />
           <p>&nbsp;</p>
         </DialogContent>
       </Dialog>
 
       <Dialog open={openPhotonModal} onClose={() => setOpenPhotonModal(false)}>
-        <DialogContent
-          sx={{ padding: '0em 2.8em', fontSize: '1.45em' }}
-        >
+        <DialogContent sx={{ padding: '0em 2.8em', fontSize: '1.45em' }}>
           <p>&nbsp;</p>
           Photons are the faintest possible specks of light.{' '}
           <WbSunnyIcon
@@ -164,10 +161,18 @@ export default function Page() {
 
         <Box sx={{ position: 'relative' }}>
           <RotatorCircle onRotationChange={setCurrentRotation}>
-            <AngleLabel top="20%" left="18%">A</AngleLabel>
-            <AngleLabel top="6%" left="50%">V</AngleLabel>
-            <AngleLabel top="20%" left="82%">D</AngleLabel>
-            <AngleLabel top="50%" left="94%">H</AngleLabel>
+            <AngleLabel top="20%" left="18%">
+              A
+            </AngleLabel>
+            <AngleLabel top="6%" left="50%">
+              V
+            </AngleLabel>
+            <AngleLabel top="20%" left="82%">
+              D
+            </AngleLabel>
+            <AngleLabel top="50%" left="94%">
+              H
+            </AngleLabel>
           </RotatorCircle>
 
           <Button

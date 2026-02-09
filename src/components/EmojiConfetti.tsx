@@ -44,9 +44,12 @@ const EmojiConfetti = ({ emoji, triggerKey, emojiRef }: EmojiConfettiProps) => {
 
       containerRef.current.appendChild(particle);
 
-      setTimeout(() => {
-        particle.remove();
-      }, (duration + delay) * 1000);
+      setTimeout(
+        () => {
+          particle.remove();
+        },
+        (duration + delay) * 1000
+      );
     }
   };
 
@@ -57,7 +60,12 @@ const EmojiConfetti = ({ emoji, triggerKey, emojiRef }: EmojiConfettiProps) => {
   return (
     <div
       ref={containerRef}
-      style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 1000 }}
+      style={{
+        position: 'fixed',
+        inset: 0,
+        pointerEvents: 'none',
+        zIndex: 1000,
+      }}
     />
   );
 };

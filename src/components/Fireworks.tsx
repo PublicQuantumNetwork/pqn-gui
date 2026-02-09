@@ -110,7 +110,17 @@ const Fireworks = () => {
     };
   }, []);
 
-  return <div ref={containerRef} style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 999 }} />;
+  return (
+    <div
+      ref={containerRef}
+      style={{
+        position: 'fixed',
+        inset: 0,
+        pointerEvents: 'none',
+        zIndex: 999,
+      }}
+    />
+  );
 };
 
 export default Fireworks;

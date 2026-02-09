@@ -31,10 +31,18 @@ export default function Page() {
         </DialogContent>
       </Dialog>
 
-      <Stack direction="row" justifyContent="space-between" sx={{ width: '100%', height: '100%' }}>
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        sx={{ width: '100%', height: '100%' }}
+      >
         <Whobit variant="arms-down" speechBubbleHeight="250px">
           <p>
-            <Link component="button" onClick={handleClick} sx={{ cursor: 'pointer' }}>
+            <Link
+              component="button"
+              onClick={handleClick}
+              sx={{ cursor: 'pointer' }}
+            >
               Entangled photons
             </Link>
             &nbsp;are flying through the library.

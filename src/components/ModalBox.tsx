@@ -1,31 +1,16 @@
 'use client';
 
-import { useState, useEffect, SetStateAction } from 'react';
+import { useState, useEffect } from 'react';
 import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
 import { Typography, LinearProgress } from '@mui/material';
-import {
-  Link,
-  Dialog,
-  DialogContent,
-  Button,
-  Box,
-  Stack,
-  TextField,
-  Paper,
-} from '@mui/material';
+import { DialogContent, Box, Stack } from '@mui/material';
 import { useSSE } from '@/hooks/useSSE';
 
 type ModalBoxVariant = 'chsh' | 'qkd' | 'rng';
 
-function envStuff() {
-  return process.env;
-}
-
 interface ModalBoxProps {
   variant?: ModalBoxVariant;
 }
-
-const setLinks = () => {};
 
 export default function ModalBox({ variant = 'chsh' }: ModalBoxProps): React.ReactElement {
   // Determine endpoint and event name based on variant

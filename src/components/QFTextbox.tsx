@@ -2,10 +2,6 @@
 
 import { Typography } from '@mui/material';
 
-function envStuff() {
-  return process.env;
-}
-
 interface QFTextboxProps {
   questionNumber: number;
 }

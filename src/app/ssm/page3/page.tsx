@@ -95,9 +95,11 @@ function SSMPage3Content() {
     if (currentQuestionIndex === questionOrder.length - 1) {
       setOpenModal(true);
       setSubmissionInProgress(true);
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+      console.log("Submitting answers:", newAnswers);
       const result = await submitSSMAnswers(newAnswers);
       if (result.success) {
-        const { n_matching_bits, n_total_bits, emoji, role } = result.data;
+        const {n_matching_bits, n_total_bits, emoji, role} = result.data;
         router.push(
           `/ssm/page4?n_matching_bits=${n_matching_bits}&n_total_bits=${n_total_bits}&emoji=${encodeURIComponent(emoji)}&role=${encodeURIComponent(role)}&success=true`
         );
@@ -111,10 +113,9 @@ function SSMPage3Content() {
       } else {
         router.push(`/ssm/page4?success=false`);
       }
-    } else {
-      // Move to next question
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
     }
+    // Move to next question
+    setCurrentQuestionIndex(currentQuestionIndex + 1);
   };
 
   useEnterKey(() => {

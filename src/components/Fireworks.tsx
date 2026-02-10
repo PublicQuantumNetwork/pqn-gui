@@ -85,7 +85,7 @@ const Fireworks = () => {
       const randomY = 0.35 + Math.random() * 0.3;
       const randomColors =
         colorSchemes[Math.floor(Math.random() * colorSchemes.length)];
-      const randomDelay = 2500 + Math.random() * 2000;
+      const randomDelay = Math.random() * 2000;
 
       const timeout = setTimeout(() => {
         if (isActive) {

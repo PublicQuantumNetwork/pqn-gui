@@ -45,7 +45,7 @@ export default function MyComponent() {
     <Container maxWidth="lg">
       <Box sx={{ mt: 9, mb: 4, display: 'flex', alignItems: 'center' }}>
         <Dialog open={openModal} onClose={() => {}}>
-          <ModalBox />
+          <ModalBox variant="rng" />
         </Dialog>
 
         <Stack direction="row" alignItems="center" sx={{ width: '100%' }}>

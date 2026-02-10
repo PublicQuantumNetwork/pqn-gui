@@ -2,7 +2,7 @@
 
 import { useState, useEffect, SetStateAction } from 'react';
 import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
-import { Typography } from '@mui/material';
+import { Typography, LinearProgress } from '@mui/material';
 import {
   Link,
   Dialog,
@@ -13,16 +13,47 @@ import {
   TextField,
   Paper,
 } from '@mui/material';
+import { useSSE } from '@/hooks/useSSE';
+
+type ModalBoxVariant = 'chsh' | 'qkd' | 'rng';
 
 function envStuff() {
   return process.env;
 }
 
-interface ModalBoxProps {}
+interface ModalBoxProps {
+  variant?: ModalBoxVariant;
+}
 
 const setLinks = () => {};
 
-export default function ModalBox(props: ModalBoxProps): React.ReactElement {
+export default function ModalBox({ variant = 'chsh' }: ModalBoxProps): React.ReactElement {
+  // Determine endpoint and event name based on variant
+  const getProgressConfig = () => {
+    switch (variant) {
+      case 'chsh':
+        return { endpoint: '/chsh/progress', eventName: 'chsh_progress' };
+      case 'qkd':
+        return { endpoint: '/qkd/progress', eventName: 'qkd_progress' };
+      case 'rng':
+        return { endpoint: '/rng/progress', eventName: 'rng_progress' };
+      default:
+        return { endpoint: '/chsh/progress', eventName: 'chsh_progress' };
+    }
+  };
+
+  const { endpoint, eventName } = getProgressConfig();
+  const { lastMessage } = useSSE(endpoint, true);
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    if (lastMessage?.event === eventName) {
+      const current = lastMessage.current || 0;
+      const total = lastMessage.total || 16;
+      setProgress((current / total) * 100);
+    }
+  }, [lastMessage, eventName]);
+
   return (
     <DialogContent sx={{ padding: '50px' }}>
       <Stack flexDirection="column" sx={{}}>
@@ -36,6 +67,14 @@ export default function ModalBox(props: ModalBoxProps): React.ReactElement {
         >
           <ShareOutlinedIcon /> Photons are being measured back at the lab
         </Typography>
+
+        {/* Progress Bar */}
+        <Box sx={{ width: '100%', mt: 2, mb: 2 }}>
+          <LinearProgress variant="determinate" value={progress} />
+          <Typography variant="body2" color="text.secondary" sx={{ mt: 1, textAlign: 'center' }}>
+            {Math.round(progress)}% complete
+          </Typography>
+        </Box>
       </Stack>
       <Stack flexDirection="column">
         <Stack display="flex" flexDirection="row" position="relative" sx={{}}>

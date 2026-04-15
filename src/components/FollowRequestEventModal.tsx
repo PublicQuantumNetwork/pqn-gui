@@ -1,9 +1,7 @@
-
-"use client";
+'use client';
 
 import React from 'react';
-import { Modal, Box, Typography, IconButton, Button } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import { Modal, Box, Typography, Button } from '@mui/material';
 import { useRouter } from 'next/navigation';
 
 interface EventModalProps {
@@ -14,7 +12,7 @@ interface EventModalProps {
 }
 
 const style = {
-  position: 'absolute' as 'absolute',
+  position: 'absolute' as const,
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
@@ -25,12 +23,16 @@ const style = {
   p: 4,
 };
 
-const FollowRequestEventModal: React.FC<EventModalProps> = ({ isOpen, onClose, message, sendMessage }) => {
-
+const FollowRequestEventModal: React.FC<EventModalProps> = ({
+  isOpen,
+  onClose,
+  message,
+  sendMessage,
+}) => {
   const router = useRouter();
 
   const handleAccept = () => {
-    sendMessage("true");
+    sendMessage('true');
     // Add a short delay to allow the WebSocket message to be sent before navigating
     setTimeout(() => {
       router.push('/ssm/page3?role=follower');
@@ -39,32 +41,26 @@ const FollowRequestEventModal: React.FC<EventModalProps> = ({ isOpen, onClose, m
   };
 
   const handleReject = () => {
-    sendMessage("false");
+    sendMessage('false');
     onClose();
   };
 
   return (
     <Modal
       open={isOpen}
-      onClose={onClose}
+      onClose={(_, reason) => {
+        if (reason === 'backdropClick' || reason === 'escapeKeyDown') {
+          return;
+        }
+        onClose();
+      }}
       aria-labelledby="modal-title"
       aria-describedby="modal-description"
+      disableEscapeKeyDown
     >
       <Box sx={style}>
-        <IconButton
-          aria-label="close"
-          onClick={onClose}
-          sx={{
-            position: 'absolute',
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
-          }}
-        >
-          <CloseIcon />
-        </IconButton>
         <Typography id="modal-description" sx={{ mt: 2 }}>
-          {message || "No message content"}
+          {message || 'No message content'}
         </Typography>
         <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
           <Button onClick={handleReject} sx={{ mr: 1 }}>

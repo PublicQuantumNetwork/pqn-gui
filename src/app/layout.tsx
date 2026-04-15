@@ -1,170 +1,54 @@
-'use client'
+'use client';
 import * as React from 'react';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
-import { ThemeProvider, styled, keyframes } from '@mui/material/styles';
-import { Box, Stack, Icon, Button } from '@mui/material'
+import { ThemeProvider } from '@mui/material/styles';
+import { Box, Stack } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import theme from '@/theme';
 import InitColorSchemeScript from '@mui/material/InitColorSchemeScript';
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { PageRedirectProvider } from '@/app/contexts/PageRedirectContext';
-import RedirectArrow from '@/components/RedirectArrow';
+import HeaderBar from '@/components/HeaderBar';
 import './globals.css';
 
 export default function RootLayout(props: { children: React.ReactNode }) {
-
- 
-  
-  
   return (
-    <html lang="en" suppressHydrationWarning style={{ touchAction: 'pan-y pan-x' }}>
-      <body style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100vh',
-        marginRight: 'auto',
-        marginLeft: 'auto',
-        touchAction: 'pan-y pan-x',
-        WebkitOverflowScrolling: 'touch',
-        overflowY: 'auto'
-      }}>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      style={{ touchAction: 'pan-y pan-x' }}
+    >
+      <body>
         <InitColorSchemeScript attribute="class" />
         <AppRouterCacheProvider options={{ enableCssLayer: true }}>
           <ThemeProvider theme={theme}>
-            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
             <CssBaseline />
-            {/* <ModeSwitch /> */}
             <PageRedirectProvider>
-              <Stack
+              <Stack // Main component
                 display="flex"
                 flexDirection="column"
                 position="relative"
                 sx={{
                   width: '100%',
+                  height: '100vh',
                   touchAction: 'pan-y pan-x',
-                  WebkitOverflowScrolling: 'touch'
+                  WebkitOverflowScrolling: 'touch',
                 }}
               >
-                {/*<Stack direction="row" 
-                sx={{backgroundImage: 'url(images/PQN-blue-ufl-website-image-blue4-small.png)', minHeight: '8em', backgroundRepeat: 'no-repeat', backgroundSize: 'contain', backgroundPosition: 'center', marginTop: '2em',}}
-                >*/}
-
-                <Stack direction="row"
+                <HeaderBar />
+                <Box
                   sx={{
-                    minHeight: '8em',
-                    marginTop: '2em',
-                    justifyContent: 'center',
-                    alignItems: 'flex-end', // Align items to the bottom of the row
+                    backgroundImage: 'url(/images/GUI-background.png)',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'center top',
+                    backgroundSize: '100% 100%',
+                    position: 'relative',
+                    width: '100%',
+                    height: '60vh',
+                    overflow: 'hidden',
                   }}
                 >
-                  <Box
-                    component="img"
-                    src="/images/PQN-blue-ufl-website-image-blue4-small.png"
-                    alt="Public Quantum Network"
-                    sx={{
-                      maxWidth: '100%',
-                      height: 'auto',
-                      backgroundRepeat: 'no-repeat',
-                      backgroundSize: 'contain',
-                      backgroundPosition: 'center'
-                    }}
-                  />
-
-                  <Box
-                    component="img"
-                    src="/images/qrcode.png"
-                    alt="Visit the PQN website"
-                    sx={{
-                      maxWidth: '100%',
-                      height: '4em',
-                      display: 'block',
-                      backgroundRepeat: 'no-repeat',
-                      backgroundSize: 'contain',
-                      backgroundPosition: 'center bottom',
-                      margin: '0 68.5em 20px 3em', // Add this line to set the padding
-                      border: '1px solid #000'
-                    }}
-                  />
-
-                  <Button
-                    variant="contained"
-                    component="a"
-                    href="/"
-                    sx={{
-                      minWidth: '120px',
-                      height: '4em',
-                      display: 'block',
-                      backgroundRepeat: 'no-repeat',
-                      backgroundSize: 'contain',
-                      backgroundPosition: 'center bottom',
-                      margin: '0 0 20px 3em',
-                      paddingTop: '15px',
-                      border: '1px solid #000',
-                      backgroundColor: '#FFFFFF;',
-                      color: '#000000;'
-                    }}
-                  >
-                    Start Over
-                  </Button>
-
-                  <Button
-                    variant="contained"
-                    component="a"
-                    href="/survey"
-                    sx={{
-                      minWidth: '88px',
-                      height: '4em',
-                      display: 'block',
-                      backgroundRepeat: 'no-repeat',
-                      backgroundSize: 'contain',
-                      backgroundPosition: 'center bottom',
-                      margin: '0 0 20px 3em',
-                      paddingTop: '15px',
-                      border: '1px solid #000',
-                      backgroundColor: '#FFFFFF;',
-                      color: '#000000;'
-                    }}
-                  >
-                    Survey
-                  </Button>
-
-                  <Box
-                    component="img"
-                    src="/images/block-I.png"
-                    alt="University of Illinois Urbana-Champaign"
-                    sx={{
-                      maxWidth: '100%',
-                      height: '3.8em',
-                      display: 'block',
-                      backgroundRepeat: 'no-repeat',
-                      backgroundSize: 'contain',
-                      backgroundPosition: 'right bottom',
-                      margin: '0 0em 16px 4em', // Add this line to set the padding
-                    }}
-                  />
-
-                </Stack>
-
-                {/* </Stack>*/}
-                <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{
-                  backgroundImage: 'url(/images/GUI-background.png)',
-                  minHeight: '40em',
-                  backgroundRepeat: 'no-repeat',
-                  width: '100%',
-                  backgroundPosition: 'center',
-                  touchAction: 'pan-y pan-x',
-                  WebkitOverflowScrolling: 'touch'
-                }}>
-                  {/*<RedirectArrow direction="back">
-                    {<Icon sx={{height:'30px'}}><ArrowBackIosNewIcon /></Icon>}
-                  </RedirectArrow>*/}
                   {props.children}
-                  {/* <RedirectArrow direction="forward">
-                    <Icon sx={{height:'30px'}}><ArrowForwardIosIcon /></Icon>
-                  </RedirectArrow>*/}
-                </Stack>
+                </Box>
               </Stack>
             </PageRedirectProvider>
           </ThemeProvider>

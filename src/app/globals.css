@@ -3,16 +3,17 @@
   -webkit-overflow-scrolling: touch;
 }
 
-html, body {
+html,
+body {
   touch-action: pan-y pan-x;
   overscroll-behavior: contain;
 }
 
 /* Ensure all scrollable containers support touch */
-[style*="overflow: auto"],
-[style*="overflow: scroll"],
-[style*="overflowY: auto"],
-[style*="overflowY: scroll"] {
+[style*='overflow: auto'],
+[style*='overflow: scroll'],
+[style*='overflowY: auto'],
+[style*='overflowY: scroll'] {
   -webkit-overflow-scrolling: touch;
   touch-action: pan-y;
 }
@@ -25,7 +26,11 @@ html, body {
 }
 
 /* Prevent default touch behavior conflicts */
-button, a, input, textarea, select {
+button,
+a,
+input,
+textarea,
+select {
   touch-action: manipulation;
 }
 

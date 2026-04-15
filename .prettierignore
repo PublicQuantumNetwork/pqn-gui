@@ -1,0 +1,21 @@
+# Build directories
+.next
+.next-a
+.next-b
+out
+build
+
+# Dependencies
+node_modules
+
+# Environment files
+.env
+.env.*
+
+# TypeScript
+next-env.d.ts
+
+# Package manager
+package-lock.json
+yarn.lock
+pnpm-lock.yaml

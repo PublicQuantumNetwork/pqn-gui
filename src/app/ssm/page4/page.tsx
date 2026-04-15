@@ -1,25 +1,30 @@
-"use client"
-import {useState, useEffect, Suspense} from 'react';
+'use client';
+import { useState, useEffect, Suspense, useCallback, useRef } from 'react';
 import Container from '@mui/material/Container';
-import {Box, Stack } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import Typography from '@mui/material/Typography';
-import {usePageRedirect} from '@/app/contexts/PageRedirectContext';
+import { usePageRedirect } from '@/app/contexts/PageRedirectContext';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useEnterKey } from '@/hooks/useEnterKey';
+import EmojiConfetti from '@/components/EmojiConfetti';
+import Fireworks from '@/components/Fireworks';
+import Whobit from '@/components/Whobit';
 
 export default function Home() {
-  const {setBackArrowLink, setForwardArrowLink} = usePageRedirect();
+  const { setBackArrowLink, setForwardArrowLink } = usePageRedirect();
   const router = useRouter();
 
-  const setLinks=()=>{
-    setBackArrowLink("/ssm/page3/");
-    setForwardArrowLink("/survey/");
-  }
+  const setLinks = useCallback(() => {
+    setBackArrowLink('/ssm/page3/');
+    setForwardArrowLink('/survey/');
+  }, [setBackArrowLink, setForwardArrowLink]);
 
-  useEffect(()=>{setLinks()},[])
+  useEffect(() => {
+    setLinks();
+  }, [setLinks]);
 
   useEnterKey(() => {
-    router.push("/survey/");
+    router.push('/survey/');
   });
 
   function MyComponent() {
@@ -35,9 +40,14 @@ export default function Home() {
 
     const [message, setMessage] = useState('');
     const [message2, setMessage2] = useState('');
+    const emojiRef = useRef<HTMLDivElement>(null);
+    const [confettiTrigger, setConfettiTrigger] = useState(0);
 
     // Calculate blur pixels based on matching bits ratio
-    const calculateBlurPixels = (matchingBits: string, totalBits: string): number => {
+    const calculateBlurPixels = (
+      matchingBits: string,
+      totalBits: string
+    ): number => {
       const minPixels = 0;
       const maxPixels = 25;
 
@@ -47,9 +57,7 @@ export default function Home() {
       if (total === 0) return maxPixels;
 
       const matchRatio = matching / total;
-      const blurPixels = (1 - matchRatio) * (maxPixels - minPixels) + minPixels;
-
-      return blurPixels;
+      return (1 - matchRatio) * (maxPixels - minPixels) + minPixels;
     };
 
     // Set the message based on the 'success' prop and role
@@ -57,188 +65,178 @@ export default function Home() {
       if (!success) {
         setMessage('There was an error, we will work on this.');
         setMessage2('Please try a different game.');
+      } else if (
+        Number(n_matching_bits) === Number(n_total_bits) &&
+        Number(n_total_bits) > 0
+      ) {
+        setMessage('Woo!! Hoo!!');
+        setMessage2('You and your friend are in perfect sync!');
       } else {
         if (role === 'leader') {
-          setMessage('You sent the message now. If it is too blurry you might need to agree on more questions.');
+          setMessage(
+            'You sent the message now. If it is too blurry you might need to agree on more questions.'
+          );
         } else if (role === 'follower') {
-          setMessage('You have received this message. If it is too blurry you might need to agree on more questions.');
+          setMessage(
+            'You have received this message. If it is too blurry you might need to agree on more questions.'
+          );
         } else {
           setMessage('Your quantum key distribution result is...');
         }
       }
-    }, [success, role]);
+    }, [success, role, n_matching_bits, n_total_bits]);
+
+    // Trigger emoji explosion continuously when bits match perfectly
+    useEffect(() => {
+      if (
+        success &&
+        emoji &&
+        Number(n_matching_bits) === Number(n_total_bits) &&
+        Number(n_total_bits) > 0
+      ) {
+        let interval: NodeJS.Timeout | null = null;
+        const initialTimeout = setTimeout(() => {
+          setConfettiTrigger((prev) => prev + 1);
+          interval = setInterval(() => {
+            setConfettiTrigger((prev) => prev + 1);
+          }, 2000);
+        }, 100);
+
+        return () => {
+          clearTimeout(initialTimeout);
+          if (interval) clearInterval(interval);
+        };
+      }
+    }, [success, emoji, n_matching_bits, n_total_bits]);
 
     return (
-      <Container maxWidth="lg">
-        <Box
-          sx={{
-            my: 4,
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <Stack
-            display="flex"
-            flexDirection="column"
-            position="relative"
-            sx={{ width:'100%'}}
+      <Container maxWidth="lg" sx={{ my: 4 }}>
+        <Stack direction="row" alignItems="flex-start" sx={{ width: '100%' }}>
+          <Whobit
+            variant={
+              success &&
+              Number(n_matching_bits) === Number(n_total_bits) &&
+              Number(n_total_bits) > 0
+                ? 'arms-up'
+                : 'arms-down'
+            }
+            speechBubbleHeight="250px"
           >
-            <Stack direction="row"
+            <Box sx={{ fontSize: '0.85em' }}>
+              {!success ? (
+                <>
+                  <p>{message}</p>
+                  <p>{message2}</p>
+                </>
+              ) : Number(n_matching_bits) === Number(n_total_bits) &&
+                Number(n_total_bits) > 0 ? (
+                <>
+                  <p>{message}</p>
+                  <p>{message2}</p>
+                </>
+              ) : (
+                <p>{message}</p>
+              )}
+            </Box>
+          </Whobit>
+
+          <Stack
+            flexDirection="column"
+            flex={1}
+            alignItems="center"
+            justifyContent="center"
+            sx={{ paddingLeft: '150px' }}
+          >
+            <Box
               sx={{
-                justifyContent: 'left',
-                alignItems: 'flex-end',
+                backgroundImage: 'url(/images/circle.png)',
+                backgroundRepeat: 'no-repeat',
+                backgroundSize: 'contain',
+                backgroundPosition: 'center',
+                width: '560px',
+                height: '560px',
+                position: 'relative',
               }}
             >
-              <Stack
-                display="flex"
-                flexDirection="column"
-                position="relative"
-                sx={{ width:'50%'}}
-              >
-                <Box
-                  component="img"
-                  src="/images/speech-bubble-white-small.png"
-                  alt="Whobit welcomes you"
-                  sx={{
-                    width: 'auto',
-                    height: '18em',
-                    backgroundRepeat: 'no-repeat',
-                    backgroundSize: 'contain',
-                    backgroundPosition: 'left',
-                  }}
-                />
-                <Typography
-                  variant="h5"
-                  component="h1"
-                  sx={{
-                    position: 'absolute',
-                    top: '23%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    color: '#000000',
-                    width: '75%',
-                  }}
-                >
-                  {!success ? (
-                    <p>{message}<br /><br />{message2}</p>
-                  ) : (
-                    <div>
-                      {message}
-                    </div>
-                  )}
-                </Typography>
-
-                <Box
-                  component="img"
-                  src="/images/whobit-arms-down.png"
-                  alt="Whobit showing results"
-                  sx={{
-                    width: '14.8em',
-                    height: 'auto',
-                    backgroundRepeat: 'no-repeat',
-                    backgroundSize: 'contain',
-                    backgroundPosition: 'left',
-                    paddingLeft:'12px',
-                    marginLeft:'-10px'
-                  }}
-                />
-              </Stack>
-
-              <Stack
-                display="flex"
-                flexDirection="column"
-                position="relative"
-                sx={{ width:'50%'}}
-              >
-                <Stack direction="row"
-                  sx={{
-                    minHeight: '7em',
-                    justifyContent: 'left',
-                    alignItems: 'flex-end',
-                  }}
-                >
-                  <Stack
-                    display="flex"
-                    flexDirection="column"
-                    position="relative"
-                    sx={{ width:'100%', marginLeft:'232px'}}
+              {success && (
+                <>
+                  <Typography
+                    ref={emojiRef}
+                    variant="h5"
+                    component="h1"
+                    sx={{
+                      position: 'absolute',
+                      top: '30%',
+                      left: '50%',
+                      transform: 'translate(-50%, -50%)',
+                      color: '#000000',
+                      width: '60%',
+                      fontSize: '7em',
+                      textAlign: 'center',
+                      filter: `blur(${calculateBlurPixels(n_matching_bits, n_total_bits)}px)`,
+                    }}
                   >
-                    <Box
-                      component="img"
-                      src="/images/circle.png"
-                      alt="Circle background"
-                      sx={{
-                        width: '560px',
-                        height: '560px',
-                        backgroundRepeat: 'no-repeat',
-                        backgroundSize: 'contain',
-                        backgroundPosition: 'right',
-                      }}
-                    />
+                    {emoji}
+                  </Typography>
 
-                    {success && (
-                      <>
-                        <Typography
-                          variant="h5"
-                          component="h1"
-                          sx={{
-                            position: 'absolute',
-                            top: '30%',
-                            left: '50%',
-                            transform: 'translate(-50%, -50%)',
-                            color: '#000000',
-                            width: '60%',
-                            fontSize:'7em',
-                            textAlign:'center',
-                            filter: `blur(${calculateBlurPixels(n_matching_bits, n_total_bits)}px)`
-                          }}
-                        >
-                          {emoji}
-                        </Typography>
+                  <Typography
+                    variant="h5"
+                    component="h1"
+                    sx={{
+                      position: 'absolute',
+                      top: '60%',
+                      left: '50%',
+                      transform: 'translate(-50%, -50%)',
+                      color: '#000000',
+                      width: '60%',
+                      fontSize: '1.2em',
+                      textAlign: 'center',
+                    }}
+                  >
+                    Matching bits: {n_matching_bits} / {n_total_bits}
+                  </Typography>
 
-                        <Typography
-                          variant="h5"
-                          component="h1"
-                          sx={{
-                            position: 'absolute',
-                            top: '60%',
-                            left: '50%',
-                            transform: 'translate(-50%, -50%)',
-                            color: '#000000',
-                            width: '60%',
-                            fontSize:'1.2em',
-                            textAlign:'center'
-                          }}
-                        >
-                          Matching bits: {n_matching_bits} / {n_total_bits}
-                        </Typography>
-
-                        <Typography
-                          variant="h5"
-                          component="h1"
-                          sx={{
-                            position: 'absolute',
-                            top: '70%',
-                            left: '50%',
-                            transform: 'translate(-50%, -50%)',
-                            color: '#000000',
-                            width: '60%',
-                            fontSize:'1.1em',
-                            textAlign:'center'
-                          }}
-                        >
-                          Success rate: {n_total_bits !== '0' ? ((Number(n_matching_bits) / Number(n_total_bits)) * 100).toFixed(1) : '0'}%
-                        </Typography>
-                      </>
-                    )}
-                  </Stack>
-                </Stack>
-              </Stack>
-            </Stack>
+                  <Typography
+                    variant="h5"
+                    component="h1"
+                    sx={{
+                      position: 'absolute',
+                      top: '70%',
+                      left: '50%',
+                      transform: 'translate(-50%, -50%)',
+                      color: '#000000',
+                      width: '60%',
+                      fontSize: '1.1em',
+                      textAlign: 'center',
+                    }}
+                  >
+                    Success rate:{' '}
+                    {n_total_bits !== '0'
+                      ? (
+                          (Number(n_matching_bits) / Number(n_total_bits)) *
+                          100
+                        ).toFixed(1)
+                      : '0'}
+                    %
+                  </Typography>
+                </>
+              )}
+            </Box>
           </Stack>
-        </Box>
+        </Stack>
+        {success &&
+          emoji &&
+          Number(n_matching_bits) === Number(n_total_bits) &&
+          Number(n_total_bits) > 0 && (
+            <>
+              <EmojiConfetti
+                emoji={emoji}
+                triggerKey={confettiTrigger}
+                emojiRef={emojiRef}
+              />
+              <Fireworks />
+            </>
+          )}
       </Container>
     );
   }

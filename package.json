@@ -8,7 +8,10 @@
     "dev:instance2": "dotenv -e .env.localb -- cross-env BUILD_DIR=.next-b next dev -p 3001",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "post-update": "echo \"codesandbox preview only, need an update\" && pnpm update --latest"
   },
   "dependencies": {
@@ -20,9 +23,9 @@
     "@mui/material-nextjs": "latest",
     "dotenv-cli": "^10.0.0",
     "emoji-picker-react": "^4.15.0",
-    "next": "^15.0.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "next": "^16.1.1",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3"
   },
   "devDependencies": {
     "@types/node": "latest",
@@ -30,7 +33,9 @@
     "@types/react-dom": "^19.0.0",
     "cross-env": "^10.1.0",
     "eslint": "latest",
-    "eslint-config-next": "^15.0.0",
+    "eslint-config-next": "^16.1.1",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.7.4",
     "typescript": "latest"
   }
 }

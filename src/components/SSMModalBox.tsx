@@ -1,4 +1,4 @@
-"use client"
+'use client';
 
 import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
 import { Typography } from '@mui/material';
@@ -13,29 +13,26 @@ export default function SSMModalBox(
   props: SSMModalBoxProps
 ): React.ReactElement {
   const {
-    title = "Processing your answers...",
-    description = "The backend is executing the quantum game!"
+    title = 'Processing your answers...',
+    description = 'The backend is executing the quantum game!',
   } = props;
 
   return (
-      <DialogContent sx={{ padding:'50px'}}>
-        <Stack
-          flexDirection="column"
-          sx={{}}
+    <DialogContent sx={{ padding: '50px' }}>
+      <Stack flexDirection="column" sx={{}}>
+        <Typography
+          sx={{
+            color: '#FF5F05',
+            textAlign: 'center',
+            paddingBottom: '0px',
+            fontSize: '1.45em',
+          }}
         >
-            <Typography
-              sx={{color:'#FF5F05', textAlign:'center', paddingBottom:'0px', fontSize:'1.45em'}}
-            ><ShareOutlinedIcon/> {title}</Typography>
-        </Stack>
-        <Stack
-          flexDirection="column"
-        >
-        <Stack
-          display="flex"
-          flexDirection="row"
-          position="relative"
-          sx={{}}
-        >
+          <ShareOutlinedIcon /> {title}
+        </Typography>
+      </Stack>
+      <Stack flexDirection="column">
+        <Stack display="flex" flexDirection="row" position="relative" sx={{}}>
           <Box
             component="img"
             src="/images/gif_pqn.gif"
@@ -49,8 +46,8 @@ export default function SSMModalBox(
               float: 'left',
               display: 'flex',
               alignItems: 'center',
-              paddingTop:'80px',
-              paddingRight:'30px'
+              paddingTop: '80px',
+              paddingRight: '30px',
             }}
           />
 
@@ -58,9 +55,12 @@ export default function SSMModalBox(
             display="flex"
             flexDirection="column"
             position="relative"
-            sx={{ marginTop:'30px'}}
+            sx={{ marginTop: '30px' }}
           >
-            <Typography variant="body1" sx={{ fontWeight: 'bold', float: 'left' }}>
+            <Typography
+              variant="body1"
+              sx={{ fontWeight: 'bold', float: 'left' }}
+            >
               What is really happening here?
             </Typography>
 
@@ -73,8 +73,8 @@ export default function SSMModalBox(
               src="/images/pqnbehindthescenesQRcode.png"
               alt="Visit PQN behind the scenes page"
               sx={{
-                height:'auto',
-                width:'150px',
+                height: 'auto',
+                width: '150px',
                 padding: '20px 0px',
               }}
             />
@@ -83,10 +83,9 @@ export default function SSMModalBox(
               Scan the code for a full explanation.<br></br>
               This may take a few minutes.
             </Typography>
-
           </Stack>
         </Stack>
-        </Stack>
-      </DialogContent>
+      </Stack>
+    </DialogContent>
   );
 }

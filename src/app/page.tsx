@@ -1,32 +1,34 @@
-'use client'
-import * as React from 'react';
-import {useEffect, useState} from 'react';
+'use client';
+import { useEffect, useState } from 'react';
 import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
-import {Box, Button, Stack} from '@mui/material';
-import {usePageRedirect} from '@/app/contexts/PageRedirectContext';
-import {useWebSocket} from '@/app/hooks/WebSocketHook';
+import { Button, Stack, styled, ButtonProps } from '@mui/material';
+import { useWebSocket } from '@/hooks/WebSocketHook';
 import FollowRequestEventModal from '@/components/FollowRequestEventModal';
-import {resetBackendState} from "@/calls";
+import Whobit from '@/components/Whobit';
+import { resetBackendState } from '@/calls';
 
+const StyledHomeButton = styled(Button)<ButtonProps>({
+  height: '6em',
+  fontSize: '1.2em',
+  marginBottom: '20px',
+});
 
-export default function Home() {
-  const { setBackArrowLink, setForwardArrowLink } = usePageRedirect();
+export default function Page() {
   const { lastMessage, sendMessage, connect, disconnect } = useWebSocket();
-  const [isFollowRequestModalOpen, setIsFollowRequestModalOpen] = useState(false);
-  const [followRequestModalMessage, setFollowRequestModalMessage] = useState<string | null>(null);
-
-  const setLinks = () => {
-    setForwardArrowLink("chsh/page1");
-  }
+  const [isFollowRequestModalOpen, setIsFollowRequestModalOpen] =
+    useState(false);
+  const [followRequestModalMessage, setFollowRequestModalMessage] = useState<
+    string | null
+  >(null);
 
   useEffect(() => {
-    setLinks();
-    const ret = resetBackendState();
-  }, [])
+    resetBackendState().then(() => {});
+  }, []);
 
   useEffect(() => {
     if (lastMessage) {
+      // Legitimate: updating local state in response to an external WebSocket event.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFollowRequestModalMessage(lastMessage.data);
       setIsFollowRequestModalOpen(true);
     }
@@ -45,193 +47,48 @@ export default function Home() {
   };
 
   return (
-    <Container maxWidth="lg">
-      <FollowRequestEventModal isOpen={isFollowRequestModalOpen} onClose={handleCloseModal} message={followRequestModalMessage} sendMessage={sendMessage} />
-      <Box
-        sx={{
-          my: 4,
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <Stack
-          display="flex"
-          flexDirection="column"
-          position="relative"
-          sx={{ width: '100%' }}
-        >
+    <Container maxWidth="lg" sx={{ my: 4 }}>
+      <FollowRequestEventModal
+        isOpen={isFollowRequestModalOpen}
+        onClose={handleCloseModal}
+        message={followRequestModalMessage}
+        sendMessage={sendMessage}
+      />
+      <Stack direction="row" alignItems="flex-start" sx={{ width: '100%' }}>
+        <Whobit>
+          <p>Hi, Quantum Adventurer!</p>
+          <p>I&apos;m Whobit.</p>
+          <p>What would you like to do?</p>
+        </Whobit>
 
-          <Stack direction="row"
-            sx={{
-              minHeight: '8em',
-              justifyContent: 'left',
-              alignItems: 'flex-end', // Align items to the bottom of the row
-            }}
+        {/* Right side: All buttons */}
+        <Stack flexDirection="column" flex={1} sx={{ paddingLeft: '150px' }}>
+          <StyledHomeButton
+            variant="contained"
+            component="a"
+            href="/chsh/page1"
           >
-            <Box
-              component="img"
-              src="/images/speech-bubble-white-small.png"
-              alt="Whobit welcomes you"
-              sx={{
-                maxWidth: '100%',
-                height: '18em',
-                backgroundRepeat: 'no-repeat',
-                backgroundSize: 'contain',
-                backgroundPosition: 'left',
-              }}
-            />
-            <Typography
-              variant="h5"
-              component="h1"
-              sx={{
-                position: 'absolute', // Add this line to position the text
-                top: '23%', // Adjust the top position as needed
-                left: '19%', // Adjust the left position as needed
-                transform: 'translate(-50%, -50%)', // Center the text
-                color: '#000000', // Set the text color
-              }}
-            >
-              <p>Hi, Quantum Adventurer!</p>
+            Verify Quantum Link (single player)
+          </StyledHomeButton>
 
-              <p>I'm Whobit.</p>
+          <StyledHomeButton variant="contained" component="a" href="/qf/page1">
+            Quantum Fortune (single player)
+          </StyledHomeButton>
 
-              <p>What would you like to do?</p>
-            </Typography>
-
-            <Stack
-              display="flex"
-              flexDirection="column"
-              position="relative"
-              sx={{ width: '100%' }}
-            >
-
-              <Button
-                variant="contained"
-                component="a"
-                href="/chsh/page1"
-                sx={{
-                  minWidth: '464px',
-                  height: '6em',
-                  fontSize: '1.2em',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  backgroundRepeat: 'no-repeat',
-                  backgroundSize: 'contain',
-                  margin: '0 0 20px 220px',
-                  border: '1px solid #000',
-                  backgroundColor: '#FFFFFF;',
-                  color: '#000000;',
-                }}
-              >
-                Verify Quantum Link (single player)
-              </Button>
-
-              <Button
-                variant="contained"
-                component="a"
-                href="/qf/page1"
-                sx={{
-                  minWidth: '464px',
-                  height: '6em',
-                  fontSize: '1.2em',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  backgroundRepeat: 'no-repeat',
-                  backgroundSize: 'contain',
-                  margin: '0 0 20px 220px',
-                  border: '1px solid #000',
-                  backgroundColor: '#FFFFFF;',
-                  color: '#000000;',
-                }}
-              >
-                Quantum Fortune (single player)
-              </Button>
-
-            </Stack>
-          </Stack>
-
-          <Stack direction="row"
-            sx={{
-              marginTop: '0em',
-              justifyContent: 'left',
-              alignItems: 'flex-end', // Align items to the bottom of the row
-            }}
+          <StyledHomeButton
+            variant="contained"
+            component="a"
+            href="/ssm/page1"
+            sx={{ marginTop: '40px' }}
           >
-            <Box
-              component="img"
-              src="/images/whobit-left-wing-up.png"
-              alt="Whobit welcomes you"
-              sx={{
-                width: '18em',
-                height: 'auto',
-                backgroundRepeat: 'no-repeat',
-                backgroundSize: 'contain',
-                backgroundPosition: 'left'
-              }}
-            />
+            Share a secret message (Two players)
+          </StyledHomeButton>
 
-            <Stack
-              display="flex"
-              flexDirection="column"
-              position="relative"
-              sx={{ width: '100%' }}
-            >
-
-              <Button
-                variant="contained"
-                component="a"
-                href="/ssm/page1"
-                sx={{
-                  minWidth: '464px',
-                  height: '6em',
-                  fontSize: '1.2em',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  backgroundRepeat: 'no-repeat',
-                  backgroundSize: 'contain',
-                  margin: '0 0 20px 368px',
-                  border: '1px solid #000',
-                  backgroundColor: '#FFFFFF;',
-                  color: '#000000;',
-                }}
-              >
-                Share a secret message (Preview)
-              </Button>
-
-              <Button
-                disabled
-                variant="contained"
-                component="a"
-                href="#"
-                sx={{
-                  minWidth: '464px',
-                  height: '6em',
-                  fontSize: '1.2em',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  backgroundRepeat: 'no-repeat',
-                  backgroundSize: 'contain',
-                  margin: '0 0 20px 368px',
-                  border: '1px solid #000',
-                  backgroundColor: '#FFFFFF;',
-                  color: '#000000;',
-                }}
-              >
-                Get to know someone (Coming soon)
-              </Button>
-
-            </Stack>
-          </Stack>
+          {/*<StyledHomeButton variant="contained" component="a" href="#" disabled>*/}
+          {/*  Get to know someone (Coming soon)*/}
+          {/*</StyledHomeButton>*/}
         </Stack>
-
-
-      </Box>
+      </Stack>
     </Container>
   );
 }

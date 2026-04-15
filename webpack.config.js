@@ -1,5 +1,5 @@
 module.exports = {
-  webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
+  webpack: (config) => {
     config.resolve.extensions.push('.ts', '.tsx');
     return config;
   },

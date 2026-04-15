@@ -27,6 +27,8 @@ export default function Page() {
 
   useEffect(() => {
     if (lastMessage) {
+      // Legitimate: updating local state in response to an external WebSocket event.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFollowRequestModalMessage(lastMessage.data);
       setIsFollowRequestModalOpen(true);
     }
@@ -55,7 +57,7 @@ export default function Page() {
       <Stack direction="row" alignItems="flex-start" sx={{ width: '100%' }}>
         <Whobit>
           <p>Hi, Quantum Adventurer!</p>
-          <p>I'm Whobit.</p>
+          <p>I&apos;m Whobit.</p>
           <p>What would you like to do?</p>
         </Whobit>
 

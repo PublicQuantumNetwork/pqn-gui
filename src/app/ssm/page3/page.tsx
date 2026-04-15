@@ -96,10 +96,10 @@ function SSMPage3Content() {
       setOpenModal(true);
       setSubmissionInProgress(true);
       setCurrentQuestionIndex(currentQuestionIndex + 1);
-      console.log("Submitting answers:", newAnswers);
+      console.log('Submitting answers:', newAnswers);
       const result = await submitSSMAnswers(newAnswers);
       if (result.success) {
-        const {n_matching_bits, n_total_bits, emoji, role} = result.data;
+        const { n_matching_bits, n_total_bits, emoji, role } = result.data;
         router.push(
           `/ssm/page4?n_matching_bits=${n_matching_bits}&n_total_bits=${n_total_bits}&emoji=${encodeURIComponent(emoji)}&role=${encodeURIComponent(role)}&success=true`
         );

@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import './EmojiConfetti.css';
 
 interface EmojiConfettiProps {
@@ -11,7 +11,7 @@ interface EmojiConfettiProps {
 const EmojiConfetti = ({ emoji, triggerKey, emojiRef }: EmojiConfettiProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const createEmojiParticles = () => {
+  const createEmojiParticles = useCallback(() => {
     if (!containerRef.current || !emojiRef.current) return;
 
     const rect = emojiRef.current.getBoundingClientRect();
@@ -51,11 +51,11 @@ const EmojiConfetti = ({ emoji, triggerKey, emojiRef }: EmojiConfettiProps) => {
         (duration + delay) * 1000
       );
     }
-  };
+  }, [emoji, emojiRef]);
 
   useEffect(() => {
     createEmojiParticles();
-  }, [triggerKey]);
+  }, [triggerKey, createEmojiParticles]);
 
   return (
     <div

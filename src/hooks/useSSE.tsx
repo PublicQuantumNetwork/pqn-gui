@@ -4,7 +4,9 @@ import { useEffect, useState, useRef } from 'react';
 
 interface SSEMessage {
   event: string;
-  [key: string]: any;
+  current?: number;
+  total?: number;
+  [key: string]: unknown;
 }
 
 export const useSSE = (url: string, enabled: boolean = true) => {

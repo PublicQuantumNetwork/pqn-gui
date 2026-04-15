@@ -2,28 +2,17 @@
 import { useEffect, useRef } from 'react';
 import './Fireworks.css';
 
-interface Particle {
-  id: number;
-  x: number;
-  y: number;
-  color: string;
-  duration: number;
-  angle: number;
-  distance: number;
-}
+const colorSchemes = [
+  ['#00ff00', '#66ff66', '#33ff33'],
+  ['#ff0000', '#ff6666', '#ff3333'],
+  ['#ffff00', '#ffff66', '#ffcc00'],
+  ['#0088ff', '#66bbff', '#0066cc'],
+  ['#ff00ff', '#ff66ff', '#ff33ff'],
+  ['#ff8800', '#ffaa44', '#ff6600'],
+];
 
 const Fireworks = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const particleIdRef = useRef(0);
-
-  const colorSchemes = [
-    ['#00ff00', '#66ff66', '#33ff33'],
-    ['#ff0000', '#ff6666', '#ff3333'],
-    ['#ffff00', '#ffff66', '#ffcc00'],
-    ['#0088ff', '#66bbff', '#0066cc'],
-    ['#ff00ff', '#ff66ff', '#ff33ff'],
-    ['#ff8800', '#ffaa44', '#ff6600'],
-  ];
 
   const createParticle = (
     x: number,
@@ -62,6 +51,7 @@ const Fireworks = () => {
   };
 
   useEffect(() => {
+    const container = containerRef.current;
     let isActive = true;
 
     // Initial burst of fireworks
@@ -104,8 +94,8 @@ const Fireworks = () => {
     return () => {
       isActive = false;
       initialTimeouts.forEach(clearTimeout);
-      if (containerRef.current) {
-        containerRef.current.innerHTML = '';
+      if (container) {
+        container.innerHTML = '';
       }
     };
   }, []);

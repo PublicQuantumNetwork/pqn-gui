@@ -12,7 +12,9 @@ interface ModalBoxProps {
   variant?: ModalBoxVariant;
 }
 
-export default function ModalBox({ variant = 'chsh' }: ModalBoxProps): React.ReactElement {
+export default function ModalBox({
+  variant = 'chsh',
+}: ModalBoxProps): React.ReactElement {
   // Determine endpoint and event name based on variant
   const getProgressConfig = () => {
     switch (variant) {
@@ -35,6 +37,9 @@ export default function ModalBox({ variant = 'chsh' }: ModalBoxProps): React.Rea
     if (lastMessage?.event === eventName) {
       const current = lastMessage.current || 0;
       const total = lastMessage.total || 16;
+      // Legitimate: updating progress in response to an external SSE event.
+      // useMemo would reset to 0 on unrelated messages; useState preserves last value.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setProgress((current / total) * 100);
     }
   }, [lastMessage, eventName]);
@@ -56,7 +61,11 @@ export default function ModalBox({ variant = 'chsh' }: ModalBoxProps): React.Rea
         {/* Progress Bar */}
         <Box sx={{ width: '100%', mt: 2, mb: 2 }}>
           <LinearProgress variant="determinate" value={progress} />
-          <Typography variant="body2" color="text.secondary" sx={{ mt: 1, textAlign: 'center' }}>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ mt: 1, textAlign: 'center' }}
+          >
             {Math.round(progress)}% complete
           </Typography>
         </Box>

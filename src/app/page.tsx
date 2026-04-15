@@ -5,7 +5,7 @@ import { Button, Stack, styled, ButtonProps } from '@mui/material';
 import { useWebSocket } from '@/hooks/WebSocketHook';
 import FollowRequestEventModal from '@/components/FollowRequestEventModal';
 import Whobit from '@/components/Whobit';
-import { resetBackendState } from '@/calls';
+import { resetBackendState, fetchGamesAvailability, GamesAvailability } from '@/calls';
 
 const StyledHomeButton = styled(Button)<ButtonProps>({
   height: '6em',
@@ -20,9 +20,13 @@ export default function Page() {
   const [followRequestModalMessage, setFollowRequestModalMessage] = useState<
     string | null
   >(null);
+  const [gamesAvailability, setGamesAvailability] = useState<GamesAvailability>(
+    { chsh: true, qf: true, ssm: true }
+  );
 
   useEffect(() => {
     resetBackendState().then(() => {});
+    fetchGamesAvailability().then(setGamesAvailability);
   }, []);
 
   useEffect(() => {
@@ -67,11 +71,17 @@ export default function Page() {
             variant="contained"
             component="a"
             href="/chsh/page1"
+            disabled={!gamesAvailability.chsh}
           >
             Verify Quantum Link (single player)
           </StyledHomeButton>
 
-          <StyledHomeButton variant="contained" component="a" href="/qf/page1">
+          <StyledHomeButton
+            variant="contained"
+            component="a"
+            href="/qf/page1"
+            disabled={!gamesAvailability.qf}
+          >
             Quantum Fortune (single player)
           </StyledHomeButton>
 
@@ -80,6 +90,7 @@ export default function Page() {
             component="a"
             href="/ssm/page1"
             sx={{ marginTop: '40px' }}
+            disabled={!gamesAvailability.ssm}
           >
             Share a secret message (Two players)
           </StyledHomeButton>

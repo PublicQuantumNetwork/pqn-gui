@@ -1,3 +1,21 @@
+export interface GamesAvailability {
+  chsh: boolean;
+  qf: boolean;
+  ssm: boolean;
+}
+
+export async function fetchGamesAvailability(): Promise<GamesAvailability> {
+  try {
+    const response = await fetch(
+      `http://${process.env.NEXT_PUBLIC_API_ADDRESS}/games/availability`
+    );
+    if (!response.ok) return { chsh: true, qf: true, ssm: true };
+    return await response.json();
+  } catch {
+    return { chsh: true, qf: true, ssm: true };
+  }
+}
+
 export async function chshPost(basis: number[]) {
   const response = await fetch(
     `http://${process.env.NEXT_PUBLIC_API_ADDRESS}/chsh?follower_node_address=${process.env.NEXT_PUBLIC_FOLLOWER_NODE_ADDRESS}&timetagger_address=${process.env.NEXT_PUBLIC_TIMETAGGER_ADDRESS}`,

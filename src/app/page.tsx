@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Container from '@mui/material/Container';
 import { Button, Stack, styled, ButtonProps } from '@mui/material';
 import { useWebSocket } from '@/hooks/WebSocketHook';
@@ -14,6 +15,7 @@ const StyledHomeButton = styled(Button)<ButtonProps>({
 });
 
 export default function Page() {
+  const router = useRouter();
   const { lastMessage, sendMessage, connect, disconnect } = useWebSocket();
   const [isFollowRequestModalOpen, setIsFollowRequestModalOpen] =
     useState(false);
@@ -26,8 +28,13 @@ export default function Page() {
 
   useEffect(() => {
     resetBackendState().then(() => {});
-    fetchGamesAvailability().then(setGamesAvailability);
-  }, []);
+    fetchGamesAvailability().then((avail) => {
+      setGamesAvailability(avail);
+      if (!avail.chsh && !avail.qf && !avail.ssm) {
+        router.replace('/maintenance');
+      }
+    });
+  }, [router]);
 
   useEffect(() => {
     if (lastMessage) {

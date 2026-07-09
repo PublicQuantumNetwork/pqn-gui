@@ -18,7 +18,7 @@ export async function fetchGamesAvailability(): Promise<GamesAvailability> {
 
 export async function chshPost(basis: number[]) {
   const response = await fetch(
-    `http://${process.env.NEXT_PUBLIC_API_ADDRESS}/chsh?follower_node_address=${process.env.NEXT_PUBLIC_FOLLOWER_NODE_ADDRESS}&timetagger_address=${process.env.NEXT_PUBLIC_TIMETAGGER_ADDRESS}`,
+    `http://${process.env.NEXT_PUBLIC_API_ADDRESS}/chsh?timetagger_address=${process.env.NEXT_PUBLIC_TIMETAGGER_ADDRESS}`,
     {
       method: 'POST',
       headers: {
@@ -47,7 +47,7 @@ export async function submitFortune() {
 
 export async function ssmPost(basis: number[]) {
   const response = await fetch(
-    `http://${process.env.NEXT_PUBLIC_API_ADDRESS}/chsh?follower_node_address=${process.env.NEXT_PUBLIC_FOLLOWER_NODE_ADDRESS}&timetagger_address=${process.env.NEXT_PUBLIC_TIMETAGGER_ADDRESS}`,
+    `http://${process.env.NEXT_PUBLIC_API_ADDRESS}/chsh?timetagger_address=${process.env.NEXT_PUBLIC_TIMETAGGER_ADDRESS}`,
     {
       method: 'POST',
       headers: {
@@ -95,7 +95,7 @@ export async function resetBackendState() {
 export async function requestFollower() {
   try {
     const response = await fetch(
-      `http://${process.env.NEXT_PUBLIC_API_ADDRESS}/coordination/collect_follower?address=${process.env.NEXT_PUBLIC_FOLLOWER_NODE_ADDRESS}`,
+      `http://${process.env.NEXT_PUBLIC_API_ADDRESS}/coordination/collect_follower`,
       {
         method: 'POST',
         headers: {

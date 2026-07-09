@@ -23,7 +23,7 @@
     "@mui/material-nextjs": "latest",
     "dotenv-cli": "^10.0.0",
     "emoji-picker-react": "^4.15.0",
-    "next": "^16.1.1",
+    "next": "^16.2.9",
     "react": "^19.2.3",
     "react-dom": "^19.2.3"
   },
@@ -33,7 +33,7 @@
     "@types/react-dom": "^19.0.0",
     "cross-env": "^10.1.0",
     "eslint": "latest",
-    "eslint-config-next": "^16.1.1",
+    "eslint-config-next": "^16.2.9",
     "eslint-config-prettier": "^10.1.8",
     "prettier": "^3.7.4",
     "typescript": "latest"

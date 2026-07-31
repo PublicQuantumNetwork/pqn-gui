@@ -1,6 +1,10 @@
+'use client';
 import { Box, Button, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
+import { usePathname } from 'next/navigation';
 import * as React from 'react';
+import { attractLoopEnabled, requestAttractLoop } from '@/attractLoop';
 
 const HeaderImage = styled('img')(({ theme }) => ({
   height: 64,
@@ -9,6 +13,10 @@ const HeaderImage = styled('img')(({ theme }) => ({
 }));
 
 export default function HeaderBar() {
+  // The attract loop only exists on the home page, so the button that replays it
+  // is offered only there — elsewhere it would be a control that does nothing.
+  const showAttractButton = usePathname() === '/' && attractLoopEnabled();
+
   return (
     <Stack
       direction="row"
@@ -43,6 +51,17 @@ export default function HeaderBar() {
 
       {/* Right group */}
       <Stack direction="row" spacing={6} alignItems="center">
+        {showAttractButton && (
+          <Button
+            variant="contained"
+            aria-label="Play the intro video"
+            onClick={requestAttractLoop}
+            sx={{ minWidth: 64 }}
+          >
+            <OndemandVideoIcon /> &nbsp; Intro Video
+          </Button>
+        )}
+
         <Button
           variant="contained"
           component="a"

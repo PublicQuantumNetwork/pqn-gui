@@ -1,12 +1,17 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Container from '@mui/material/Container';
 import { Button, Stack, styled, ButtonProps } from '@mui/material';
 import { useWebSocket } from '@/hooks/WebSocketHook';
 import FollowRequestEventModal from '@/components/FollowRequestEventModal';
 import Whobit from '@/components/Whobit';
-import { resetBackendState, fetchGamesAvailability, GamesAvailability } from '@/calls';
+import AttractLoop from '@/components/AttractLoop';
+import {
+  resetBackendState,
+  fetchGamesAvailability,
+  GamesAvailability,
+} from '@/calls';
 
 const StyledHomeButton = styled(Button)<ButtonProps>({
   height: '6em',
@@ -26,8 +31,9 @@ export default function Page() {
     { chsh: true, qf: true, ssm: true }
   );
 
-  useEffect(() => {
-    resetBackendState().then(() => {});
+  // Also runs when the attract loop is dismissed: a node may have been idle for
+  // hours, so what the buttons show could be stale.
+  const refreshGamesAvailability = useCallback(() => {
     fetchGamesAvailability().then((avail) => {
       setGamesAvailability(avail);
       if (!avail.chsh && !avail.qf && !avail.ssm) {
@@ -35,6 +41,11 @@ export default function Page() {
       }
     });
   }, [router]);
+
+  useEffect(() => {
+    resetBackendState().then(() => {});
+    refreshGamesAvailability();
+  }, [refreshGamesAvailability]);
 
   useEffect(() => {
     if (lastMessage) {
@@ -59,6 +70,10 @@ export default function Page() {
 
   return (
     <Container maxWidth="lg" sx={{ my: 4 }}>
+      <AttractLoop
+        suppressed={isFollowRequestModalOpen}
+        onDismiss={refreshGamesAvailability}
+      />
       <FollowRequestEventModal
         isOpen={isFollowRequestModalOpen}
         onClose={handleCloseModal}

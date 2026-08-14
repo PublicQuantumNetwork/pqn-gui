@@ -40,5 +40,3 @@ next-env.d.ts
 .env
 
 .idea
-# large media, fetched by scripts/fetch-media.mjs (see docs/adr/0001)
-/public/video/

@@ -6,9 +6,14 @@ import { Dialog, Button, Box, Stack } from '@mui/material';
 import QFTextbox from '@/components/QFTextbox';
 import ModalBox from '@/components/ModalBox';
 import Whobit from '@/components/Whobit';
+import PageTimeout from '@/components/PageTimeout';
 import { useRouter } from 'next/navigation';
 import { submitFortune } from '@/calls';
 import { useEnterKey } from '@/hooks/useEnterKey';
+
+// Short values make the activity-reset behavior easy to verify at the kiosk.
+const QUANTUM_FORTUNE_TIMEOUT_MS = 0.1 * 60 * 1000;
+const QUANTUM_FORTUNE_WARNING_DURATION_MS = 30 * 1000;
 
 export default function MyComponent() {
   const router = useRouter();
@@ -98,6 +103,13 @@ export default function MyComponent() {
           </Box>
         </Stack>
       </Box>
+      <PageTimeout
+        durationMs={QUANTUM_FORTUNE_TIMEOUT_MS}
+        warningDurationMs={QUANTUM_FORTUNE_WARNING_DURATION_MS}
+        enabled={!openModal}
+        mode="activity"
+        onTimeout={() => router.replace('/')}
+      />
     </Container>
   );
 }

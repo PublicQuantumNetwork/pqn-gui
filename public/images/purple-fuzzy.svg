@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 63 59">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: url(#radial-gradient);
+        stroke: #231f20;
+        stroke-width: 2px;
+      }
+
+      .st0, .st1, .st2 {
+        stroke-miterlimit: 8;
+      }
+
+      .st1 {
+        fill: #231f20;
+      }
+
+      .st1, .st2 {
+        stroke: #000001;
+      }
+
+      .st2 {
+        fill: #fff;
+      }
+    </style>
+    <radialGradient id="radial-gradient" cx="37.12" cy="17.34" fx="37.12" fy="17.34" r="50.95" gradientTransform="translate(-6.68 1.78) scale(.98 .77)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fff"/>
+      <stop offset=".4" stop-color="#e9cfe3"/>
+      <stop offset=".77" stop-color="#d8aace"/>
+      <stop offset=".96" stop-color="#d29dc7"/>
+    </radialGradient>
+  </defs>
+  <polygon class="st0" points="59.68 40.08 55.63 41.94 56.52 45.74 52.04 46.68 51.77 50.55 47.16 50.53 45.75 54.23 41.29 53.24 38.84 56.52 34.8 54.64 31.46 57.31 28.11 54.64 24.07 56.52 21.62 53.24 17.16 54.22 15.76 50.53 11.14 50.55 10.88 46.68 6.4 45.74 7.29 41.94 3.23 40.08 5.22 36.59 1.84 33.95 4.8 30.98 2.31 27.72 6.06 25.45 4.61 21.77 8.91 20.37 8.59 16.5 13.17 16.03 14.02 12.22 18.59 12.73 20.54 9.21 24.82 10.66 27.74 7.66 31.46 9.95 35.18 7.66 38.1 10.66 42.38 9.21 44.33 12.73 48.9 12.22 49.74 16.04 54.33 16.5 54.01 20.37 58.31 21.78 56.86 25.45 60.61 27.72 58.12 30.98 61.08 33.95 57.7 36.59 59.68 40.08"/>
+  <ellipse class="st2" cx="22.42" cy="11.79" rx="8.46" ry="10.73"/>
+  <ellipse class="st2" cx="37.8" cy="13.13" rx="8.46" ry="10.54"/>
+  <path class="st1" d="M20.5,11.03c0-.95.6-1.73,1.35-1.73s1.35.77,1.35,1.73-.6,1.73-1.35,1.73-1.35-.77-1.35-1.73Z"/>
+  <path class="st1" d="M35.5,12.56c0-.95.6-1.73,1.35-1.73s1.35.77,1.35,1.73-.6,1.73-1.35,1.73-1.35-.77-1.35-1.73Z"/>
+</svg>

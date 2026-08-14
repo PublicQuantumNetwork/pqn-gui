@@ -3,9 +3,16 @@ import { useEffect } from 'react';
 import Container from '@mui/material/Container';
 import { Box, Stack } from '@mui/material';
 import Typography from '@mui/material/Typography';
+import { useRouter } from 'next/navigation';
 import { usePageRedirect } from '@/app/contexts/PageRedirectContext';
+import PageTimeout from '@/components/PageTimeout';
+
+const SURVEY_TIMEOUT_MS = 5 * 60 * 1000;
+const SURVEY_WARNING_DURATION_MS = 30 * 1000;
 
 function SurveyContent() {
+  const router = useRouter();
+
   return (
     <Container maxWidth="lg">
       <Box
@@ -100,7 +107,10 @@ function SurveyContent() {
                 }
                 width="143%"
                 height="570"
-                style={{ border: '3.5px solid #000' }}
+                style={{
+                  border: '3.5px solid #000',
+                  backgroundColor: '#fff',
+                }}
                 allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
               />
@@ -108,6 +118,13 @@ function SurveyContent() {
           </Stack>
         </Stack>
       </Box>
+      <PageTimeout
+        durationMs={SURVEY_TIMEOUT_MS}
+        warningDurationMs={SURVEY_WARNING_DURATION_MS}
+        enabled
+        mode="absolute"
+        onTimeout={() => router.replace('/')}
+      />
     </Container>
   );
 }

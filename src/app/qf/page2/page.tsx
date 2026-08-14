@@ -4,8 +4,13 @@ import Container from '@mui/material/Container';
 import { Box, Stack, Typography } from '@mui/material';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Whobit from '@/components/Whobit';
+import PageTimeout from '@/components/PageTimeout';
 import fortune from '@/app/qf/page2/fortunes';
 import { useEnterKey } from '@/hooks/useEnterKey';
+
+// Short values make the activity-reset behavior easy to verify at the kiosk.
+const QUANTUM_FORTUNE_TIMEOUT_MS = 5 * 60 * 1000;
+const QUANTUM_FORTUNE_WARNING_DURATION_MS = 30 * 1000;
 
 function FortuneContent() {
   const router = useRouter();
@@ -98,6 +103,13 @@ function FortuneContent() {
           </Box>
         </Stack>
       </Box>
+      <PageTimeout
+        durationMs={QUANTUM_FORTUNE_TIMEOUT_MS}
+        warningDurationMs={QUANTUM_FORTUNE_WARNING_DURATION_MS}
+        enabled
+        mode="activity"
+        onTimeout={() => router.replace('/')}
+      />
     </Container>
   );
 }

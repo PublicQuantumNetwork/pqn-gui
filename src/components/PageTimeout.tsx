@@ -172,7 +172,7 @@ function ActivePageTimeout({
   const keepGoingInstruction =
     mode === 'activity'
       ? 'Touch anywhere or press the red button to keep going.'
-      : 'Press the red button or tap Purple Fuzzy to keep going.';
+      : 'Press the red button or tap me to keep going.';
 
   return (
     <ButtonBase

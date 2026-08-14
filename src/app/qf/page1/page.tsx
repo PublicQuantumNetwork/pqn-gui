@@ -12,7 +12,7 @@ import { submitFortune } from '@/calls';
 import { useEnterKey } from '@/hooks/useEnterKey';
 
 // Short values make the activity-reset behavior easy to verify at the kiosk.
-const QUANTUM_FORTUNE_TIMEOUT_MS = 0.1 * 60 * 1000;
+const QUANTUM_FORTUNE_TIMEOUT_MS = 5 * 60 * 1000;
 const QUANTUM_FORTUNE_WARNING_DURATION_MS = 30 * 1000;
 
 export default function MyComponent() {

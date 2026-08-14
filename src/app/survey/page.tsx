@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { usePageRedirect } from '@/app/contexts/PageRedirectContext';
 import PageTimeout from '@/components/PageTimeout';
 
-const SURVEY_TIMEOUT_MS = 0.1 * 60 * 1000;
+const SURVEY_TIMEOUT_MS = 5 * 60 * 1000;
 const SURVEY_WARNING_DURATION_MS = 30 * 1000;
 
 function SurveyContent() {
@@ -107,7 +107,10 @@ function SurveyContent() {
                 }
                 width="143%"
                 height="570"
-                style={{ border: '3.5px solid #000' }}
+                style={{
+                  border: '3.5px solid #000',
+                  backgroundColor: '#fff',
+                }}
                 allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
               />

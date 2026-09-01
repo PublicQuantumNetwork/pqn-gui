@@ -1,0 +1,981 @@
+.viewport {
+  position: fixed;
+  top: 160px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  overflow: hidden;
+  background-color: #fff;
+  background-image: url('/images/GUI-background.png');
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: 100% 100%;
+  color: #0d2436;
+  font-family: Inter, Arial, sans-serif;
+}
+
+.stage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+  transform-origin: top left;
+  background: transparent;
+}
+
+.touchHint {
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  z-index: 90;
+  padding: 11px 18px;
+  border: 2px solid #ff5f05;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgb(13 36 54 / 24%);
+  color: #0d2436;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
+  pointer-events: none;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.showHints :is(.hotspot, .fiberLabel, .digitalRelay, .stepOnlyButton) {
+  outline: 6px solid #ff5f05;
+  outline-offset: 5px;
+}
+
+.showHints .stepBadge {
+  border-color: #ff5f05;
+  background: #ff5f05;
+  color: #fff;
+}
+
+.locationDetails h2,
+.hotspot,
+.subpanelLabel,
+.fiberLabel,
+.dialogCard h2 {
+  font-family: 'PP Museum', Georgia, 'Times New Roman', serif;
+  font-weight: 400;
+}
+
+.building {
+  position: absolute;
+  width: 1465px;
+  height: 387px;
+}
+
+.buildingOne {
+  top: 140px;
+  left: 206px;
+}
+
+.buildingTwo {
+  top: 590px;
+  left: 206px;
+  width: 1462px;
+}
+
+.buildingLabel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 8;
+  padding: 4px 12px;
+  border-radius: 30px;
+  background: #b9e5fe;
+  color: #000;
+  font-size: 16px;
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1.15;
+  white-space: nowrap;
+}
+
+.buildingLabel span {
+  font-weight: 300;
+}
+
+.station {
+  position: absolute;
+  top: 43px;
+  left: 0;
+  width: 100%;
+  height: 344px;
+  filter: drop-shadow(0 4px 2px rgb(0 0 0 / 25%));
+}
+
+.locationCard {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 3;
+  width: 394px;
+  height: 344px;
+  overflow: hidden;
+  border-radius: 20px 0 0 20px;
+  background: #fff;
+}
+
+.locationAccent {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 8px;
+}
+
+.locationBody {
+  position: absolute;
+  top: 20px;
+  left: 28px;
+  width: 346px;
+}
+
+.locationPhoto {
+  position: relative;
+  width: 346px;
+  height: 207px;
+  overflow: hidden;
+  border: 1px solid #c7d6de;
+  border-radius: 8px 8px 0 0;
+}
+
+.locationPhoto > img {
+  object-fit: cover;
+}
+
+.locationLogo {
+  position: absolute;
+  left: 11px;
+  display: block;
+  border-radius: 6px;
+  background: rgb(255 255 255 / 64%);
+  backdrop-filter: blur(2px);
+}
+
+.locationLogo img {
+  object-fit: contain;
+}
+
+.uiucLogo {
+  top: 134px;
+  width: 158px;
+  height: 60px;
+  padding: 6px 12px;
+}
+
+.libraryLogo {
+  top: 158px;
+  width: 253px;
+  height: 36px;
+  padding: 6px 12px;
+}
+
+.locationDetails {
+  display: flex;
+  align-items: flex-start;
+  gap: 19px;
+  width: 346px;
+  height: 97px;
+  padding: 20px;
+  border-radius: 0 0 8px 8px;
+  background: #f2f2f2;
+  color: #000;
+}
+
+.locationDetails > img {
+  flex: 0 0 auto;
+  margin-top: 2px;
+}
+
+.locationDetails h2 {
+  margin: 0 0 5px;
+  font-size: 24px;
+  line-height: 1.05;
+  white-space: nowrap;
+}
+
+.locationDetails p {
+  margin: 0;
+  color: #505050;
+  font-size: 16px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.stationContent {
+  position: absolute;
+  top: 0;
+  left: 394px;
+  width: 1071px;
+  height: 344px;
+  border-left: 2px solid #f2f2f2;
+  border-radius: 0 20px 20px 0;
+  background: #fff;
+}
+
+.libraryContent {
+  border-left-color: #c9c9c9;
+}
+
+.hotspot,
+.stepOnlyButton,
+.fiberLabel,
+.digitalRelay {
+  appearance: none;
+  margin: 0;
+  border: 0;
+  color: #2d2d2d;
+  cursor: pointer;
+}
+
+.hotspot:focus-visible,
+.stepOnlyButton:focus-visible,
+.fiberLabel:focus-visible,
+.digitalRelay:focus-visible {
+  outline: 4px solid #ff5f05;
+  outline-offset: 4px;
+}
+
+.hotspot {
+  position: absolute;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #8eb9cd;
+  border-radius: 12px;
+  background: linear-gradient(55deg, #edeeee 16.7%, #fff 89.1%);
+  box-shadow: 0 4px 5px rgb(13 36 54 / 28%);
+  font-size: 16px;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.hotspot:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 7px 8px rgb(13 36 54 / 25%);
+}
+
+.largeHotspot {
+  width: 248px;
+  height: 218px;
+  padding: 10px 12px;
+}
+
+.sourceHotspot {
+  top: 67px;
+  left: 59px;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sourceHotspot span:not(.stepBadge) {
+  max-width: 210px;
+}
+
+.waveplateA {
+  top: 67px;
+  left: 441px;
+}
+
+.detectorHotspot {
+  top: 64px;
+  left: 766px;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.waveplateHotspot {
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: 16px;
+}
+
+.waveplateContent {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  white-space: pre-line;
+}
+
+.waveplateIcon {
+  position: relative;
+  display: block;
+  width: 76px;
+  height: 51px;
+}
+
+.polarizerImage,
+.waveplateImage {
+  position: absolute;
+  top: 0;
+  object-fit: cover;
+}
+
+.polarizerImage {
+  left: 0;
+}
+
+.waveplateImage {
+  left: 31px;
+}
+
+.deviceLine {
+  width: 224px;
+  height: 4px;
+}
+
+.waveplateAntenna {
+  width: 34px;
+  height: 34px;
+  margin-right: 8px;
+}
+
+.stepBadge {
+  position: absolute;
+  top: -14px;
+  left: -14px;
+  z-index: 20;
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  overflow: hidden;
+  border: 2px solid #0d2436;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 2px 4px rgb(13 36 54 / 30%);
+  color: #0d2436;
+  font-family: Inter, Arial, sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.connectorGraphic {
+  position: absolute;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.fiberA1 {
+  top: 170px;
+  left: 344px;
+  width: 99px;
+  height: 9px;
+}
+
+.fiberA2 {
+  top: 170px;
+  left: 689px;
+  width: 77px;
+  height: 9px;
+}
+
+.arrowRight {
+  position: absolute;
+  top: 160px;
+  left: 303px;
+  z-index: 5;
+  transform: rotate(90deg);
+}
+
+.arrowDown {
+  position: absolute;
+  top: 278px;
+  left: 167px;
+  z-index: 5;
+  transform: rotate(180deg);
+}
+
+.subpanel {
+  position: absolute;
+  z-index: 2;
+  height: 266px;
+  border: 2.5px dashed #e9eef0;
+  border-radius: 14px;
+  background: #f3f8fb;
+}
+
+.interactionPanel {
+  top: 43px;
+  left: 38px;
+  width: 393px;
+}
+
+.networkPanel {
+  top: 42px;
+  left: 607px;
+  width: 346px;
+}
+
+.subpanelLabel {
+  position: absolute;
+  top: -19px;
+  left: 17px;
+  padding: 2px 10px;
+  border-radius: 8px;
+  background: #cfe6f2;
+  color: #3c5568;
+  font-size: 15px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.stepOnlyButton {
+  position: absolute;
+  z-index: 9;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  background: transparent;
+}
+
+.stepOnlyButton .stepBadge {
+  top: 0;
+  left: 0;
+}
+
+.interactionBadge {
+  top: 27px;
+  left: 220px;
+}
+
+.publicStation {
+  top: 83px;
+  width: 160px;
+  height: 116px;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.publicStationA {
+  left: 62px;
+}
+
+.publicStationB {
+  left: 252px;
+}
+
+.digitalRelay {
+  position: absolute;
+  top: 253px;
+  left: 223px;
+  z-index: 7;
+  display: flex;
+  height: 36px;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  overflow: hidden;
+  border: 2px solid #08446e;
+  border-radius: 8px;
+  background: #fff;
+  color: #757575;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.relayDivider {
+  width: 2px;
+  height: 32px;
+}
+
+.relayAntenna {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.waveplateB {
+  top: 69px;
+  left: 654px;
+}
+
+.digitalRelayB {
+  position: absolute;
+  top: 271px;
+  left: 419px;
+  z-index: 3;
+  width: 445px;
+  height: 71px;
+}
+
+.digitalRelayA {
+  position: absolute;
+  top: -177px;
+  left: 419px;
+  z-index: 1;
+  width: 742px;
+  height: 594px;
+}
+
+.fiberB2 {
+  top: -166px;
+  left: 887px;
+  width: 161px;
+  height: 349px;
+}
+
+.fiberB1 {
+  top: 506px;
+  left: 780px;
+  z-index: 4;
+  width: 472px;
+  height: 307px;
+}
+
+.fiberLabel {
+  position: absolute;
+  top: 569px;
+  left: 809px;
+  z-index: 10;
+  padding: 5px 14px;
+  border: 2px solid #08446e;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 3px 4px rgb(13 36 54 / 18%);
+  color: #0d2436;
+  font-size: 15px;
+  line-height: 1.2;
+}
+
+.alice,
+.bob {
+  position: absolute;
+  z-index: 11;
+  object-fit: contain;
+  transform-origin: center bottom;
+}
+
+.alice {
+  top: 811px;
+  left: 634px;
+}
+
+.bob {
+  top: 807px;
+  left: 977px;
+}
+
+.fuzzyQuestion {
+  position: absolute;
+  bottom: 290px;
+  z-index: 13;
+  display: flex;
+  width: 370px;
+  flex-direction: column;
+  gap: 7px;
+  padding: 16px 18px;
+  border: 2px solid #0d2436;
+  border-radius: 18px;
+  background: rgb(255 255 255 / 96%);
+  box-shadow: 0 8px 22px rgb(13 36 54 / 20%);
+  color: #0d2436;
+  font-size: 16px;
+  line-height: 1.35;
+  pointer-events: none;
+}
+
+.fuzzyQuestion::before,
+.fuzzyQuestion::after {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  content: '';
+}
+
+.fuzzyQuestion::before {
+  bottom: -18px;
+  border-width: 18px 13px 0;
+  border-color: #0d2436 transparent transparent;
+}
+
+.fuzzyQuestion::after {
+  bottom: -14px;
+  border-width: 15px 11px 0;
+  border-color: #fff transparent transparent;
+}
+
+.fuzzyQuestion strong {
+  color: #39728e;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.fuzzyQuestion span {
+  display: block;
+}
+
+.fuzzyReply {
+  border-color: #0186d3;
+}
+
+.fuzzyReply::before {
+  border-color: #0186d3 transparent transparent;
+}
+
+.fuzzyReply strong {
+  color: #e84a27;
+}
+
+.aliceQuestion {
+  left: 470px;
+}
+
+.aliceQuestion::before {
+  left: 153px;
+}
+
+.aliceQuestion::after {
+  left: 155px;
+}
+
+.bobQuestion {
+  left: 835px;
+}
+
+.bobQuestion::before {
+  left: 128px;
+}
+
+.bobQuestion::after {
+  left: 130px;
+}
+
+.dialogBackdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  background: rgb(9 26 38 / 62%);
+}
+
+.dialogShell {
+  display: grid;
+  width: 1180px;
+  height: 758px;
+  grid-template-columns: 300px 880px;
+  filter: drop-shadow(0 24px 50px rgb(9 26 38 / 32%));
+  transform: translateY(55px);
+}
+
+.dialogSidebar {
+  padding: 28px 18px;
+  overflow: hidden;
+  border: 1px solid #0186d3;
+  border-right: 0;
+  border-radius: 26px 0 0 26px;
+  background: #f3f8fb;
+}
+
+.sidebarLabel {
+  margin: 0 12px 18px;
+  color: #315163;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.stepList {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  flex-direction: column;
+  gap: 8px;
+  list-style: none;
+}
+
+.stepList button {
+  display: grid;
+  width: 100%;
+  min-height: 74px;
+  grid-template-columns: 26px 1fr;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: #294555;
+  cursor: pointer;
+  font:
+    600 15px/1.28 Inter,
+    Arial,
+    sans-serif;
+  text-align: left;
+}
+
+.stepList button > span {
+  display: grid;
+  width: 26px;
+  height: 26px;
+  place-items: center;
+  border: 1.5px solid #0d2436;
+  border-radius: 50%;
+  background: #fff;
+  color: #0d2436;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.stepList button:hover,
+.stepList .activeStep {
+  background: #cce5f5;
+  color: #0d2436;
+}
+
+.stepList .activeStep > span {
+  background: #0d2436;
+  color: #fff;
+}
+
+.dialogCard {
+  position: relative;
+  display: grid;
+  height: 758px;
+  overflow: hidden;
+  border-radius: 0 24px 24px 0;
+  background: #fff;
+  grid-template-rows: 1fr 76px;
+}
+
+.dialogAccent {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 2;
+  height: 12px;
+  background: linear-gradient(90deg, #155f82 0%, #e84a27 100%);
+}
+
+.dialogClose {
+  position: absolute;
+  top: 26px;
+  right: 48px;
+  z-index: 3;
+  display: grid;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  place-items: center;
+  border: 1px solid #9eb1bc;
+  border-radius: 50%;
+  background: #fff;
+  color: #0d2436;
+  cursor: pointer;
+  font:
+    300 32px/1 Inter,
+    Arial,
+    sans-serif;
+}
+
+.dialogClose span {
+  transform: translateY(-2px);
+}
+
+.dialogContent {
+  min-height: 0;
+  padding: 32px 48px 26px;
+  overflow: hidden;
+}
+
+.dialogKicker {
+  margin: 0 72px 7px 0;
+  color: #39728e;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  line-height: 1.2;
+}
+
+.dialogCard h2 {
+  margin: 0 72px 18px 0;
+  color: #0d2436;
+  font-size: 35px;
+  line-height: 1.08;
+}
+
+.dialogFigure {
+  margin: 0 0 21px;
+}
+
+.dialogPhoto {
+  position: relative;
+  width: 784px;
+  height: 280px;
+  overflow: hidden;
+  border-radius: 14px;
+  background: #dce8ee;
+}
+
+.dialogPhoto img {
+  object-fit: cover;
+}
+
+.dialogFigure figcaption {
+  margin-top: 7px;
+  color: #687d88;
+  font-size: 12px;
+  font-style: italic;
+  line-height: 1.25;
+}
+
+.dialogSummary {
+  margin: 0 0 10px;
+  color: #0d2436;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.dialogDescription {
+  margin: 0;
+  color: #3c5568;
+  font-size: 16px;
+  line-height: 1.42;
+}
+
+.dialogFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 48px 20px;
+  border-top: 1px solid #d9e3e8;
+}
+
+.dialogFooter button {
+  display: inline-flex;
+  height: 40px;
+  align-items: center;
+  gap: 9px;
+  padding: 0 17px;
+  border-radius: 8px;
+  cursor: pointer;
+  font:
+    700 14px/1 Inter,
+    Arial,
+    sans-serif;
+}
+
+.previousButton {
+  border: 1px solid #879ba6;
+  background: #fff;
+  color: #17384b;
+}
+
+.previousButton:disabled {
+  opacity: 0.38;
+  cursor: default;
+}
+
+.nextButton {
+  border: 1px solid #0d2436;
+  background: #0d2436;
+  color: #fff;
+}
+
+.dialogShell button:focus-visible {
+  outline: 4px solid #ff5f05;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hotspot {
+    transition:
+      transform 140ms ease,
+      box-shadow 140ms ease;
+  }
+
+  .touchHint {
+    animation: touchHintEntrance 220ms ease-out both;
+  }
+
+  .showHints :is(.hotspot, .fiberLabel, .digitalRelay, .stepOnlyButton) {
+    animation: interactiveTargetPulse 800ms ease-in-out infinite;
+  }
+
+  .alice {
+    animation: fuzzyHover 6.4s ease-in-out infinite;
+  }
+
+  .bob {
+    animation: fuzzyHover 7.1s ease-in-out 1.2s infinite reverse;
+  }
+
+  .fuzzyQuestion {
+    animation: fuzzyQuestionCycle 9s ease-in-out both;
+  }
+
+  .fuzzyReply {
+    animation-duration: 5s;
+  }
+}
+
+@keyframes touchHintEntrance {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+@keyframes interactiveTargetPulse {
+  0%,
+  100% {
+    outline-color: #ff5f05;
+    outline-offset: 4px;
+  }
+
+  50% {
+    outline-color: #ffd0b5;
+    outline-offset: 10px;
+  }
+}
+
+@keyframes fuzzyHover {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-0.4deg);
+  }
+
+  50% {
+    transform: translateY(-8px) rotate(0.4deg);
+  }
+}
+
+@keyframes fuzzyQuestionCycle {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+
+  7%,
+  90% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(4px) scale(0.99);
+  }
+}

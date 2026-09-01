@@ -1,0 +1,30 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="742"
+  height="594"
+  viewBox="0 0 742 594"
+  fill="none"
+>
+  <defs>
+    <marker
+      id="relay-arrow-a"
+      markerWidth="8"
+      markerHeight="8"
+      refX="8"
+      refY="4"
+      orient="auto-start-reverse"
+      markerUnits="userSpaceOnUse"
+    >
+      <path d="M0 0L8 4L0 8Z" fill="#000" />
+    </marker>
+  </defs>
+  <path
+    d="M0 448C115 450 215 594 422 594C650 594 742 500 742 242C742 88 535 78 350 55C274 46 232 29 231 21"
+    stroke="#000"
+    stroke-width="1.5"
+    stroke-linecap="round"
+    stroke-dasharray="2 10"
+    marker-start="url(#relay-arrow-a)"
+    marker-end="url(#relay-arrow-a)"
+  />
+</svg>

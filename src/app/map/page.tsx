@@ -7,6 +7,7 @@ import {
   ReactNode,
   useCallback,
   useEffect,
+  useEffectEvent,
   useRef,
   useState,
 } from 'react';
@@ -29,8 +30,6 @@ const MAP_CONTENT_TOP = 110;
 const MAP_CONTENT_HEIGHT = DESIGN_HEIGHT - MAP_CONTENT_TOP;
 const MAP_TIMEOUT_MS = 5 * 60 * 1000;
 const MAP_WARNING_DURATION_MS = 30 * 1000;
-const FUZZY_QUESTION_MIN_DELAY_MS = 12 * 1000;
-const FUZZY_QUESTION_MAX_DELAY_MS = 20 * 1000;
 const FUZZY_QUESTION_VISIBLE_MS = 9 * 1000;
 const FUZZY_REPLY_VISIBLE_MS = 5 * 1000;
 const HINT_VISIBLE_MS = 2600;
@@ -79,6 +78,18 @@ const FIBER_ARROWS: [number, number, number][] = [
 ];
 
 type FuzzySpeaker = 'alice' | 'bob';
+
+/** A random SSM question (never the previous one) and a random answer to it. */
+function pickExchange(lastQuestionIndex: number) {
+  const questionCount = ssmQuestions.length;
+  let questionIndex = Math.floor(Math.random() * questionCount);
+  if (questionCount > 1 && questionIndex === lastQuestionIndex) {
+    questionIndex = (questionIndex + 1) % questionCount;
+  }
+  const question = ssmQuestions[questionIndex];
+  const reply = Math.random() < 0.5 ? question.a : question.b;
+  return { questionIndex, question, reply };
+}
 
 type FuzzyConversation = {
   speaker: FuzzySpeaker;
@@ -747,6 +758,7 @@ export default function MapPage() {
   const stageRef = useRef<HTMLDivElement>(null);
   const hintTimeoutRef = useRef<number | null>(null);
   const lastQuestionIndexRef = useRef(-1);
+  const conversationTimersRef = useRef<number[]>([]);
   const [activeStep, setActiveStep] = useState<StepNumber | null>(null);
   const [fuzzyConversation, setFuzzyConversation] =
     useState<FuzzyConversation | null>(null);
@@ -801,115 +813,88 @@ export default function MapPage() {
     return () => query.removeEventListener('change', applyMotionPreference);
   }, []);
 
-  useEffect(
-    () => () => {
+  useEffect(() => {
+    const conversationTimers = conversationTimersRef.current;
+    return () => {
       if (hintTimeoutRef.current !== null) {
         window.clearTimeout(hintTimeoutRef.current);
       }
-    },
-    []
-  );
-
-  useEffect(() => {
-    let showTimer: number | undefined;
-    let replyTimer: number | undefined;
-    let hideTimer: number | undefined;
-
-    // Alice and Bob stay quiet while a step is open.
-    if (activeStep !== null) return;
-
-    const chooseQuestionIndex = () => {
-      const questionCount = ssmQuestions.length;
-      let nextIndex = Math.floor(Math.random() * questionCount);
-
-      if (questionCount > 1 && nextIndex === lastQuestionIndexRef.current) {
-        nextIndex = (nextIndex + 1) % questionCount;
-      }
-
-      lastQuestionIndexRef.current = nextIndex;
-      return nextIndex;
+      conversationTimers.forEach((timer) => window.clearTimeout(timer));
     };
+  }, []);
 
-    const scheduleQuestion = () => {
-      const delay =
-        FUZZY_QUESTION_MIN_DELAY_MS +
-        Math.random() *
-          (FUZZY_QUESTION_MAX_DELAY_MS - FUZZY_QUESTION_MIN_DELAY_MS);
+  const endConversation = () => {
+    conversationTimersRef.current.forEach((timer) =>
+      window.clearTimeout(timer)
+    );
+    conversationTimersRef.current = [];
+    setFuzzyConversation(null);
+  };
 
-      showTimer = window.setTimeout(() => {
-        const question = ssmQuestions[chooseQuestionIndex()];
-        const speaker: FuzzySpeaker = Math.random() < 0.5 ? 'alice' : 'bob';
-        const responder: FuzzySpeaker = speaker === 'alice' ? 'bob' : 'alice';
-        const reply = Math.random() < 0.5 ? question.a : question.b;
+  /** Tapping Alice or Bob: they ask the other an SSM question, who answers. */
+  const askQuestion = (speaker: FuzzySpeaker) => {
+    endConversation();
 
-        setFuzzyConversation({
-          speaker,
-          kind: 'question',
-          text: question.leader_question,
-          options: [question.a, question.b],
-        });
-        replyTimer = window.setTimeout(() => {
-          setFuzzyConversation({
-            speaker: responder,
-            kind: 'reply',
-            text: reply,
-          });
-          hideTimer = window.setTimeout(() => {
-            setFuzzyConversation(null);
-            scheduleQuestion();
-          }, FUZZY_REPLY_VISIBLE_MS);
-        }, FUZZY_QUESTION_VISIBLE_MS);
-      }, delay);
-    };
+    const { questionIndex, question, reply } = pickExchange(
+      lastQuestionIndexRef.current
+    );
+    lastQuestionIndexRef.current = questionIndex;
+    const responder: FuzzySpeaker = speaker === 'alice' ? 'bob' : 'alice';
 
-    scheduleQuestion();
+    setFuzzyConversation({
+      speaker,
+      kind: 'question',
+      text: question.leader_question,
+      options: [question.a, question.b],
+    });
+    const replyTimer = window.setTimeout(() => {
+      setFuzzyConversation({ speaker: responder, kind: 'reply', text: reply });
+      const hideTimer = window.setTimeout(
+        () => setFuzzyConversation(null),
+        FUZZY_REPLY_VISIBLE_MS
+      );
+      conversationTimersRef.current = [hideTimer];
+    }, FUZZY_QUESTION_VISIBLE_MS);
+    conversationTimersRef.current = [replyTimer];
+  };
 
-    return () => {
-      if (showTimer !== undefined) window.clearTimeout(showTimer);
-      if (replyTimer !== undefined) window.clearTimeout(replyTimer);
-      if (hideTimer !== undefined) window.clearTimeout(hideTimer);
-      // Opening a step (or a Fast Refresh) ends the current exchange.
-      setFuzzyConversation(null);
-    };
-  }, [activeStep]);
-
-  const openStep = useCallback((step: StepNumber) => {
+  const openStep = (step: StepNumber) => {
     if (hintTimeoutRef.current !== null) {
       window.clearTimeout(hintTimeoutRef.current);
       hintTimeoutRef.current = null;
     }
     setShowInteractionHints(false);
+    endConversation();
     setActiveStep(step);
-  }, []);
+  };
 
   // Keys 1-6 open a step from anywhere; arrows move while the dialog is open.
   // Escape is handled by the dialog itself.
-  useEffect(() => {
-    const handleKey = (event: KeyboardEvent) => {
-      if (event.altKey || event.ctrlKey || event.metaKey) return;
-      const stepKey = Number(event.key);
-      if (stepNumbers.includes(stepKey as StepNumber)) {
-        event.preventDefault();
-        openStep(stepKey as StepNumber);
-        return;
-      }
-      if (activeStep === null) return;
-      if (event.key === 'ArrowLeft' && activeStep > 1) {
-        event.preventDefault();
-        setActiveStep((activeStep - 1) as StepNumber);
-      } else if (event.key === 'ArrowRight') {
-        event.preventDefault();
-        setActiveStep(
-          activeStep === stepNumbers.length
-            ? 1
-            : ((activeStep + 1) as StepNumber)
-        );
-      }
-    };
+  const handleKey = useEffectEvent((event: KeyboardEvent) => {
+    if (event.altKey || event.ctrlKey || event.metaKey) return;
+    const stepKey = Number(event.key);
+    if (stepNumbers.includes(stepKey as StepNumber)) {
+      event.preventDefault();
+      openStep(stepKey as StepNumber);
+      return;
+    }
+    if (activeStep === null) return;
+    if (event.key === 'ArrowLeft' && activeStep > 1) {
+      event.preventDefault();
+      setActiveStep((activeStep - 1) as StepNumber);
+    } else if (event.key === 'ArrowRight') {
+      event.preventDefault();
+      setActiveStep(
+        activeStep === stepNumbers.length ? 1 : ((activeStep + 1) as StepNumber)
+      );
+    }
+  });
 
-    window.addEventListener('keydown', handleKey);
-    return () => window.removeEventListener('keydown', handleKey);
-  }, [activeStep, openStep]);
+  useEffect(() => {
+    const listener = (event: KeyboardEvent) => handleKey(event);
+    window.addEventListener('keydown', listener);
+    return () => window.removeEventListener('keydown', listener);
+  }, []);
 
   const handleMissedTap = (event: ReactMouseEvent<HTMLElement>) => {
     if (
@@ -1224,9 +1209,15 @@ export default function MapPage() {
           <StepBadge step={2} index={1} />
         </Hotspot>
 
+        {/*
+          Alice and Bob are buttons so a tap on them asks a question, but not
+          hotspots: the missed-tap hint never highlights them.
+        */}
         {[
           {
+            speaker: 'alice' as const,
             name: 'Alice',
+            other: 'Bob',
             station: 'A',
             src: 'alice.png',
             left: 634,
@@ -1235,7 +1226,9 @@ export default function MapPage() {
             animation: `${aliceBob} 4.4s ease-in-out infinite`,
           },
           {
+            speaker: 'bob' as const,
             name: 'Bob',
+            other: 'Alice',
             station: 'B',
             src: 'bob.png',
             left: 977,
@@ -1244,25 +1237,31 @@ export default function MapPage() {
             animation: `${bobBob} 5.1s ease-in-out infinite`,
           },
         ].map((fuzzy) => (
-          <Box
+          <ButtonBase
             key={fuzzy.name}
+            aria-label={`${fuzzy.name} at Public Station ${fuzzy.station}: ask ${fuzzy.other} a question`}
+            onClick={() => askQuestion(fuzzy.speaker)}
             sx={{
               position: 'absolute',
               left: fuzzy.left,
               top: fuzzy.top,
               zIndex: 4,
-              display: 'flex',
+              borderRadius: '50%',
               transformOrigin: 'center bottom',
               animation: fuzzy.animation,
+              '&.Mui-focusVisible': {
+                outline: '3px solid #1F7AE0',
+                outlineOffset: '3px',
+              },
             }}
           >
             <Image
               src={`${ASSET_ROOT}/${fuzzy.src}`}
-              alt={`${fuzzy.name} at Public Station ${fuzzy.station}`}
+              alt=""
               width={fuzzy.width}
               height={64}
             />
-          </Box>
+          </ButtonBase>
         ))}
 
         {fuzzyConversation && fuzzyConversation.text?.trim() && (

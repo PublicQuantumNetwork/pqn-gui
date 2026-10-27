@@ -16,7 +16,7 @@ const TRIP_FADE_OUT = 0.94;
 // Fraction of each path at which the photon passes its half-waveplate icon
 // (measured along the path), where the superposition collapses to one axis.
 const LAB_COLLAPSE_AT = 0.5116;
-const LIBRARY_COLLAPSE_AT = 0.6115;
+const LIBRARY_COLLAPSE_AT = 0.6122;
 const COLLAPSE_HALF_WINDOW = 0.02;
 // Under reduced motion every SMIL timeline is paused here: first trip, both
 // photons past their waveplates and collapsed to the horizontal axis.
@@ -78,7 +78,7 @@ export const LAB_PHOTON_PATH = [
   'C 1454.5 419.75 1461.75 417.75 1463.43 406.93',
 ].join(' ');
 // Library: left source orb -> down fiber B1 through its self-crossing loop
-// (up the left side, over the top, down the right) -> waveplate B -> back up
+// (up the right side, over the top, down the left) -> waveplate B -> back up
 // fiber B2 -> Vector 6, which enters the detector from below.
 export const LIBRARY_PHOTON_PATH = [
   'M 748 384',
@@ -88,14 +88,16 @@ export const LIBRARY_PHOTON_PATH = [
   'C 882 607.87 898.69 611.81 917.19 613.93',
   'C 935.69 616.06 956 616.38 975.72 615.52',
   'C 1002.6 614.37 1028.4 611.03 1047.09 607.15',
-  'L 1048.76 604.74',
-  'C 1047.8 597.58 1047.29 590.81 1047.24 584.56',
-  'C 1047.13 572.09 1048.83 561.7 1052.29 554.43',
-  'C 1055.68 547.16 1061 543 1068 543',
-  'C 1079.37 543 1087.12 545.88 1091.84 550.38',
-  'C 1096.55 554.89 1098.22 561.03 1097.44 567.56',
-  'C 1095.88 580.62 1084.5 595.25 1068 601.5',
-  'C 1063.77 603.1 1057.98 604.73 1051 606.3',
+  // Through the crossing, then round the loop the way the fiber turns:
+  // up the right side, over the top, down the left side, out the crossing.
+  'L 1051 606.3',
+  'C 1057.98 604.73 1063.77 603.1 1068 601.5',
+  'C 1084.5 595.25 1095.88 580.62 1097.44 567.56',
+  'C 1098.22 561.03 1096.55 554.89 1091.84 550.38',
+  'C 1087.12 545.88 1079.37 543 1068 543',
+  'C 1061 543 1055.68 547.16 1052.29 554.43',
+  'C 1048.83 561.7 1047.13 572.09 1047.24 584.56',
+  'C 1047.29 590.81 1047.8 597.58 1048.76 604.74',
   'L 1049.33 608.71',
   'C 1052.5 629.21 1059.27 652.6 1069.71 676',
   'C 1099.12 741.89 1161.59 808.27 1251 809.48',

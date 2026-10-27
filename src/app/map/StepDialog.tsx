@@ -2,7 +2,16 @@
 
 import Image from 'next/image';
 import { useState } from 'react';
-import { Box, ButtonBase, Dialog, Stack, useMediaQuery } from '@mui/material';
+import {
+  Box,
+  ButtonBase,
+  Dialog,
+  Fade,
+  Modal,
+  Stack,
+  useMediaQuery,
+} from '@mui/material';
+import OpenInFullRoundedIcon from '@mui/icons-material/OpenInFullRounded';
 import { keyframes } from '@mui/material/styles';
 import { StepNumber, stepDetails, stepNumbers } from './steps';
 
@@ -55,6 +64,109 @@ function NavButton({
   );
 }
 
+/**
+ * A step photo shown whole (uncropped) over the entire screen. Tap anywhere
+ * or press Escape to close. Other keys stay here, so the map's step keys
+ * don't change the step underneath.
+ */
+function PhotoLightbox({
+  open,
+  src,
+  alt,
+  title,
+  caption,
+  reduceMotion,
+  onClose,
+}: {
+  open: boolean;
+  src: string;
+  alt: string;
+  title: string;
+  caption?: string;
+  reduceMotion: boolean;
+  onClose: () => void;
+}) {
+  return (
+    <Modal
+      open={open}
+      onClose={onClose}
+      closeAfterTransition
+      aria-label={`${title} photo`}
+      slotProps={{
+        backdrop: {
+          timeout: reduceMotion ? 0 : 220,
+          sx: { bgcolor: 'rgba(9, 26, 38, 0.94)' },
+        },
+      }}
+    >
+      <Fade in={open} timeout={reduceMotion ? 0 : 220}>
+        <Stack
+          onClick={onClose}
+          onKeyDown={(event) => {
+            if (event.key !== 'Escape') event.stopPropagation();
+          }}
+          sx={{
+            position: 'fixed',
+            inset: 0,
+            gap: '16px',
+            p: '32px',
+            pt: '88px',
+            color: '#fff',
+            fontFamily: SANS,
+            outline: 'none',
+          }}
+        >
+          <ButtonBase
+            onClick={onClose}
+            aria-label="Close the photo"
+            autoFocus
+            sx={{
+              position: 'absolute',
+              top: 24,
+              right: 24,
+              width: 56,
+              height: 56,
+              borderRadius: '28px',
+              bgcolor: SUB_FILL,
+              color: INK,
+              fontSize: 28,
+              fontWeight: 700,
+              '&.Mui-focusVisible': {
+                outline: '4px solid #ff5f05',
+                outlineOffset: '3px',
+              },
+            }}
+          >
+            <span aria-hidden="true">×</span>
+          </ButtonBase>
+          <Box sx={{ position: 'relative', flex: 1 }}>
+            <Image
+              src={src}
+              alt={alt}
+              fill
+              sizes="100vw"
+              style={{ objectFit: 'contain' }}
+            />
+          </Box>
+          <Box sx={{ textAlign: 'center', lineHeight: 1.4 }}>
+            <Box component="span" sx={{ fontFamily: SERIF, fontSize: 24 }}>
+              {title}
+            </Box>
+            {caption && (
+              <Box sx={{ mt: '4px', fontSize: 14, opacity: 0.8 }}>
+                {caption}
+              </Box>
+            )}
+            <Box sx={{ mt: '8px', fontSize: 14, opacity: 0.7 }}>
+              Tap anywhere to close
+            </Box>
+          </Box>
+        </Stack>
+      </Fade>
+    </Modal>
+  );
+}
+
 export default function StepDialog({
   step,
   container,
@@ -76,277 +188,322 @@ export default function StepDialog({
   if (step !== null && step !== shownStep) setShownStep(step);
   const detail = stepDetails[shownStep];
   const isLastStep = shownStep === stepNumbers.length;
+  const [photoZoomed, setPhotoZoomed] = useState(false);
+  if (step === null && photoZoomed) setPhotoZoomed(false);
 
   return (
-    <Dialog
-      open={step !== null}
-      onClose={onClose}
-      container={container}
-      disableScrollLock
-      transitionDuration={reduceMotion ? 0 : 220}
-      aria-labelledby="map-dialog-title"
-      sx={{
-        position: 'absolute',
-        top: topOffset,
-        // The stage is letterboxed inside the page; overshoot it so the
-        // backdrop dims the whole map area (the page clips the overflow).
-        '& .MuiBackdrop-root': {
+    <>
+      {detail.image && (
+        <PhotoLightbox
+          open={photoZoomed}
+          src={detail.image}
+          alt={detail.imageAlt ?? ''}
+          title={detail.title}
+          caption={detail.caption}
+          reduceMotion={reduceMotion}
+          onClose={() => setPhotoZoomed(false)}
+        />
+      )}
+      <Dialog
+        open={step !== null}
+        onClose={onClose}
+        container={container}
+        disableScrollLock
+        transitionDuration={reduceMotion ? 0 : 220}
+        aria-labelledby="map-dialog-title"
+        sx={{
           position: 'absolute',
-          inset: -2000,
-          bgcolor: 'rgba(9, 26, 38, 0.62)',
-        },
-      }}
-      slotProps={{
-        paper: {
-          sx: {
-            m: 0,
-            width: 1180,
-            maxWidth: 'none',
-            height: 758,
-            maxHeight: 'none',
-            flexDirection: 'row',
-            bgcolor: 'transparent',
-            backgroundImage: 'none',
-            boxShadow: 'none',
-            borderRadius: 0,
-            overflow: 'visible',
-            color: INK,
-            fontFamily: SANS,
-            animation: reduceMotion
-              ? 'none'
-              : `${cardPop} 0.24s cubic-bezier(0.2, 0.8, 0.3, 1)`,
-            '& button:focus-visible': {
-              outline: '4px solid #ff5f05',
-              outlineOffset: '3px',
-            },
+          top: topOffset,
+          // The stage is letterboxed inside the page; overshoot it so the
+          // backdrop dims the whole map area (the page clips the overflow).
+          '& .MuiBackdrop-root': {
+            position: 'absolute',
+            inset: -2000,
+            bgcolor: 'rgba(9, 26, 38, 0.62)',
           },
-        },
-      }}
-    >
-      <Stack
-        component="nav"
-        aria-label="How it works steps"
-        spacing="4px"
-        sx={{
-          width: 300,
-          flexShrink: 0,
-          px: '18px',
-          py: '28px',
-          bgcolor: SUB_FILL,
-          border: '1px solid #0186d3',
-          borderRadius: '26px 0 0 26px',
-          filter: 'drop-shadow(0 20px 25px rgba(9, 26, 38, 0.45))',
         }}
-      >
-        <Box
-          component="p"
-          sx={{
-            m: 0,
-            pb: '14px',
-            color: INK_SOFT,
-            fontSize: 13,
-            fontWeight: 700,
-            letterSpacing: '1.2px',
-            textTransform: 'uppercase',
-          }}
-        >
-          How it works
-        </Box>
-        {stepNumbers.map((stepNumber) => {
-          const active = stepNumber === shownStep;
-          return (
-            <ButtonBase
-              key={stepNumber}
-              onClick={() => onStepChange(stepNumber)}
-              aria-current={active ? 'step' : undefined}
-              sx={{
-                width: '100%',
-                justifyContent: 'flex-start',
-                gap: '12px',
-                pl: '10px',
-                pr: '12px',
-                py: '10px',
-                borderRadius: '12px',
-                bgcolor: active ? '#cce5f5' : 'transparent',
-                color: INK,
-                fontFamily: SANS,
-                fontSize: 15,
-                fontWeight: active ? 700 : 600,
-                lineHeight: 1.25,
-                textAlign: 'left',
-              }}
-            >
-              <Box
-                component="span"
-                sx={{
-                  display: 'grid',
-                  placeItems: 'center',
-                  flexShrink: 0,
-                  width: 26,
-                  height: 26,
-                  borderRadius: '13px',
-                  bgcolor: '#fff',
-                  border: active ? 'none' : '1.5px solid #c7d6de',
-                  fontSize: 13,
-                  fontWeight: 700,
-                }}
-              >
-                {stepNumber}
-              </Box>
-              {stepDetails[stepNumber].title}
-            </ButtonBase>
-          );
-        })}
-      </Stack>
-
-      <Stack
-        component="article"
-        sx={{
-          width: 880,
-          flexShrink: 0,
-          bgcolor: '#fff',
-          borderRadius: '0 24px 24px 0',
-          overflow: 'hidden',
-          boxShadow: '0 20px 50px rgba(9, 26, 38, 0.45)',
-        }}
-      >
-        <Box sx={{ height: 12, flexShrink: 0, background: ACCENT_GRADIENT }} />
-
-        {/* gap, not spacing: the absolutely placed close button comes first. */}
-        <Stack
-          sx={{
-            position: 'relative',
-            flex: 1,
-            gap: '16px',
-            pt: '32px',
-            pb: '40px',
-            px: '48px',
-          }}
-        >
-          <ButtonBase
-            onClick={onClose}
-            aria-label="Close how it works"
-            autoFocus
-            sx={{
-              position: 'absolute',
-              top: 14,
-              left: 788,
-              width: 44,
-              height: 44,
-              borderRadius: '22px',
-              bgcolor: SUB_FILL,
+        slotProps={{
+          paper: {
+            sx: {
+              m: 0,
+              width: 1180,
+              maxWidth: 'none',
+              height: 758,
+              maxHeight: 'none',
+              flexDirection: 'row',
+              bgcolor: 'transparent',
+              backgroundImage: 'none',
+              boxShadow: 'none',
+              borderRadius: 0,
+              overflow: 'visible',
               color: INK,
               fontFamily: SANS,
-              fontSize: 22,
-              fontWeight: 700,
-            }}
-          >
-            <span aria-hidden="true">×</span>
-          </ButtonBase>
-
+              animation: reduceMotion
+                ? 'none'
+                : `${cardPop} 0.24s cubic-bezier(0.2, 0.8, 0.3, 1)`,
+              '& button:focus-visible': {
+                outline: '4px solid #ff5f05',
+                outlineOffset: '3px',
+              },
+            },
+          },
+        }}
+      >
+        <Stack
+          component="nav"
+          aria-label="How it works steps"
+          spacing="4px"
+          sx={{
+            width: 300,
+            flexShrink: 0,
+            px: '18px',
+            py: '28px',
+            bgcolor: SUB_FILL,
+            border: '1px solid #0186d3',
+            borderRadius: '26px 0 0 26px',
+            filter: 'drop-shadow(0 20px 25px rgba(9, 26, 38, 0.45))',
+          }}
+        >
           <Box
             component="p"
             sx={{
               m: 0,
+              pb: '14px',
               color: INK_SOFT,
-              fontSize: 14,
+              fontSize: 13,
               fontWeight: 700,
               letterSpacing: '1.2px',
               textTransform: 'uppercase',
             }}
           >
-            {detail.kicker}
+            How it works
           </Box>
-          <Box
-            component="h2"
-            id="map-dialog-title"
-            sx={{
-              m: 0,
-              pt: '12px',
-              fontFamily: SERIF,
-              fontSize: 34,
-              fontWeight: 400,
-              lineHeight: 'normal',
-            }}
-          >
-            {detail.title}
-          </Box>
-
-          <Stack component="figure" spacing="8px" sx={{ m: 0 }}>
-            <Box
-              sx={{
-                position: 'relative',
-                height: 280,
-                borderRadius: '14px',
-                overflow: 'hidden',
-                background: ACCENT_GRADIENT,
-              }}
-            >
-              {detail.image && (
-                <Image
-                  src={detail.image}
-                  alt={detail.imageAlt ?? ''}
-                  fill
-                  sizes="784px"
-                  style={{
-                    objectFit: 'cover',
-                    objectPosition: detail.imagePosition,
-                  }}
-                  priority
-                />
-              )}
-            </Box>
-            {detail.caption && (
-              <Box
-                component="figcaption"
+          {stepNumbers.map((stepNumber) => {
+            const active = stepNumber === shownStep;
+            return (
+              <ButtonBase
+                key={stepNumber}
+                onClick={() => onStepChange(stepNumber)}
+                aria-current={active ? 'step' : undefined}
                 sx={{
-                  color: INK_SOFT,
-                  fontSize: 13,
-                  fontWeight: 700,
-                  letterSpacing: '0.4px',
+                  width: '100%',
+                  justifyContent: 'flex-start',
+                  gap: '12px',
+                  pl: '10px',
+                  pr: '12px',
+                  py: '10px',
+                  borderRadius: '12px',
+                  bgcolor: active ? '#cce5f5' : 'transparent',
+                  color: INK,
+                  fontFamily: SANS,
+                  fontSize: 15,
+                  fontWeight: active ? 700 : 600,
+                  lineHeight: 1.25,
+                  textAlign: 'left',
                 }}
               >
-                {detail.caption}
-              </Box>
-            )}
-          </Stack>
-
-          <Stack
-            spacing="16px"
-            sx={{ py: '16px', fontSize: 20, lineHeight: 1.45 }}
-          >
-            <Box component="p" sx={{ m: 0, fontWeight: 600 }}>
-              {detail.summary}
-            </Box>
-            <Box component="p" sx={{ m: 0 }}>
-              {detail.description}
-            </Box>
-          </Stack>
+                <Box
+                  component="span"
+                  sx={{
+                    display: 'grid',
+                    placeItems: 'center',
+                    flexShrink: 0,
+                    width: 26,
+                    height: 26,
+                    borderRadius: '13px',
+                    bgcolor: '#fff',
+                    border: active ? 'none' : '1.5px solid #c7d6de',
+                    fontSize: 13,
+                    fontWeight: 700,
+                  }}
+                >
+                  {stepNumber}
+                </Box>
+                {stepDetails[stepNumber].title}
+              </ButtonBase>
+            );
+          })}
         </Stack>
 
         <Stack
-          component="footer"
-          direction="row"
+          component="article"
           sx={{
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            p: '20px',
-            borderTop: '1px solid #d0d0d0',
+            width: 880,
+            flexShrink: 0,
+            bgcolor: '#fff',
+            borderRadius: '0 24px 24px 0',
+            overflow: 'hidden',
+            boxShadow: '0 20px 50px rgba(9, 26, 38, 0.45)',
           }}
         >
-          <NavButton
-            label="Previous Step"
-            disabled={shownStep === 1}
-            onClick={() => onStepChange((shownStep - 1) as StepNumber)}
+          <Box
+            sx={{ height: 12, flexShrink: 0, background: ACCENT_GRADIENT }}
           />
-          <NavButton
-            label={isLastStep ? 'Return to Beginning' : 'Next Step'}
-            onClick={() =>
-              onStepChange(isLastStep ? 1 : ((shownStep + 1) as StepNumber))
-            }
-          />
+
+          {/* gap, not spacing: the absolutely placed close button comes first. */}
+          <Stack
+            sx={{
+              position: 'relative',
+              flex: 1,
+              gap: '16px',
+              pt: '32px',
+              pb: '40px',
+              px: '48px',
+            }}
+          >
+            <ButtonBase
+              onClick={onClose}
+              aria-label="Close how it works"
+              autoFocus
+              sx={{
+                position: 'absolute',
+                top: 14,
+                left: 788,
+                width: 44,
+                height: 44,
+                borderRadius: '22px',
+                bgcolor: SUB_FILL,
+                color: INK,
+                fontFamily: SANS,
+                fontSize: 22,
+                fontWeight: 700,
+              }}
+            >
+              <span aria-hidden="true">×</span>
+            </ButtonBase>
+
+            <Box
+              component="p"
+              sx={{
+                m: 0,
+                color: INK_SOFT,
+                fontSize: 14,
+                fontWeight: 700,
+                letterSpacing: '1.2px',
+                textTransform: 'uppercase',
+              }}
+            >
+              {detail.kicker}
+            </Box>
+            <Box
+              component="h2"
+              id="map-dialog-title"
+              sx={{
+                m: 0,
+                pt: '12px',
+                fontFamily: SERIF,
+                fontSize: 34,
+                fontWeight: 400,
+                lineHeight: 'normal',
+              }}
+            >
+              {detail.title}
+            </Box>
+
+            <Stack component="figure" spacing="8px" sx={{ m: 0 }}>
+              <Box
+                component={detail.image ? ButtonBase : 'div'}
+                {...(detail.image && {
+                  onClick: () => setPhotoZoomed(true),
+                  'aria-label': 'Show the photo full screen',
+                })}
+                sx={{
+                  position: 'relative',
+                  display: 'block',
+                  width: '100%',
+                  height: 280,
+                  borderRadius: '14px',
+                  overflow: 'hidden',
+                  background: ACCENT_GRADIENT,
+                }}
+              >
+                {detail.image && (
+                  <>
+                    <Image
+                      src={detail.image}
+                      alt={detail.imageAlt ?? ''}
+                      fill
+                      sizes="784px"
+                      style={{
+                        objectFit: 'cover',
+                        objectPosition: detail.imagePosition,
+                      }}
+                      priority
+                    />
+                    <Box
+                      component="span"
+                      aria-hidden="true"
+                      sx={{
+                        position: 'absolute',
+                        right: 12,
+                        bottom: 12,
+                        display: 'grid',
+                        placeItems: 'center',
+                        width: 40,
+                        height: 40,
+                        borderRadius: '20px',
+                        bgcolor: 'rgba(255, 255, 255, 0.88)',
+                        color: INK,
+                        boxShadow: '0 2px 6px rgba(9, 26, 38, 0.3)',
+                      }}
+                    >
+                      <OpenInFullRoundedIcon sx={{ fontSize: 20 }} />
+                    </Box>
+                  </>
+                )}
+              </Box>
+              {detail.caption && (
+                <Box
+                  component="figcaption"
+                  sx={{
+                    color: INK_SOFT,
+                    fontSize: 13,
+                    fontWeight: 700,
+                    letterSpacing: '0.4px',
+                  }}
+                >
+                  {detail.caption}
+                </Box>
+              )}
+            </Stack>
+
+            <Stack
+              spacing="16px"
+              sx={{ py: '16px', fontSize: 20, lineHeight: 1.45 }}
+            >
+              <Box component="p" sx={{ m: 0, fontWeight: 600 }}>
+                {detail.summary}
+              </Box>
+              <Box component="p" sx={{ m: 0 }}>
+                {detail.description}
+              </Box>
+            </Stack>
+          </Stack>
+
+          <Stack
+            component="footer"
+            direction="row"
+            sx={{
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              p: '20px',
+              borderTop: '1px solid #d0d0d0',
+            }}
+          >
+            <NavButton
+              label="Previous Step"
+              disabled={shownStep === 1}
+              onClick={() => onStepChange((shownStep - 1) as StepNumber)}
+            />
+            <NavButton
+              label={isLastStep ? 'Return to Beginning' : 'Next Step'}
+              onClick={() =>
+                onStepChange(isLastStep ? 1 : ((shownStep + 1) as StepNumber))
+              }
+            />
+          </Stack>
         </Stack>
-      </Stack>
-    </Dialog>
+      </Dialog>
+    </>
   );
 }

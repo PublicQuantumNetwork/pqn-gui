@@ -7,8 +7,13 @@ import { usePageRedirect } from '@/app/contexts/PageRedirectContext';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useEnterKey } from '@/hooks/useEnterKey';
 import EmojiConfetti from '@/components/EmojiConfetti';
-import Fireworks from '@/components/Fireworks';
 import Whobit from '@/components/Whobit';
+import Decorations from '@/components/Decorations';
+import { activeCelebration, type Scene } from '@/themes';
+
+// The active theme is fixed at build time (decision 5), so its Celebration
+// is computed once here, not on every render.
+const Celebration = activeCelebration();
 
 export default function Home() {
   const { setBackArrowLink, setForwardArrowLink } = usePageRedirect();
@@ -37,6 +42,15 @@ export default function Home() {
     const n_total_bits = searchParams.get('n_total_bits') ?? '0';
     const emoji = searchParams.get('emoji') ?? '';
     const role = searchParams.get('role') ?? '';
+
+    // The Scene the page's state calls for (decision 10): a perfect match,
+    // or anything else (a partial match or an error).
+    const scene: Scene =
+      success &&
+      Number(n_matching_bits) === Number(n_total_bits) &&
+      Number(n_total_bits) > 0
+        ? 'ssm4-perfect'
+        : 'ssm4';
 
     const [message, setMessage] = useState('');
     const [message2, setMessage2] = useState('');
@@ -111,6 +125,7 @@ export default function Home() {
 
     return (
       <Container maxWidth="lg" sx={{ my: 4 }}>
+        <Decorations scene={scene} />
         <Stack direction="row" alignItems="flex-start" sx={{ width: '100%' }}>
           <Whobit
             variant={
@@ -234,7 +249,7 @@ export default function Home() {
                 triggerKey={confettiTrigger}
                 emojiRef={emojiRef}
               />
-              <Fireworks />
+              <Celebration />
             </>
           )}
       </Container>

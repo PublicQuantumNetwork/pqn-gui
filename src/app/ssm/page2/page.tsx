@@ -7,16 +7,22 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { requestFollower } from '@/calls';
 import Whobit from '@/components/Whobit';
+import Decorations from '@/components/Decorations';
+import type { Scene } from '@/themes';
 
 export default function MyComponent() {
   const router = useRouter();
   const [hasError, setHasError] = useState(false);
   const [wasAccepted, setWasAccepted] = useState<boolean | null>(null);
+  // Whether the collect_follower request has answered, which tells the
+  // asking and waiting Scenes apart (agent decision A2).
+  const [hasAnswered, setHasAnswered] = useState(false);
 
   useEffect(() => {
     const fetchFollowerRequest = async () => {
       const result = await requestFollower();
 
+      setHasAnswered(true);
       if (!result.success) {
         setHasError(true);
       } else if (result.data && result.data.accepted !== undefined) {
@@ -30,8 +36,19 @@ export default function MyComponent() {
     fetchFollowerRequest();
   }, [router]);
 
+  // The Scene the page's state calls for (decision 10): asking while the
+  // request is still in flight, waiting once it has answered without an
+  // answer, declined when the friend declined (agent decision A2).
+  const scene: Scene =
+    wasAccepted === false
+      ? 'ssm2-declined'
+      : hasAnswered
+        ? 'ssm2-waiting'
+        : 'ssm2-asking';
+
   return (
     <Container maxWidth="lg" sx={{ my: 4 }}>
+      <Decorations scene={scene} />
       <Stack direction="row" alignItems="center" sx={{ width: '100%' }}>
         <Whobit variant="right-wing-up" speechBubbleHeight="250px">
           <Box sx={{ fontSize: '1em' }}>

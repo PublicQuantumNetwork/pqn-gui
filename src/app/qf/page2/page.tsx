@@ -7,6 +7,7 @@ import Whobit from '@/components/Whobit';
 import PageTimeout from '@/components/PageTimeout';
 import { activeFlavourCopy, activeFortune } from '@/themes';
 import { useEnterKey } from '@/hooks/useEnterKey';
+import Decorations from '@/components/Decorations';
 
 // Short values make the activity-reset behavior easy to verify at the kiosk.
 const QUANTUM_FORTUNE_TIMEOUT_MS = 5 * 60 * 1000;
@@ -30,6 +31,7 @@ function FortuneContent() {
 
   return (
     <Container maxWidth="lg">
+      <Decorations scene="qf2" />
       <Box sx={{ mt: 9, mb: 4 }}>
         <Stack direction="row" alignItems="center" sx={{ width: '100%' }}>
           <Whobit variant="arms-down">

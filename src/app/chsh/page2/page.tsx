@@ -23,6 +23,7 @@ import TrendingFlatIcon from '@mui/icons-material/TrendingFlat';
 import DoDisturbIcon from '@mui/icons-material/DoDisturb';
 import PolylineIcon from '@mui/icons-material/Polyline';
 import { chshPost } from '@/calls';
+import Decorations from '@/components/Decorations';
 
 const AngleLabel = styled(Box)<{ top: string; left: string }>(
   ({ top, left }) => ({
@@ -90,6 +91,7 @@ export default function Page() {
         my: 4,
       }}
     >
+      <Decorations scene="chsh2" />
       <Dialog maxWidth="md" open={openMeasuringModal} onClose={() => {}}>
         <ModalBox />
       </Dialog>

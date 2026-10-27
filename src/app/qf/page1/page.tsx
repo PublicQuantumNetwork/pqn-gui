@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation';
 import { submitFortune } from '@/calls';
 import { activeFlavourCopy } from '@/themes';
 import { useEnterKey } from '@/hooks/useEnterKey';
+import Decorations from '@/components/Decorations';
 
 // Short values make the activity-reset behavior easy to verify at the kiosk.
 const QUANTUM_FORTUNE_TIMEOUT_MS = 5 * 60 * 1000;
@@ -50,6 +51,7 @@ export default function MyComponent() {
 
   return (
     <Container maxWidth="lg">
+      <Decorations scene="qf1" />
       <Box sx={{ mt: 9, mb: 4, display: 'flex', alignItems: 'center' }}>
         <Dialog open={openModal} onClose={() => {}}>
           <ModalBox variant="rng" />

@@ -7,8 +7,12 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { useEnterKey } from '@/hooks/useEnterKey';
 import Whobit from '@/components/Whobit';
 import CircleContainer from '@/components/CircleContainer';
-import Fireworks from '@/components/Fireworks';
-import { activeFlavourCopy } from '@/themes';
+import Decorations from '@/components/Decorations';
+import { activeCelebration, activeFlavourCopy, type Scene } from '@/themes';
+
+// The active theme is fixed at build time (decision 5), so its Celebration
+// is computed once here, not on every render.
+const Celebration = activeCelebration();
 
 export default function Home() {
   const router = useRouter();
@@ -27,6 +31,14 @@ export default function Home() {
     const failParam = searchParams.get('fail');
     const fail = failParam ? failParam.replace(/\}/g, '') : true;
 
+    // The Scene the page's state calls for (decision 10).
+    const scene: Scene =
+      fail === 'true'
+        ? 'chsh3-error'
+        : value >= 2
+          ? 'chsh3-entangled'
+          : 'chsh3-weak';
+
     // Determine Whobit variant based on results
     const getWhobitVariant = () => {
       if (fail === 'true') return 'arms-down';
@@ -36,6 +48,7 @@ export default function Home() {
 
     return (
       <Container maxWidth="lg">
+        <Decorations scene={scene} />
         <Box
           sx={{
             my: 4,
@@ -68,8 +81,8 @@ export default function Home() {
                 )}
               </Whobit>
 
-              {/* Fireworks positioned as siblings to Whobit */}
-              {value >= 2 && fail !== 'true' && <Fireworks />}
+              {/* The Celebration positioned as siblings to Whobit */}
+              {value >= 2 && fail !== 'true' && <Celebration />}
             </Box>
 
             {/* Right side: Results circle */}

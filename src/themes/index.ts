@@ -1,9 +1,13 @@
 import { createTheme, type Theme } from '@mui/material/styles';
 import defaultPalette from '@/theme';
 import defaultFortunes from '@/app/qf/page2/fortunes';
+import Fireworks from '@/components/Fireworks';
 import { KNOWN_THEME_NAMES, type SeasonalThemeName } from './names.mjs';
 import type {
+  Celebration,
   FlavourCopy,
+  Scene,
+  SceneDecorations,
   SeasonalImages,
   SeasonalTheme,
   WhobitAccessory,
@@ -142,4 +146,26 @@ export function activeWhobitAccessory(
   theme: SeasonalTheme = getActiveTheme()
 ): WhobitAccessory | undefined {
   return theme.whobitAccessory;
+}
+
+/**
+ * The active theme's Decorations for a Scene (decision 10): the component
+ * the theme maps the Scene to, or nothing when it maps none — the Default
+ * Theme maps no Scene, so it renders no Decorations at all.
+ */
+export function activeDecorations(
+  scene: Scene,
+  theme: SeasonalTheme = getActiveTheme()
+): SceneDecorations | undefined {
+  return theme.decorations?.[scene];
+}
+
+/**
+ * The active theme's Celebration (decision 14): the effect when a Game
+ * succeeds. The Default Theme sets none, so it keeps today's Fireworks.
+ */
+export function activeCelebration(
+  theme: SeasonalTheme = getActiveTheme()
+): Celebration {
+  return theme.celebration ?? Fireworks;
 }

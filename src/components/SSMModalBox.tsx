@@ -4,6 +4,7 @@ import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
 import { Typography } from '@mui/material';
 import { DialogContent, Box, Stack } from '@mui/material';
 import { activeImages } from '@/themes';
+import Decorations from '@/components/Decorations';
 
 interface SSMModalBoxProps {
   title?: string;
@@ -20,6 +21,9 @@ export default function SSMModalBox(
 
   return (
     <DialogContent sx={{ padding: '50px' }}>
+      {/* The `measuring` Scene's Decorations (decision 11); this popup shows
+          no progress bar, so the Scene gets no progress. */}
+      <Decorations scene="measuring" />
       <Stack flexDirection="column" sx={{}}>
         <Typography
           sx={{

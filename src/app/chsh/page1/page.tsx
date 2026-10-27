@@ -5,6 +5,7 @@ import { Link, Dialog, DialogContent, Stack, Button } from '@mui/material';
 import { useEnterKey } from '@/hooks/useEnterKey';
 import { useRouter } from 'next/navigation';
 import Whobit from '@/components/Whobit';
+import Decorations from '@/components/Decorations';
 
 export default function Page() {
   const router = useRouter();
@@ -24,6 +25,7 @@ export default function Page() {
 
   return (
     <Container maxWidth="lg" sx={{ my: 4 }}>
+      <Decorations scene="chsh1" />
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogContent sx={{ padding: '2.8em', fontSize: '1.45em' }}>
           Entangled photons are light particles that act as if they&apos;re

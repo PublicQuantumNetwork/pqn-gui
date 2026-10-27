@@ -30,8 +30,10 @@ vi.mock('@/themes', async () => {
     activeMuiTheme: () =>
       createTheme({ palette: { primary: { main: sentinels.primaryMain } } }),
     // The accessory has no sentinel here; tests/unit/theme-accessory.test.tsx
-    // holds the accessory tests.
+    // holds the accessory tests. Decorations likewise:
+    // tests/unit/theme-scenes.test.tsx holds the Decorations tests.
     activeWhobitAccessory: () => undefined,
+    activeDecorations: () => undefined,
   };
 });
 vi.mock('@/hooks/useSSE', async () =>

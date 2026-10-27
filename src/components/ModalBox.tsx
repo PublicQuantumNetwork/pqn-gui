@@ -6,6 +6,7 @@ import { Typography, LinearProgress } from '@mui/material';
 import { DialogContent, Box, Stack } from '@mui/material';
 import { useSSE } from '@/hooks/useSSE';
 import { activeImages } from '@/themes';
+import Decorations from '@/components/Decorations';
 
 type ModalBoxVariant = 'chsh' | 'qkd' | 'rng';
 
@@ -47,6 +48,9 @@ export default function ModalBox({
 
   return (
     <DialogContent sx={{ padding: '50px' }}>
+      {/* The `measuring` Scene's Decorations, with the read-only progress
+          (decision 11). */}
+      <Decorations scene="measuring" progress={progress} />
       <Stack flexDirection="column" sx={{}}>
         <Typography
           sx={{

@@ -13,6 +13,7 @@ import {
   GamesAvailability,
 } from '@/calls';
 import { activeFlavourCopy } from '@/themes';
+import Decorations from '@/components/Decorations';
 
 const StyledHomeButton = styled(Button)<ButtonProps>({
   height: '6em',
@@ -72,6 +73,7 @@ export default function Page() {
 
   return (
     <Container maxWidth="lg" sx={{ my: 4 }}>
+      <Decorations scene="home" />
       <AttractLoop
         suppressed={isFollowRequestModalOpen}
         onDismiss={refreshGamesAvailability}

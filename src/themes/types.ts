@@ -1,4 +1,4 @@
-import type { CSSProperties } from 'react';
+import type { ComponentType, CSSProperties } from 'react';
 import type { PaletteOptions } from '@mui/material/styles';
 
 /**
@@ -64,6 +64,47 @@ export interface FlavourCopy {
 }
 
 /**
+ * The Scenes a page can be in (decision 10): the one fixed list every
+ * Seasonal Theme shares, each Scene named after the design board it comes
+ * from. A page picks the Scene from its own state; a theme maps any Scenes
+ * it wants to Decorations.
+ */
+export type Scene =
+  | 'home'
+  | 'qf1'
+  | 'qf2'
+  | 'chsh1'
+  | 'chsh2'
+  | 'chsh3-entangled'
+  | 'chsh3-weak'
+  | 'chsh3-error'
+  | 'ssm1'
+  | 'ssm2-asking'
+  | 'ssm2-waiting'
+  | 'ssm2-declined'
+  | 'ssm3'
+  | 'ssm4'
+  | 'ssm4-perfect'
+  | 'measuring';
+
+/**
+ * The Decorations of one Scene (decision 10): the component a theme maps the
+ * Scene to. The `measuring` Scene's component receives the Measuring popup's
+ * read-only progress (decision 11).
+ */
+export type SceneDecorations = ComponentType<{
+  /** The Measuring popup's read-only progress, 0–100 (decision 11). */
+  progress?: number;
+}>;
+
+/**
+ * The Celebration of a Seasonal Theme (decision 14): the effect when a Game
+ * succeeds, rendered by CHSH3 (entangled) and SSM4 (perfect match). The
+ * Default Theme's is today's Fireworks.
+ */
+export type Celebration = ComponentType;
+
+/**
  * A Seasonal Theme: any of its six parts, each optional; anything it does
  * not set falls back to the Default Theme.
  */
@@ -72,10 +113,11 @@ export interface SeasonalTheme {
   images?: SeasonalImages;
   /** The Whobit accessory, worn over each pose (decision 8). */
   whobitAccessory?: WhobitAccessory;
-  /** Decorations per Scene (group 1.4 types it). */
-  decorations?: unknown;
-  /** The effect when a Game succeeds (group 1.4 types it). */
-  celebration?: unknown;
+  /** Decorations per Scene (decision 10): a theme maps any Scenes it wants
+   * to components; the Default Theme maps none. */
+  decorations?: Partial<Record<Scene, SceneDecorations>>;
+  /** The effect when a Game succeeds (decision 14). */
+  celebration?: Celebration;
   /** Flavour copy slots, each defaulting to today's text (decision 13). */
   flavourCopy?: FlavourCopy;
 }

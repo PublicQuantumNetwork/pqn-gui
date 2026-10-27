@@ -15,6 +15,7 @@ import { useRouter } from 'next/navigation';
 import EmojiPicker, { EmojiClickData, EmojiStyle } from 'emoji-picker-react';
 import { submitQKDEmoji } from '@/calls';
 import Whobit from '@/components/Whobit';
+import Decorations from '@/components/Decorations';
 
 export default function Home() {
   const router = useRouter();
@@ -204,6 +205,7 @@ export default function Home() {
 
   return (
     <Container maxWidth="lg" sx={{ my: 4 }}>
+      <Decorations scene="ssm1" />
       <Stack direction="row" alignItems="flex-start" sx={{ width: '100%' }}>
         <Whobit variant="arms-down" speechBubbleHeight="250px">
           <Box sx={{ fontSize: '0.85em' }}>

@@ -104,6 +104,8 @@ import SSM1 from '@/app/ssm/page1/page';
 import SSM2 from '@/app/ssm/page2/page';
 import SSM3 from '@/app/ssm/page3/page';
 import SSM4 from '@/app/ssm/page4/page';
+import MaintenancePage from '@/app/maintenance/page';
+import SurveyPage from '@/app/survey/page';
 import ModalBox from '@/components/ModalBox';
 import SSMModalBox from '@/components/SSMModalBox';
 import { PageRedirectProvider } from '@/app/contexts/PageRedirectContext';
@@ -111,6 +113,11 @@ import { PageRedirectProvider } from '@/app/contexts/PageRedirectContext';
 /** The page shows this Scene's Decorations and no other Scene's. */
 function expectScene(scene: string) {
   expect(screen.getByText(`decorations-${scene}`)).toBeInTheDocument();
+  expectNoOtherScene(scene);
+}
+
+/** No Scene's Decorations render anywhere on the page (but `scene`'s). */
+function expectNoOtherScene(scene?: string) {
   for (const other of sentinels.scenes) {
     if (other !== scene) {
       expect(
@@ -248,6 +255,27 @@ test('SSM4 renders the Scene its result calls for', () => {
   expectScene('ssm4');
 });
 
+test('Maintenance and Survey render no Decorations in any Seasonal Theme', () => {
+  // Decision 9: the two pages stay exactly as today, so the Decorations
+  // slot never renders on them, whatever the theme maps.
+  const maintenance = render(<MaintenancePage />);
+  expect(
+    screen.getByText('All games are in maintenance mode')
+  ).toBeInTheDocument();
+  expectNoOtherScene();
+  maintenance.unmount();
+
+  render(
+    <PageRedirectProvider>
+      <SurveyPage />
+    </PageRedirectProvider>
+  );
+  expect(
+    screen.getByText('Please take a moment to fill out this short survey.')
+  ).toBeInTheDocument();
+  expectNoOtherScene();
+});
+
 test('the Measuring popup renders the measuring Scene with the read-only progress', () => {
   sse.message = { event: 'chsh_progress', current: 8, total: 16 };
   render(<ModalBox />);
@@ -297,12 +325,32 @@ test('CHSH3 and SSM4 render the theme’s Celebration on success', () => {
   searchParams.current = new URLSearchParams(
     'success=true&n_matching_bits=5&n_total_bits=5&emoji=%F0%9F%98%82&role=leader'
   );
-  render(
+  const perfect = render(
     <PageRedirectProvider>
       <SSM4 />
     </PageRedirectProvider>
   );
   expect(screen.getByText('celebration-sentinel')).toBeInTheDocument();
+  perfect.unmount();
+
+  searchParams.current = new URLSearchParams(
+    'success=true&n_matching_bits=3&n_total_bits=5&emoji=%F0%9F%98%82&role=leader'
+  );
+  const partial = render(
+    <PageRedirectProvider>
+      <SSM4 />
+    </PageRedirectProvider>
+  );
+  expect(screen.queryByText('celebration-sentinel')).not.toBeInTheDocument();
+  partial.unmount();
+
+  searchParams.current = new URLSearchParams('success=false');
+  render(
+    <PageRedirectProvider>
+      <SSM4 />
+    </PageRedirectProvider>
+  );
+  expect(screen.queryByText('celebration-sentinel')).not.toBeInTheDocument();
 });
 
 test('the player’s own emoji still bursts on a perfect match, whatever the Celebration', () => {

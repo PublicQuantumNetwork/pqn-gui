@@ -364,8 +364,10 @@ test('SSM4 renders the burst only for a perfect match', () => {
   );
   const burstLayer = burst(perfect.container);
   expect(burstLayer).not.toBeNull();
-  // The burst sits around Whobit, as on CHSH3: Whobit's pose is inside the
-  // same relative box the burst is positioned against.
+  // The burst is positioned against Whobit's own positioned wrapper, as on
+  // CHSH3: its parent is the relative Box around Whobit (the page Container
+  // is static), and Whobit's pose is inside that same box.
+  expect(burstLayer!.parentElement).toHaveStyle({ position: 'relative' });
   expect(
     burstLayer!.parentElement?.querySelector('img[alt="Whobit"]')
   ).not.toBeNull();

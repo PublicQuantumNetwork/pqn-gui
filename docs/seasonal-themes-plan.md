@@ -12,7 +12,7 @@
 | Phase | State | Who |
 | --- | --- | --- |
 | 0. Setup and workflow | Done (2026-10-27) | One Claude session, following [Phase 0](#phase-0-setup-and-workflow-one-claude-session) |
-| 1. Theme system (no visible change) | In progress (1.1–1.3 done) | Agents (Overall orchestrator) |
+| 1. Theme system (no visible change) | Done (2026-10-27) | Agents (Overall orchestrator) |
 | 2. Halloween theme | Not started | Agents (Overall orchestrator) |
 | 3. Review and deploy | Not started | Marcos, by hand |
 
@@ -166,9 +166,9 @@ Copy and accessory (group 1.3):
 - [x] Tests: with the Default Theme every slot renders today's text and the lead-ins and CHSH3 line render nothing; a theme overriding fortune 2 changes only fortune 2; an accessory renders over each pose at that pose's position and not on Maintenance
 
 Scenes and Celebration (group 1.4):
-- [ ] The fixed [Scenes](#scenes) list as a type; a `Decorations` slot rendering the active theme's component for a Scene (nothing for the Default Theme), `aria-hidden`, no pointer events, above the page; every page renders its slot with the Scene its state calls for (decision 10); the `measuring` Scene gets the read-only progress (decision 11)
-- [ ] **Celebration**: CHSH3 (entangled) and SSM4 (perfect match) render the active theme's Celebration; the Default Theme's is `Fireworks`; `EmojiConfetti` unchanged (decision 14)
-- [ ] Tests: each page state passes the Scene in the table; a test theme's Decorations render for its Scene and nowhere else and cannot be clicked; the Default Theme renders `Fireworks` exactly where it does today
+- [x] The fixed [Scenes](#scenes) list as a type; a `Decorations` slot rendering the active theme's component for a Scene (nothing for the Default Theme), `aria-hidden`, no pointer events, above the page; every page renders its slot with the Scene its state calls for (decision 10); the `measuring` Scene gets the read-only progress (decision 11)
+- [x] **Celebration**: CHSH3 (entangled) and SSM4 (perfect match) render the active theme's Celebration; the Default Theme's is `Fireworks`; `EmojiConfetti` unchanged (decision 14)
+- [x] Tests: each page state passes the Scene in the table; a test theme's Decorations render for its Scene and nowhere else and cannot be clicked; the Default Theme renders `Fireworks` exactly where it does today
 
 ### Phase 2: Halloween theme
 
@@ -257,6 +257,7 @@ Newest first. One row per session or meaningful event.
 
 | Date | Who | What happened |
 | --- | --- | --- |
+| 2026-10-27 | Phase orchestrator | Group 1.4 done, Phase 1 done: the fixed list of 16 Scenes as a type; a `Decorations` slot (aria-hidden, no pointer events, fixed above the page) on every page with the Scene its state calls for (SSM2 per A2; none on Maintenance or Survey), the `measuring` Scene in both Measuring popups with the read-only progress; the Celebration on CHSH3 (entangled) and SSM4 (perfect match), Default = `Fireworks` where it is today, `EmojiConfetti` unchanged. Commits `ce92bc2`, `616b7cd`; 1 fix round (tests: no Decorations on Maintenance and Survey; no Celebration on SSM4's partial match or error). Not sent: nine nits. Notes for Phase 2: an SSM2 backend error shows the `ssm2-waiting` Scene (consistent with A2); Decorations sit at z-index 999, below MUI dialogs (1300), for the design checker to judge. Default baselines unchanged since group 1.1. |
 | 2026-10-27 | Phase orchestrator | Group 1.3 done: Flavour copy slots (strings, the rows of User-facing text, defaulting to today's text; lead-ins and the CHSH3 line render nothing in the Default Theme; fortunes overridden by number) rendered by Home, QF1, QF2 and CHSH3; Whobit accessory (optional SVG, one CSS style per pose) drawn by `Whobit.tsx`, turned off on Maintenance by a prop (Survey does not use `Whobit.tsx`). Commits `ad03224`, `e1ceacd`; 1 fix round (negative tests for the CHSH3 line on weak and error results and the QF2 lead-in on the error screen). Agent decision A4. Not sent: six nits. Note for 2.1: the CHSH3 line's placeholder placement (top 75%, left 29%, .85em) differs from `CHSH3.dc.html` (top 70%, centred, 22px). |
 | 2026-10-27 | Phase orchestrator | Group 1.2 done: Seasonal Theme type with six optional parts (four typed `unknown` until 1.3/1.4, A3), registry with only `default`, active theme from `NEXT_PUBLIC_SEASONAL_THEME`, `next.config.mjs` failing the build on an unknown name (case-sensitive), Palette merged over `src/theme.ts` via `createTheme`, Images slots read by the layout, Whobit and both Measuring popups. Commits `d587245`, `84b7a27`; 1 fix round (case-sensitivity test, sentinel tests proving each reader uses its slot, env-var and runtime-error tests, dropped the undeclared `@mui/utils` import, theme computed once in the layout). Agent decision A3. Not sent: nine nits. Note for 2.1: the `createTheme` merge re-derives shadows, transitions and zIndex (none customized today). |
 | 2026-10-27 | Phase orchestrator | Group 1.1 done: Playwright harness (one Next build and server per theme from a list, Default only per A1; backend HTTP, SSE and WebSocket mocked by route interception; animations disabled on both capture paths; `next-env.d.ts` restored after each harness build), 24 Default baselines from unchanged `src/`, Vitest harness with module mocks and one test per Game's first page. Commits `147be6d`, `152c5d6`; 1 fix round (tree left dirty by `test:screens`, friend-invite WebSocket race, timeout-card clock target, capture path without disabled animations). Agent decisions A1 (Default-only harness until 2.1) and A2 (SSM2 asking vs waiting by backend call). Not sent: three nits. The first coder and one plan checker were replaced after opening a PNG on a text-only model. `npm run build` failed once on fetching Google Fonts (pre-existing network dependency), green on rerun. Note for 2.1: two parallel harness builds could race on `next-env.d.ts`. |

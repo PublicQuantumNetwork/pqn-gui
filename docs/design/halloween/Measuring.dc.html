@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Measuring popup — Halloween</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&amp;display=swap">
+<style>
+body{margin:0;background:#ffffff}
+a{color:#4169e1}a:hover{color:#4169e1}
+.stage{background:url(/_blob/aa0374523b0e2765887a42b90f61ad80) center top / 100% 100% no-repeat}
+@keyframes pqn-orbit{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes pqn-bubble{0%{transform:translateY(0);opacity:0}15%{opacity:1}100%{transform:translateY(-120px);opacity:0}}
+@keyframes pqn-flicker{0%,100%{transform:scaleY(1)}50%{transform:scaleY(0.82)}}
+@keyframes pqn-flap{0%,100%{transform:scaleY(1)}50%{transform:scaleY(0.55)}}
+@keyframes pqn-steam{0%,100%{transform:translateY(0);opacity:0.7}50%{transform:translateY(-8px);opacity:1}}
+@keyframes pqn-peek{0%,58%{transform:translateY(100%)}64%,82%{transform:translateY(0)}67%{transform:translateY(0) rotate(-5deg)}71%{transform:translateY(0) rotate(5deg)}75%{transform:translateY(0) rotate(0)}88%,100%{transform:translateY(100%)}}
+.orbit{transform-box:view-box;transform-origin:150px 104px;animation:pqn-orbit 5s linear infinite}
+.bub{transform-box:fill-box;animation:pqn-bubble 2.6s ease-in infinite}
+.bub2{animation-delay:0.9s}.bub3{animation-delay:1.7s}.bub4{animation-delay:0.4s}
+.flame{transform-box:fill-box;transform-origin:50% 100%;animation:pqn-flicker 0.7s ease-in-out infinite}
+.flame2{animation-duration:0.9s;animation-delay:0.2s}
+.steam{animation:pqn-steam 3s ease-in-out infinite}
+.wing{transform-box:fill-box;transform-origin:50% 50%;animation:pqn-flap 0.45s ease-in-out infinite}
+.peeker{transform:translateY(100%);animation:pqn-peek 12s ease-in-out 2s infinite}
+.bar-fill{transition:width 400ms linear}
+.bar-rider{transition:left 400ms linear}
+@media (prefers-reduced-motion: reduce){.orbit,.bub,.flame,.steam,.wing,.peeker{animation:none}.bar-fill,.bar-rider{transition:none}}
+</style>
+</helmet>
+<div style="position: relative; min-height: 980px; background: #ffffff; color: #000000; font-family: Roboto, Helvetica, Arial, sans-serif; display: flex; flex-direction: column; overflow: hidden">
+
+<div aria-hidden="true" style="display: flex; flex-direction: column; flex: 1 0 auto">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 24px; min-height: 128px; margin-top: 32px; padding: 0 32px">
+<div style="display: flex; align-items: center; gap: 48px">
+<img src="/_blob/b4d801572f04b2ade9f59cec0ab4f482" alt="" style="width: 240px; height: auto; display: block">
+<div style="width: 64px; height: 64px; margin-bottom: 16px; border: 1px solid #000000; box-sizing: border-box"></div>
+</div>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 48px">
+<span style="display: inline-flex; align-items: center; justify-content: center; min-width: 120px; height: 56px; padding: 0 22px; box-sizing: border-box; background: #ffffff; border: 1px solid #000000; border-radius: 4px; text-transform: uppercase; font-size: 14px; font-weight: 500; letter-spacing: 0.4px">Start over</span>
+<span style="display: inline-flex; align-items: center; justify-content: center; height: 56px; padding: 0 22px; box-sizing: border-box; background: #ffffff; border: 1px solid #000000; border-radius: 4px; text-transform: uppercase; font-size: 14px; font-weight: 500; letter-spacing: 0.4px">Survey</span>
+<img src="/_blob/9fe3990252fea0f5e95fa706f144bdfd" alt="" style="height: 64px; width: auto; margin-bottom: 16px; display: block">
+</div>
+</div>
+<div class="stage" style="flex: 1 0 auto; min-height: 640px"></div>
+</div>
+
+<div style="position: absolute; inset: 0; background: rgba(0, 0, 0, 0.5)"></div>
+
+<div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 72px 16px 32px; box-sizing: border-box">
+<div role="dialog" aria-modal="true" aria-labelledby="measuring-title" style="position: relative; width: 960px; max-width: 100%; background: #ffffff; border-radius: 4px; box-shadow: 0px 11px 15px -7px rgba(0,0,0,0.2), 0px 24px 38px 3px rgba(0,0,0,0.14), 0px 9px 46px 8px rgba(0,0,0,0.12)">
+
+<div aria-hidden="true" style="position: absolute; right: 72px; bottom: 100%; width: 96px; height: 70px; overflow: hidden">
+<div class="peeker" style="width: 96px; height: 70px">
+<svg width="96" height="80" viewBox="0 0 96 80">
+<path d="M26 20 L20 2 L36 14 Z M70 20 L76 2 L60 14 Z" fill="#fcb316" stroke="#000000" stroke-width="2.5" stroke-linejoin="round"></path>
+<path d="M8 80 L8 44 Q8 12 48 12 Q88 12 88 44 L88 80 Z" fill="#f5ddff" stroke="#000000" stroke-width="3" stroke-linejoin="round"></path>
+<circle cx="34" cy="40" r="10" fill="#ffffff" stroke="#000000" stroke-width="2.5"></circle>
+<circle cx="62" cy="40" r="10" fill="#ffffff" stroke="#000000" stroke-width="2.5"></circle>
+<circle cx="36" cy="44" r="4.5" fill="#000000"></circle>
+<circle cx="64" cy="44" r="4.5" fill="#000000"></circle>
+<path d="M40 60 Q48 66 56 60" fill="none" stroke="#000000" stroke-width="2.5" stroke-linecap="round"></path>
+</svg>
+</div>
+</div>
+
+<div style="padding: 50px; display: flex; flex-direction: column; gap: 16px">
+<h2 id="measuring-title" style="margin: 0; display: flex; align-items: center; justify-content: center; gap: 10px; color: #ff5f05; text-align: center; font-size: 24px; line-height: 34.8px; font-weight: 400">
+<svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path fill="#ff5f05" d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92zM18 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM6 13c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm12 7.02c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"></path></svg>
+<span>{{title}}</span>
+</h2>
+
+<sc-if value="{{showProgress}}" hint-placeholder-val="{{ true }}">
+<div style="margin-top: 28px">
+<div role="progressbar" aria-label="Measurement progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{pct}}" style="position: relative; height: 14px; border: 2px solid #000000; border-radius: 9px; background: #fff4dd; box-sizing: border-box">
+<div class="bar-fill" style="height: 100%; width: {{pctWidth}}; background: {{pumpkin}}; border-radius: 7px"></div>
+<div class="bar-rider" aria-hidden="true" style="position: absolute; top: -30px; left: {{pctWidth}}; transform: translateX(-50%); width: 48px; height: 26px">
+<svg width="48" height="26" viewBox="0 0 48 26">
+<g class="wing"><path fill="#000000" d="M2 12 Q8 2 16 9 Q18 4 21 7 L23 1 L25 7 Q28 4 30 9 Q38 2 46 12 Q38 11 34 18 Q30 14 26 18 Q24 13 22 18 Q18 14 14 18 Q10 11 2 12 Z"></path></g>
+<circle cx="21" cy="10" r="1.3" fill="#ffffff"></circle>
+<circle cx="26" cy="10" r="1.3" fill="#ffffff"></circle>
+</svg>
+</div>
+</div>
+<p style="margin: 8px 0 0; text-align: center; font-size: 14px; line-height: 20px; letter-spacing: 0.17px; color: #707372">{{pct}}% complete</p>
+</div>
+</sc-if>
+
+<div style="display: flex; flex-wrap: wrap; align-items: flex-start; gap: 30px; margin-top: 8px">
+<svg role="img" aria-label="Two entangled photons spinning above a bubbling cauldron" width="300" height="400" viewBox="0 0 300 400" style="flex: 0 0 auto; max-width: 100%; height: auto">
+<g class="steam" fill="none" stroke="#000000" stroke-width="1.5" stroke-linecap="round">
+<path d="M110 170 Q100 150 112 134 Q124 118 112 100"></path>
+<path d="M196 170 Q206 152 194 138 Q182 122 194 108"></path>
+</g>
+<g class="orbit">
+<path d="M110 104 L190 104" stroke="#000000" stroke-width="1.5" stroke-dasharray="5 5"></path>
+<path d="M110 104 Q150 74 190 104" fill="none" stroke="#000000" stroke-width="1.5" stroke-dasharray="5 5"></path>
+<circle cx="110" cy="104" r="18" fill="rgba(252,179,22,0.3)"></circle>
+<circle cx="190" cy="104" r="18" fill="rgba(252,179,22,0.3)"></circle>
+<circle cx="110" cy="104" r="11" fill="#fcb316" stroke="#000000" stroke-width="2.5"></circle>
+<circle cx="190" cy="104" r="11" fill="#fcb316" stroke="#000000" stroke-width="2.5"></circle>
+<path d="M106 102 L110 98 L114 102 M186 106 L190 110 L194 106" fill="none" stroke="#000000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+</g>
+<path d="M150 42 L153 50 L161 52 L153 55 L150 63 L147 55 L139 52 L147 50 Z" fill="#ffffff" stroke="#000000" stroke-width="1.5" stroke-linejoin="round"></path>
+<path d="M60 76 L62 81 L67 82 L62 84 L60 89 L58 84 L53 82 L58 81 Z" fill="#ffffff" stroke="#000000" stroke-width="1.5" stroke-linejoin="round"></path>
+<path d="M240 70 L242 75 L247 76 L242 78 L240 83 L238 78 L233 76 L238 75 Z" fill="#ffffff" stroke="#000000" stroke-width="1.5" stroke-linejoin="round"></path>
+<g stroke="#000000" stroke-width="2">
+<circle class="bub" cx="120" cy="214" r="7" fill="#d3ffb5"></circle>
+<circle class="bub bub2" cx="160" cy="214" r="9" fill="#d3ffb5"></circle>
+<circle class="bub bub3" cx="186" cy="214" r="5" fill="#d3ffb5"></circle>
+<circle class="bub bub4" cx="140" cy="214" r="4" fill="#d3ffb5"></circle>
+</g>
+<path d="M58 376 L94 352 M242 376 L206 352" stroke="#000000" stroke-width="3" stroke-linecap="round"></path>
+<rect x="70" y="360" width="160" height="16" rx="8" fill="#c88f11" stroke="#000000" stroke-width="2.5"></rect>
+<path d="M98 362 Q102 380 120 376 M170 362 Q176 380 196 374" fill="none" stroke="#000000" stroke-width="1.5"></path>
+<path class="flame" d="M108 362 Q96 340 114 318 Q114 334 124 340 Q130 324 126 306 Q152 330 146 362 Z" fill="#ff5f05" stroke="#000000" stroke-width="2.5" stroke-linejoin="round"></path>
+<path class="flame flame2" d="M150 362 Q144 336 164 316 Q162 334 172 338 Q182 330 178 314 Q200 340 190 362 Z" fill="#ff5f05" stroke="#000000" stroke-width="2.5" stroke-linejoin="round"></path>
+<path class="flame" d="M122 362 Q120 346 132 336 Q132 348 140 350 Q146 344 144 336 Q156 350 150 362 Z" fill="#fcb316" stroke="#000000" stroke-width="2" stroke-linejoin="round"></path>
+<path class="flame flame2" d="M162 362 Q162 348 172 340 Q172 350 178 352 Q182 346 180 340 Q190 352 184 362 Z" fill="#fcb316" stroke="#000000" stroke-width="2" stroke-linejoin="round"></path>
+<path d="M44 220 Q32 330 150 344 Q268 330 256 220 Z" fill="#13294b" stroke="#000000" stroke-width="3" stroke-linejoin="round"></path>
+<path d="M70 250 Q64 290 86 316" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="5" stroke-linecap="round"></path>
+<ellipse cx="150" cy="220" rx="122" ry="20" fill="#0d1b33" stroke="#000000" stroke-width="3"></ellipse>
+<ellipse cx="150" cy="220" rx="106" ry="13" fill="#338659" stroke="#000000" stroke-width="2"></ellipse>
+<path d="M76 222 Q86 214 96 222 Q106 230 116 222 M184 222 Q194 214 204 222 Q214 230 224 222" fill="none" stroke="#006230" stroke-width="2" stroke-linecap="round"></path>
+</svg>
+
+<div style="flex: 1 1 360px; min-width: 0; margin-top: 30px; display: flex; flex-direction: column; font-size: 16px; line-height: 24px; letter-spacing: 0.15px">
+<p style="margin: 0; font-weight: 700">What is really happening here?</p>
+<p style="margin: 0">{{description}}</p>
+<div style="width: 150px; height: 150px; margin: 20px 0; border: 1px solid #000000; box-sizing: border-box; display: flex; align-items: center; justify-content: center; font-size: 14px; line-height: 20px; color: #707372">[Behind-the-scenes QR]</div>
+<p style="margin: 0">Scan the code for a full explanation.<br>This may take a few minutes.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"variant":{"editor":"enum","options":["Bell test / Quantum Fortune","Secret message"],"default":"Bell test / Quantum Fortune"},"pumpkin":{"editor":"color","default":"#ff5f05","options":["#ff5f05","#c84113","#fcb316"]},"$preview":{"width":1440,"height":980}}'>
+class Component extends DCLogic {
+componentDidMount() {
+var reduce = false;
+try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+if (reduce) { this.setState({ step: 10 }); return; }
+this.timer = setInterval(() => {
+var s = ((this.state && this.state.step) || 0) + 1;
+this.setState({ step: s > 18 ? 0 : s });
+}, 700);
+}
+componentWillUnmount() {
+if (this.timer) clearInterval(this.timer);
+}
+renderVals() {
+var step = (this.state && this.state.step) || 0;
+var pct = Math.round(Math.min(step, 16) / 16 * 100);
+var ssm = this.props.variant === 'Secret message';
+return {
+pumpkin: this.props.pumpkin ?? '#ff5f05',
+pct: pct,
+pctWidth: pct + '%',
+showProgress: !ssm,
+title: ssm ? 'Processing your answers...' : 'Photons are being measured back at the lab',
+description: ssm ? 'The backend is executing the quantum game!' : 'The entangled photons are being measured at the first angle you chose for one photon and at a slightly offset angle for the other photon. These measurements are repeated for the second angle. By comparing the results, we can tell whether the photons are entangled.'
+};
+}
+}
+</script>
+</body>
+</html>

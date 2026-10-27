@@ -52,12 +52,26 @@ if (!NODE_ADDRESS) {
 // A closed map, not a directory lookup: the served paths are fixed at startup and a
 // visitor's request is only ever compared against these keys, never used to build a
 // path. There is no traversal to defend against because there is no path arithmetic.
-const IMAGES_DIR = join(dirname(fileURLToPath(import.meta.url)), '..', 'public', 'images');
+const IMAGES_DIR = join(
+  dirname(fileURLToPath(import.meta.url)),
+  '..',
+  'public',
+  'images'
+);
 const ASSETS = new Map([
-  ['/bg.png', { type: 'image/png', body: readFileSync(join(IMAGES_DIR, 'GUI-background.png')) }],
+  [
+    '/bg.png',
+    {
+      type: 'image/png',
+      body: readFileSync(join(IMAGES_DIR, 'GUI-background.png')),
+    },
+  ],
   ...['arms-up', 'right-wing-up', 'arms-down'].map((variant) => [
     `/whobit-${variant}.svg`,
-    { type: 'image/svg+xml', body: readFileSync(join(IMAGES_DIR, `whobit-${variant}.svg`)) },
+    {
+      type: 'image/svg+xml',
+      body: readFileSync(join(IMAGES_DIR, `whobit-${variant}.svg`)),
+    },
   ]),
 ]);
 
@@ -224,5 +238,7 @@ const server = createServer(async (request, response) => {
 });
 
 server.listen(PORT, HOST, () => {
-  console.log(`pqn status bridge on http://${HOST}:${PORT} -> http://${NODE_ADDRESS}${NODE_PATH}`);
+  console.log(
+    `pqn status bridge on http://${HOST}:${PORT} -> http://${NODE_ADDRESS}${NODE_PATH}`
+  );
 });

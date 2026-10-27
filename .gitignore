@@ -40,3 +40,15 @@ next-env.d.ts
 .env
 
 .idea
+
+# agent workflow
+orchestration/
+.orca/
+
+# test output
+test-results/
+playwright-report/
+/tests/screens/halloween/
+
+# Halloween design: runtime, images, vendored React and board renders (docs/design/halloween/serve-design.mjs)
+docs/design/halloween/runtime/

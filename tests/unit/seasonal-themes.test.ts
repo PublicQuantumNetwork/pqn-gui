@@ -27,6 +27,35 @@ test('a known name gives that theme', () => {
   expect(getActiveTheme('test-theme', registry)).toBe(registry['test-theme']);
 });
 
+test('getActiveTheme() with no argument reads NEXT_PUBLIC_SEASONAL_THEME', () => {
+  const saved = process.env.NEXT_PUBLIC_SEASONAL_THEME;
+  try {
+    // Unset is the Default Theme.
+    delete process.env.NEXT_PUBLIC_SEASONAL_THEME;
+    expect(getActiveTheme()).toBe(knownThemes.default);
+
+    // A known name gives that theme.
+    process.env.NEXT_PUBLIC_SEASONAL_THEME = 'default';
+    expect(getActiveTheme()).toBe(knownThemes.default);
+
+    // The env var really is what is read: an unknown name is an error.
+    process.env.NEXT_PUBLIC_SEASONAL_THEME = 'nosuchtheme';
+    expect(() => getActiveTheme()).toThrow(/nosuchtheme[\s\S]*\bdefault\b/);
+  } finally {
+    if (saved === undefined) {
+      delete process.env.NEXT_PUBLIC_SEASONAL_THEME;
+    } else {
+      process.env.NEXT_PUBLIC_SEASONAL_THEME = saved;
+    }
+  }
+});
+
+test('an unknown name is an error naming the bad value and the known ones', () => {
+  expect(() => getActiveTheme('nosuchtheme')).toThrow(
+    /nosuchtheme[\s\S]*\bdefault\b/
+  );
+});
+
 test('the Default Theme leaves the Default Palette untouched', () => {
   expect(activeMuiTheme(getActiveTheme(undefined))).toBe(defaultPalette);
 });

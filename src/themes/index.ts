@@ -1,5 +1,4 @@
-import { deepmerge } from '@mui/utils';
-import type { Theme } from '@mui/material/styles';
+import { createTheme, type Theme } from '@mui/material/styles';
 import defaultPalette from '@/theme';
 import { KNOWN_THEME_NAMES, type SeasonalThemeName } from './names.mjs';
 import type { SeasonalImages, SeasonalTheme } from './types';
@@ -79,5 +78,8 @@ export function activeMuiTheme(
   if (!theme.palette) {
     return base;
   }
-  return { ...base, palette: deepmerge(base.palette, theme.palette) };
+  // createTheme deep-merges its extra arguments into the theme it builds,
+  // so the theme's Palette lands over the Default Palette and every value
+  // it leaves out keeps the Default Theme's.
+  return createTheme(base, { palette: theme.palette });
 }

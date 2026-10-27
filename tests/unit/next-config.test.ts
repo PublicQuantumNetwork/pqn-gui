@@ -37,3 +37,14 @@ test('a known name passes the build check', async () => {
     delete process.env.NEXT_PUBLIC_SEASONAL_THEME;
   }
 });
+
+test('a known name in another case fails the build check (the match is case-sensitive)', async () => {
+  process.env.NEXT_PUBLIC_SEASONAL_THEME = 'Default';
+  try {
+    await expect(importNextConfig()).rejects.toThrow(
+      /Default[\s\S]*\bdefault\b/
+    );
+  } finally {
+    delete process.env.NEXT_PUBLIC_SEASONAL_THEME;
+  }
+});

@@ -10,6 +10,11 @@ import { PageRedirectProvider } from '@/app/contexts/PageRedirectContext';
 import HeaderBar from '@/components/HeaderBar';
 import './globals.css';
 
+// The active theme is fixed at build time (decision 5), so its Palette and
+// background are computed once here, not on every render.
+const muiTheme = activeMuiTheme();
+const backgroundImage = `url(${activeImages().background})`;
+
 export default function RootLayout(props: { children: React.ReactNode }) {
   return (
     <html
@@ -20,7 +25,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
       <body>
         <InitColorSchemeScript attribute="class" />
         <AppRouterCacheProvider options={{ enableCssLayer: true }}>
-          <ThemeProvider theme={activeMuiTheme()}>
+          <ThemeProvider theme={muiTheme}>
             <CssBaseline />
             <PageRedirectProvider>
               <Stack // Main component
@@ -37,7 +42,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
                 <HeaderBar />
                 <Box
                   sx={{
-                    backgroundImage: `url(${activeImages().background})`,
+                    backgroundImage,
                     backgroundRepeat: 'no-repeat',
                     backgroundPosition: 'center top',
                     backgroundSize: '100% 100%',

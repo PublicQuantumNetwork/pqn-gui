@@ -648,9 +648,9 @@ const twinkles = {
  * boards show, the ball itself covering the disc's middle) and its white
  * veil softens the mist over the ball's middle. The ball, the counter and
  * the fortune text stay the page's own content: on the boards they are drawn
- * after the ball svg, so their boxes are cut out of this whole layer, just
- * as the game buttons are cut out of the moon and the bats (agent decision
- * A8).
+ * after the ball svg, so they sit above its mist — their boxes are cut out
+ * of the mist alone (agent decision A8), leaving the twinkles and the halo
+ * as whole as they are on the boards.
  */
 export function BallMist({
   ball,
@@ -670,6 +670,31 @@ export function BallMist({
     width: 560 * scale,
     height: 500 * scale,
   };
+  // The occluders' boxes, page pixels, moved into the boards' own ball
+  // coordinates the mist is drawn in. On the boards the counter and the
+  // fortune are drawn after the ball svg, so they sit above its mist: their
+  // boxes are cut out of the mist (and the veil with it) alone — the
+  // twinkles sparkle and the glow halo pulses over the whole ball, on the
+  // board as here, so no hole touches them.
+  const holes = (occluders ?? []).map((occluder) => {
+    const x = (occluder.left - box.left) / scale;
+    const y = (occluder.top - box.top) / scale;
+    return {
+      x,
+      y,
+      width: occluder.width / scale,
+      height: occluder.height / scale,
+    };
+  });
+  const holesClip =
+    holes.length > 0
+      ? `M-100 -100 H660 V600 H-100 Z${holes
+          .map(
+            (hole) =>
+              ` M${hole.x} ${hole.y} H${hole.x + hole.width} V${hole.y + hole.height} H${hole.x} Z`
+          )
+          .join('')}`
+      : null;
   return (
     <svg
       width={box.width}
@@ -680,15 +705,17 @@ export function BallMist({
         position: 'absolute',
         left: `${box.left}px`,
         top: `${box.top}px`,
-        ...(occluders && occluders.length > 0
-          ? { clipPath: clipPathValue(box, occluders) }
-          : {}),
       }}
     >
       <defs>
-        <clipPath id={clipId}>
+        <clipPath id={`${clipId}-ball`}>
           <circle cx="280" cy="230" r="188" />
         </clipPath>
+        {holesClip && (
+          <clipPath id={`${clipId}-holes`}>
+            <path clipRule="evenodd" d={holesClip} />
+          </clipPath>
+        )}
       </defs>
       {board === 'qf2' && (
         <path
@@ -698,23 +725,25 @@ export function BallMist({
           fill="#fdca5c"
         />
       )}
-      <g
-        className="halloween-mist"
-        fill="none"
-        strokeLinecap="round"
-        clipPath={`url(#${clipId})`}
-      >
-        {mistStrokes.map((stroke) => (
-          <path
-            key={stroke.d}
-            d={stroke.d}
-            stroke={stroke.stroke}
-            strokeWidth={stroke.width}
-          />
-        ))}
-        {board === 'qf2' && (
-          <circle cx="280" cy="230" r="150" fill="#ffffff" opacity="0.55" />
-        )}
+      <g clipPath={holesClip ? `url(#${clipId}-holes)` : undefined}>
+        <g
+          className="halloween-mist"
+          fill="none"
+          strokeLinecap="round"
+          clipPath={`url(#${clipId}-ball)`}
+        >
+          {mistStrokes.map((stroke) => (
+            <path
+              key={stroke.d}
+              d={stroke.d}
+              stroke={stroke.stroke}
+              strokeWidth={stroke.width}
+            />
+          ))}
+          {board === 'qf2' && (
+            <circle cx="280" cy="230" r="150" fill="#ffffff" opacity="0.55" />
+          )}
+        </g>
       </g>
       {twinkles[board].map((twinkle) => (
         <path

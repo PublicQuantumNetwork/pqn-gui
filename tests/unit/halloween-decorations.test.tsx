@@ -120,21 +120,28 @@ const MEASURING = {
 const anchors: { current: Record<string, Box> } = { current: {} };
 
 /**
- * A stub ResizeObserver: records every instance so a test can fire the
- * callbacks by hand — the trigger the real browser fires when an element
- * re-lays out (the Measuring popup growing as its QR image loads), which
- * jsdom has none of.
+ * A stub ResizeObserver: records every instance and everything each instance
+ * observes, so a test can fire the callbacks by hand — the trigger the real
+ * browser fires when an element re-lays out (the Measuring popup growing as
+ * its QR image loads), which jsdom has none of — and prove what was watched.
  */
 class ResizeObserverStub {
   static instances: ResizeObserverStub[] = [];
   callback: ResizeObserverCallback;
+  observed: Element[] = [];
   constructor(callback: ResizeObserverCallback) {
     this.callback = callback;
     ResizeObserverStub.instances.push(this);
   }
-  observe() {}
-  unobserve() {}
-  disconnect() {}
+  observe(element: Element) {
+    this.observed.push(element);
+  }
+  unobserve(element: Element) {
+    this.observed = this.observed.filter((observed) => observed !== element);
+  }
+  disconnect() {
+    this.observed = [];
+  }
 }
 
 beforeAll(() => {
@@ -156,6 +163,34 @@ beforeAll(() => {
 
 function setAnchors(next: Record<string, Box>) {
   anchors.current = next;
+}
+
+/**
+ * The d of the SVG clipPath that cuts the occluders' boxes out of the mist
+ * (the wrapper around the mist group carries it), or null when the mist has
+ * no occluders.
+ */
+function mistHolesClip(container: HTMLElement): string | null {
+  const wrapper = container.querySelector('.halloween-mist')!.parentElement!;
+  const reference = wrapper.getAttribute('clip-path');
+  if (!reference) {
+    return null;
+  }
+  const clipPath = document.getElementById(reference.slice(5, -1));
+  return clipPath?.querySelector('path')?.getAttribute('d') ?? null;
+}
+
+/** An occluder's hole in the mist layer's own ball coordinates. */
+function mistHole(
+  occluder: Box,
+  layer: { left: number; top: number },
+  scale: number
+): string {
+  const x = (occluder.left - layer.left) / scale;
+  const y = (occluder.top - layer.top) / scale;
+  return ` M${x} ${y} H${x + occluder.width / scale} V${
+    y + occluder.height / scale
+  } H${x} Z`;
 }
 
 /**
@@ -409,18 +444,18 @@ test('QF1 renders the QF1 board’s spider, ball pieces and rising monster', () 
   expect(container.querySelector('.halloween-glow-pulse')).toBeNull();
 
   // The counter is drawn over the ball on the board, so its box is cut out
-  // of the whole mist layer: the digit stays fully readable.
-  const mistLayer = mist.closest('svg') as SVGSVGElement;
-  const clip = mistLayer.style.clipPath;
-  expect(clip).toMatch(/^path\(evenodd,/);
-  const scale = ballOf(QF.ball).r / 190;
-  const layerLeft = ballOf(QF.ball).cx - 280 * scale;
-  const layerTop = ballOf(QF.ball).cy - 230 * scale;
-  const x = QF.counter.left - layerLeft;
-  const y = QF.counter.top - layerTop;
-  expect(clip).toContain(
-    ` M${x} ${y} H${x + QF.counter.width} V${y + QF.counter.height} H${x} Z`
-  );
+  // of the mist alone: the digit stays fully readable while the twinkles
+  // sparkle untouched.
+  const ball = ballOf(QF.ball);
+  const scale = ball.r / 190;
+  const layer = { left: ball.cx - 280 * scale, top: ball.cy - 230 * scale };
+  const holesClip = mistHolesClip(container);
+  expect(holesClip).toMatch(/^M-100 -100 H660 V600 H-100 Z/);
+  expect(holesClip).toContain(mistHole(QF.counter, layer, scale));
+  for (const twinkle of twinkles) {
+    expect(twinkle.getAttribute('clip-path')).toBeNull();
+    expect((twinkle as HTMLElement).style.clipPath).toBe('');
+  }
 
   // The QF1 board carries no ghost.
   expect(container.querySelector('.halloween-ghost')).toBeNull();
@@ -525,20 +560,25 @@ test('QF2 renders the QF2 board’s ghost, glow, flickering pumpkin and sliding 
   expect(veil!.getAttribute('opacity')).toBe('0.55');
 
   // The fortune's number and text are drawn over the ball on the board, so
-  // their boxes are cut out of the whole mist layer: the fortune stays fully
-  // readable.
-  const mistLayer = mist.closest('svg') as SVGSVGElement;
-  const clip = mistLayer.style.clipPath;
-  expect(clip).toMatch(/^path\(evenodd,/);
+  // their boxes are cut out of the mist alone: the fortune stays fully
+  // readable while the twinkles sparkle and the halo pulses untouched — even
+  // where the fortune paragraph's box reaches out over the halo's ring.
   const scale = ball.r / 190;
-  const layerLeft = ball.cx - 280 * scale;
-  const layerTop = ball.cy - 230 * scale;
+  const layer = { left: ball.cx - 280 * scale, top: ball.cy - 230 * scale };
+  const holesClip = mistHolesClip(container);
+  expect(holesClip).toMatch(/^M-100 -100 H660 V600 H-100 Z/);
   for (const fortune of [QF.number, QF.text]) {
-    const x = fortune.left - layerLeft;
-    const y = fortune.top - layerTop;
-    expect(clip).toContain(
-      ` M${x} ${y} H${x + fortune.width} V${y + fortune.height} H${x} Z`
-    );
+    expect(holesClip).toContain(mistHole(fortune, layer, scale));
+  }
+  const unclipped = [
+    ...Array.from(
+      container.querySelectorAll('.halloween-twinkle, .halloween-twinkle-late')
+    ),
+    container.querySelector('.halloween-glow-pulse')!,
+  ];
+  for (const piece of unclipped) {
+    expect(piece.getAttribute('clip-path')).toBeNull();
+    expect((piece as HTMLElement).style.clipPath).toBe('');
   }
 
   // The pumpkin under the pose keeps its place beside the pose box, clamped
@@ -832,6 +872,31 @@ test('the Measuring Decorations follow the popup when only the ResizeObserver fi
   setAnchors(grown);
   const observers = ResizeObserverStub.instances.slice(beforeRender);
   expect(observers.length).toBeGreaterThan(0);
+
+  // The observers watch the popup's own elements and the containers around
+  // them: the dialog itself, an ancestor of the bar and the title — the half
+  // of the watching that carries the bar along when the popup grows around
+  // it — and the bar and title themselves.
+  const observed = observers.flatMap((observer) => observer.observed);
+  const dialogElement = observed.find(
+    (element) => element.getAttribute('role') === 'dialog'
+  );
+  const barElement = observed.find(
+    (element) => element.getAttribute('role') === 'progressbar'
+  );
+  const titleElement = observed.find(
+    (element) =>
+      element.getAttribute('data-decoration-anchor') === 'measuring-title'
+  );
+  expect(dialogElement).toBeDefined();
+  expect(barElement).toBeDefined();
+  expect(titleElement).toBeDefined();
+  expect(dialogElement!.contains(barElement!)).toBe(true);
+  expect(dialogElement!.contains(titleElement!)).toBe(true);
+
+  // The real browser fires the observers, and nothing else — no window
+  // resize is dispatched here — so the observer path alone must carry the
+  // Decorations along.
   act(() => {
     for (const observer of observers) {
       observer.callback([], observer as unknown as ResizeObserver);

@@ -4,7 +4,7 @@ import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import { ThemeProvider } from '@mui/material/styles';
 import { Box, Stack } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
-import theme from '@/theme';
+import { activeImages, activeMuiTheme } from '@/themes';
 import InitColorSchemeScript from '@mui/material/InitColorSchemeScript';
 import { PageRedirectProvider } from '@/app/contexts/PageRedirectContext';
 import HeaderBar from '@/components/HeaderBar';
@@ -20,7 +20,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
       <body>
         <InitColorSchemeScript attribute="class" />
         <AppRouterCacheProvider options={{ enableCssLayer: true }}>
-          <ThemeProvider theme={theme}>
+          <ThemeProvider theme={activeMuiTheme()}>
             <CssBaseline />
             <PageRedirectProvider>
               <Stack // Main component
@@ -37,7 +37,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
                 <HeaderBar />
                 <Box
                   sx={{
-                    backgroundImage: 'url(/images/GUI-background.png)',
+                    backgroundImage: `url(${activeImages().background})`,
                     backgroundRepeat: 'no-repeat',
                     backgroundPosition: 'center top',
                     backgroundSize: '100% 100%',

@@ -5,6 +5,7 @@ import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
 import { Typography, LinearProgress } from '@mui/material';
 import { DialogContent, Box, Stack } from '@mui/material';
 import { useSSE } from '@/hooks/useSSE';
+import { activeImages } from '@/themes';
 
 type ModalBoxVariant = 'chsh' | 'qkd' | 'rng';
 
@@ -74,7 +75,7 @@ export default function ModalBox({
         <Stack display="flex" flexDirection="row" position="relative" sx={{}}>
           <Box
             component="img"
-            src="/images/gif_pqn.gif"
+            src={activeImages()['measuring-illustration']}
             alt="Your photons in action!"
             sx={{
               width: 'auto',

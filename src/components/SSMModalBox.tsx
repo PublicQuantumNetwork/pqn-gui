@@ -3,6 +3,7 @@
 import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
 import { Typography } from '@mui/material';
 import { DialogContent, Box, Stack } from '@mui/material';
+import { activeImages } from '@/themes';
 
 interface SSMModalBoxProps {
   title?: string;
@@ -35,7 +36,7 @@ export default function SSMModalBox(
         <Stack display="flex" flexDirection="row" position="relative" sx={{}}>
           <Box
             component="img"
-            src="/images/gif_pqn.gif"
+            src={activeImages()['measuring-illustration']}
             alt="Your photons in action!"
             sx={{
               width: 'auto',

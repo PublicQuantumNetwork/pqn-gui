@@ -14,11 +14,11 @@
 | --- | --- | --- |
 | 0. Commit, clean up, decide | Done (2026-10-27) | Marcos with one Claude session |
 | 1. Design inputs | Done (2026-10-27) | Claude (single session) |
-| 2. Static map in MUI | Not started | Claude (single session) |
-| 3. Step modal | Not started | Claude (single session) |
-| 4. Animations | Not started | Claude (single session) |
-| 5. Carry-over behaviour and cleanup | Not started | Claude (single session) |
-| 6. Verify and open the PR | Not started | Claude (single session) |
+| 2. Static map in MUI | Done (2026-10-27) | Claude (single session) |
+| 3. Step modal | Done (2026-10-27) | Claude (single session) |
+| 4. Animations | Done (2026-10-27) | Claude (single session) |
+| 5. Carry-over behaviour and cleanup | Done (2026-10-27) | Claude (single session) |
+| 6. Verify and open the PR | Verified; push and PR waiting on Marcos | Claude (single session) |
 | 7. Review, merge, deploy | Not started | Marcos, by hand |
 
 Everything happens in the main checkout, `/Users/marcosf2/Documents/github/PQN/pqn-gui`, on branch `adding_map` (based on `master` at `ae7aed9`), and ships as **one PR** to `master` on `origin` (`PublicQuantumNetwork/frontend`). Branch state at the start of Phase 1: `c0d528a` (first map), `18bab9a` (photon pair animation), `80fbdc4` (docs).
@@ -124,46 +124,46 @@ Each phase ends with a commit (decision 1: Marcos as sole author, no AI lines) a
 
 ### Phase 2: Static map in MUI
 
-- [ ] Step data module: the 6 steps of [Step content](#step-content) as typed data (`StepNumber = 1 | … | 6`)
-- [ ] Stage: 1920×1080 `Box`, scaled to fit under `HeaderBar` (port `fitStage` and the `MAP_CONTENT_TOP` offset), page background as today
-- [ ] Building rows: "Building 1" / "Building 2 (You are here!)" tags, location cards (photo, logo badge, pin icon, name, address, accent strip in Illini orange / navy), white content panels, "Interaction Points" and "Network Closet" subpanels
-- [ ] Equipment cards as `ButtonBase` hotspots: Source (two orbs), Waveplate A, Detection System (radar), Public Station A and B (gear), Waveplate B, each with A/B receiver chip; Digital Relay pill (A | Digital Relay System | B); "Optical Fiber" pill
-- [ ] Step badges 1–6 at Figma's positions (5 at both waveplates); each opens its step
-- [ ] Fiber (yellow core over dark edge) and relay lines (dashed) in one SVG layer behind the cards, from Figma's paths; the direction arrows from the design
-- [ ] Alice and Bob beside the stations
-- [ ] Screenshot at 1920×1080 against the Figma target; fix layout differences before moving on
+- [x] Step data module: the 6 steps of [Step content](#step-content) as typed data (`StepNumber = 1 | … | 6`)
+- [x] Stage: 1920×1080 `Box`, scaled to fit under `HeaderBar` (port `fitStage` and the `MAP_CONTENT_TOP` offset), page background as today
+- [x] Building rows: "Building 1" / "Building 2 (You are here!)" tags, location cards (photo, logo badge, pin icon, name, address, accent strip in Illini orange / navy), white content panels, "Interaction Points" and "Network Closet" subpanels
+- [x] Equipment cards as `ButtonBase` hotspots: Source (two orbs), Waveplate A, Detection System (radar), Public Station A and B (gear), Waveplate B, each with A/B receiver chip; Digital Relay pill (A | Digital Relay System | B); "Optical Fiber" pill
+- [x] Step badges 1–6 at Figma's positions (5 at both waveplates); each opens its step
+- [x] Fiber (yellow core over dark edge) and relay lines (dashed) in one SVG layer behind the cards, from Figma's paths; the direction arrows from the design
+- [x] Alice and Bob beside the stations
+- [x] Screenshot at 1920×1080 against the Figma target; fix layout differences before moving on
 
 ### Phase 3: Step modal
 
-- [ ] MUI `Dialog` per the Figma modal frames: sidebar list with the active step highlighted, gradient top bar, close button, kicker, title, image (or gradient placeholder for step 4), caption, lead, body, footer with Previous Step / Next Step ("Return to Beginning" on step 6, wraps to step 1), Previous disabled on step 1
-- [ ] Keys: `1`–`6` open that step (whether or not the modal is open), `←`/`→` move while open, `Esc` closes; focus returns to the hotspot that opened it
-- [ ] Opening a step clears the missed-tap hint and the Alice/Bob bubbles (as today)
-- [ ] Screenshot all six modals against the Figma frames
+- [x] MUI `Dialog` per the Figma modal frames: sidebar list with the active step highlighted, gradient top bar, close button, kicker, title, image (or gradient placeholder for step 4), caption, lead, body, footer with Previous Step / Next Step ("Return to Beginning" on step 6, wraps to step 1), Previous disabled on step 1
+- [x] Keys: `1`–`6` open that step (whether or not the modal is open), `←`/`→` move while open, `Esc` closes; focus returns to the hotspot that opened it
+- [x] Opening a step clears the missed-tap hint and the Alice/Bob bubbles (as today)
+- [x] Screenshot all six modals against the Figma frames
 
 ### Phase 4: Animations
 
-- [ ] Re-trace `LAB_PHOTON_PATH` and `LIBRARY_PHOTON_PATH` along frame B's fibers (Source → Waveplate A → Detection; Source → down through the loop → Waveplate B → up to Detection), passing straight through each waveplate; recompute `LAB_COLLAPSE_AT` / `LIBRARY_COLLAPSE_AT` as the fraction of path length at the waveplate (measure with `getTotalLength()` / `getPointAtLength()` in the browser)
-- [ ] Waveplate icons with the turning dial at both waveplates, in step with the photons
-- [ ] Step number glow and hover/focus ([Animation specs](#animation-specs))
-- [ ] Marching dashes on the relay lines
-- [ ] Breathing orbs; bobbing Alice and Bob; modal fade and pop
-- [ ] Reduced motion: every CSS animation and transition off, photons paused at a readable frame
-- [ ] Screenshots of the photons at fixed times (e.g. mid-flight, at collapse, after collapse) with `pauseAnimations()` + `setCurrentTime()`
+- [x] Re-trace `LAB_PHOTON_PATH` and `LIBRARY_PHOTON_PATH` along frame B's fibers (Source → Waveplate A → Detection; Source → down through the loop → Waveplate B → up to Detection), passing straight through each waveplate; recompute `LAB_COLLAPSE_AT` / `LIBRARY_COLLAPSE_AT` as the fraction of path length at the waveplate (measure with `getTotalLength()` / `getPointAtLength()` in the browser)
+- [x] Waveplate icons with the turning dial at both waveplates, in step with the photons
+- [x] Step number glow and hover/focus ([Animation specs](#animation-specs))
+- [x] Marching dashes on the relay lines
+- [x] Breathing orbs; bobbing Alice and Bob; modal fade and pop
+- [x] Reduced motion: every CSS animation and transition off, photons paused at a readable frame
+- [x] Screenshots of the photons at fixed times (e.g. mid-flight, at collapse, after collapse) with `pauseAnimations()` + `setCurrentTime()`
 
 ### Phase 5: Carry-over behaviour and cleanup
 
-- [ ] Alice/Bob question bubbles, positioned for frame B's Alice and Bob
-- [ ] Missed-tap hint: a tap that hits no control shows "Tap a highlighted element to learn more" and highlights every hotspot for 2.6 s
-- [ ] `PageTimeout` as today
-- [ ] Delete `src/app/map/map.module.css` and any image in `public/images/interactive-map/` that nothing references any more (check with `grep -r` across `src/` first)
-- [ ] `CONTEXT.md`: run Prettier on it (it fails `format:check` today) or add `CONTEXT.md` and `docs/` to `.prettierignore`, whichever keeps the tables readable
-- [ ] Local `CLAUDE.md` (gitignored): note that `/map` is MUI with a scaled 1920×1080 stage
+- [x] Alice/Bob question bubbles, positioned for frame B's Alice and Bob
+- [x] Missed-tap hint: a tap that hits no control shows "Tap a highlighted element to learn more" and highlights every hotspot for 2.6 s
+- [x] `PageTimeout` as today
+- [x] Delete `src/app/map/map.module.css` and any image in `public/images/interactive-map/` that nothing references any more (check with `grep -r` across `src/` first)
+- [x] `CONTEXT.md`: run Prettier on it (it fails `format:check` today) or add `CONTEXT.md` and `docs/` to `.prettierignore`, whichever keeps the tables readable
+- [x] Local `CLAUDE.md` (gitignored): note that `/map` is MUI with a scaled 1920×1080 stage
 
 ### Phase 6: Verify and open the PR
 
-- [ ] `npm run lint`, `npm run format:check`, `npm run build` all pass
-- [ ] Browser check at 1920×1080 with mocked backend (see the analytics browser harness note: Playwright from the npx cache, isolated `BUILD_DIR` and port, `127.0.0.1:8000` mocked): map, six modals, photons at fixed times, reduced motion, keys `1`–`6`/arrows/Esc, missed-tap hint, Header map button from `/` reaches `/map`
-- [ ] Compare each screenshot with its Figma target; fix in-scope differences; list any intended difference in the PR
+- [x] `npm run lint`, `npm run format:check`, `npm run build` all pass
+- [x] Browser check at 1920×1080 with mocked backend (see the analytics browser harness note: Playwright from the npx cache, isolated `BUILD_DIR` and port, `127.0.0.1:8000` mocked): map, six modals, photons at fixed times, reduced motion, keys `1`–`6`/arrows/Esc, missed-tap hint, Header map button from `/` reaches `/map`
+- [x] Compare each screenshot with its Figma target; fix in-scope differences; list any intended difference in the PR
 - [ ] Push `adding_map` and open the PR to `master` with `gh pr create`: summary, the decisions table in short, screenshots, what Marcos should check. No AI attribution (decision 1)
 - [ ] Tick Phase 6, log it, tell Marcos the PR link
 
@@ -203,5 +203,6 @@ Newest first. One row per session or meaningful event.
 
 | Date | Who | What happened |
 | --- | --- | --- |
+| 2026-10-27 | Claude | **Phases 2–5, Phase 6 checks.** `/map` rewritten in MUI as `page.tsx` (stage, buildings, hotspots, lines, Alice/Bob, bubbles, hint, keys), `StepDialog.tsx` (Figma modal), `photons.tsx` (photon pair + waveplate SMIL, ported unchanged apart from paths) and `steps.ts`; `map.module.css` deleted. Each building's panel is absolutely placed at Figma's coordinates and its equipment uses Figma's panel-local positions; the measured waveplate centres, (1167, 353) and (1380, 805), match the computed ones. Photon paths re-traced along the fiber centrelines (lab from the right orb, library from the left orb); `getTotalLength()` gives `LAB_COLLAPSE_AT` 0.5116 and `LIBRARY_COLLAPSE_AT` 0.6115, and screenshots at fixed times show each photon collapsing on its waveplate. Keys verified in Chrome: `1`–`6`, `←`/`→` (→ on step 6 wraps to 1, ← on step 1 does nothing), `Esc`, sidebar, footer, close; focus returns to the hotspot that opened the dialog. Reduced motion: all SMIL timelines paused at 4.8 s (both photons collapsed), zero CSS animations. `npm run lint` clean, `npm run build` passes, `format:check` passes for every tracked app file (still fails on the pre-existing `status-bridge/server.mjs`). **Decided:** the dialog renders inside the scaled stage (`container`), as the old one did, so it scales with the map; its backdrop overshoots the stage so the letterbox bands are dimmed too. **Decided:** the old focus-ring colour (`#ff5f05`) stays inside the dialog; hotspots use the HTML's blue ring. **Decided:** `CONTEXT.md` is formatted with Prettier (only `*em*` → `_em_`); `docs/` goes in `.prettierignore` because Prettier pads every plan table row to the widest cell; `.next-*` replaces `.next-a`/`.next-b` there so test build dirs don't fail `format:check`. **Kept, differs from Figma:** step 5's photo crop stays `center 65%` as this plan says (Figma crops nearer 78%). Inter and PP Museum are not loaded anywhere in the app, so text renders in the fallback fonts, as on the old page and in `HeaderBar`. **Not checked:** the Header map button from `/`; with the `{}` API mock the home page drops into maintenance mode, which hides that button. `HeaderBar` is untouched on this branch. |
 | 2026-10-27 | Claude | **Phase 1.** `get_design_context` on `195:892` (high-fidelity, no child calls needed) and on all six modals. Modal text matches [Step content](#step-content) exactly. Every photo and logo Figma returned is byte-identical to a file already in `public/images/interactive-map/`, so those are reused. New files: `alice.png`, `bob.png` (Figma's PNG characters), `source-orb.png`, `detection-system.svg`, `fiber-arrow.svg`, `optical-fiber-a-detector.svg` (Vector 4), `optical-fiber-b-detector.svg` (Vector 6), `fiber-crossing-1/2.svg` (the over/under ticks on B1's loop), `radio.svg`, `radio-receiver.svg`. Overwritten with frame B versions: `optical-fiber-a1/a2/b1/b2.svg`, `device-line.svg`, `relay-line.svg`. Figma screenshots (map + six modals, 1920×1080) saved to the session scratchpad. Stage geometry: Building 1/2 content panels start at (602, 183) and (602, 633) (card 394 wide + 2 px border; tag 27 + gap 16 above each station). **Decided:** Figma exports the relay lines as pre-cut dash outlines, which can't march, so their centrelines were rebuilt from the dash centres (filtered, chained nearest-neighbour, Catmull-Rom) into `RELAY_PATH_A`/`B`. **Decided:** the fiber/relay SVG layer sits *above* the cards, not behind as Phase 2 says: in Figma the fibers are drawn over the card edges, and the fiber has to be visible inside the waveplate cards for the photon to cross the waveplate. |
 | 2026-10-27 | Marcos with Claude | Grilling session. Committed the photon pair animation (`18bab9a`) and docs (`80fbdc4`), first with a `Co-Authored-By` trailer, then rewritten without it (not yet pushed). Removed GitNexus boilerplate and the stale `ANALYTICS-PLAN.md`; moved the attract-loop plan to `docs/plans/`. Connected Figma; found two `Map` frames and picked `195:892`; found the six modal frames. Decisions 1–18. Wrote this plan. |

@@ -50,13 +50,13 @@ A run ends in one of four ways, and the difference is the interesting part:
 
 - **Completed** — the visitor saw a result.
 - **Failed** — the hardware or the backend could not produce a result, and the
-  visitor saw an error. Distinct from a *disappointing* result: a CHSH value
+  visitor saw an error. Distinct from a _disappointing_ result: a CHSH value
   below 2 is a real measurement, not a failure.
 - **Declined** — SSM only, where the other node's visitor said no or never
   answered.
 - **Abandoned** — the visitor walked away part-way through.
 
-A two-player SSM produces one game run *per node*, because two visitors each
+A two-player SSM produces one game run _per node_, because two visitors each
 played. Counting the joint activity once means filtering to the leader's side.
 
 ### Attract loop

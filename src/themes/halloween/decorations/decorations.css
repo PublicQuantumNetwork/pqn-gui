@@ -1,0 +1,280 @@
+/*
+ * The Halloween Scene Decorations (docs/design/halloween/), the boards' own
+ * keyframes and classes under halloween- names, ported as the boards have
+ * them, including their prefers-reduced-motion rules (decision 12). Each
+ * keyframes comment names the board it is ported from.
+ */
+
+/* Main.dc.html: the spider bobs on its thread. */
+@keyframes halloween-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(18px);
+  }
+}
+
+/* Main.dc.html: the bats drift. */
+@keyframes halloween-drift {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(-10px, -6px);
+  }
+}
+
+/* Main.dc.html: the ghost floats. */
+@keyframes halloween-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+/* Main.dc.html: the peeking monster. */
+@keyframes halloween-peek {
+  0%,
+  55% {
+    transform: translateY(72px);
+  }
+  62%,
+  80% {
+    transform: translateY(0);
+  }
+  64% {
+    transform: translateY(0) rotate(-6deg);
+  }
+  68% {
+    transform: translateY(0) rotate(6deg);
+  }
+  72% {
+    transform: translateY(0) rotate(0);
+  }
+  86%,
+  100% {
+    transform: translateY(72px);
+  }
+}
+
+/* Main.dc.html: the popping monster. */
+@keyframes halloween-pop {
+  0%,
+  60% {
+    transform: translateY(105%);
+  }
+  66% {
+    transform: translateY(0);
+  }
+  69% {
+    transform: translateY(5%);
+  }
+  72%,
+  84% {
+    transform: translateY(0);
+  }
+  90%,
+  100% {
+    transform: translateY(105%);
+  }
+}
+
+/* QF1.dc.html: the rising monster. */
+@keyframes halloween-rise {
+  0%,
+  48% {
+    transform: translateY(0);
+  }
+  55% {
+    transform: translateY(-74px);
+  }
+  58% {
+    transform: translateY(-74px) rotate(-5deg);
+  }
+  62% {
+    transform: translateY(-74px) rotate(5deg);
+  }
+  66%,
+  76% {
+    transform: translateY(-74px) rotate(0);
+  }
+  82%,
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* QF2.dc.html: the sliding monster and its waving arm. */
+@keyframes halloween-slide {
+  0%,
+  56% {
+    transform: translateX(115%);
+  }
+  62%,
+  82% {
+    transform: translateX(0);
+  }
+  88%,
+  100% {
+    transform: translateX(115%);
+  }
+}
+
+@keyframes halloween-wave {
+  0%,
+  62% {
+    transform: rotate(0);
+  }
+  66% {
+    transform: rotate(-24deg);
+  }
+  70% {
+    transform: rotate(8deg);
+  }
+  74% {
+    transform: rotate(-24deg);
+  }
+  78% {
+    transform: rotate(8deg);
+  }
+  82%,
+  100% {
+    transform: rotate(0);
+  }
+}
+
+/* QF1.dc.html: the lit pumpkin faces flicker. */
+@keyframes halloween-flicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  45% {
+    opacity: 0.82;
+  }
+  50% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 0.9;
+  }
+}
+
+/* Measuring.dc.html: the bat riding the bar flaps its wings. */
+@keyframes halloween-flap {
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(0.55);
+  }
+}
+
+/* Measuring.dc.html: the monster peeking over the popup's top edge. */
+@keyframes halloween-peeker {
+  0%,
+  58% {
+    transform: translateY(100%);
+  }
+  64%,
+  82% {
+    transform: translateY(0);
+  }
+  67% {
+    transform: translateY(0) rotate(-5deg);
+  }
+  71% {
+    transform: translateY(0) rotate(5deg);
+  }
+  75% {
+    transform: translateY(0) rotate(0);
+  }
+  88%,
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+.halloween-spider {
+  animation: halloween-bob 3.2s ease-in-out infinite;
+}
+
+.halloween-bats {
+  animation: halloween-drift 4s ease-in-out infinite;
+}
+
+.halloween-ghost {
+  animation: halloween-float 3.6s ease-in-out infinite;
+}
+
+.halloween-monster-peek {
+  transform: translateY(72px);
+  animation: halloween-peek 13s ease-in-out 4s infinite;
+}
+
+.halloween-monster-pop {
+  transform: translateY(105%);
+  animation: halloween-pop 11s ease-in-out infinite;
+}
+
+.halloween-monster-rise {
+  animation: halloween-rise 10s ease-in-out 2s infinite;
+}
+
+.halloween-monster-slide {
+  transform: translateX(115%);
+  animation: halloween-slide 12s ease-in-out 3s infinite;
+}
+
+.halloween-monster-arm {
+  transform-box: fill-box;
+  transform-origin: 100% 100%;
+  animation: halloween-wave 12s ease-in-out 3s infinite;
+}
+
+.halloween-flicker {
+  animation: halloween-flicker 1.8s ease-in-out infinite;
+}
+
+.halloween-wing {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation: halloween-flap 0.45s ease-in-out infinite;
+}
+
+.halloween-peeker {
+  transform: translateY(100%);
+  animation: halloween-peeker 12s ease-in-out 2s infinite;
+}
+
+/* Measuring.dc.html: the bat rides the bar's fill as it grows. */
+.halloween-bar-rider {
+  transition: left 400ms linear;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .halloween-spider,
+  .halloween-bats,
+  .halloween-ghost,
+  .halloween-monster-peek,
+  .halloween-monster-pop,
+  .halloween-monster-rise,
+  .halloween-monster-slide,
+  .halloween-monster-arm,
+  .halloween-flicker,
+  .halloween-wing,
+  .halloween-peeker {
+    animation: none;
+  }
+
+  .halloween-bar-rider {
+    transition: none;
+  }
+}

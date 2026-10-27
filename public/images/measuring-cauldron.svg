@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  The Measuring popup's cauldron illustration (docs/design/halloween/Measuring.dc.html),
+  ported as it is with its animations and its prefers-reduced-motion rule inside
+  (decision 11): the photons orbit, the brew bubbles, the flames flicker and the
+  steam rises, and every animation stops under prefers-reduced-motion.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="400" viewBox="0 0 300 400" role="img" aria-label="Two entangled photons spinning above a bubbling cauldron">
+  <style>
+    @keyframes pqn-orbit{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+    @keyframes pqn-bubble{0%{transform:translateY(0);opacity:0}15%{opacity:1}100%{transform:translateY(-120px);opacity:0}}
+    @keyframes pqn-flicker{0%,100%{transform:scaleY(1)}50%{transform:scaleY(0.82)}}
+    @keyframes pqn-steam{0%,100%{transform:translateY(0);opacity:0.7}50%{transform:translateY(-8px);opacity:1}}
+    .orbit{transform-box:view-box;transform-origin:150px 104px;animation:pqn-orbit 5s linear infinite}
+    .bub{transform-box:fill-box;animation:pqn-bubble 2.6s ease-in infinite}
+    .bub2{animation-delay:0.9s}
+    .bub3{animation-delay:1.7s}
+    .bub4{animation-delay:0.4s}
+    .flame{transform-box:fill-box;transform-origin:50% 100%;animation:pqn-flicker 0.7s ease-in-out infinite}
+    .flame2{animation-duration:0.9s;animation-delay:0.2s}
+    .steam{animation:pqn-steam 3s ease-in-out infinite}
+    @media (prefers-reduced-motion: reduce){.orbit,.bub,.flame,.steam{animation:none}}
+  </style>
+  <g class="steam" fill="none" stroke="#000000" stroke-width="1.5" stroke-linecap="round">
+    <path d="M110 170 Q100 150 112 134 Q124 118 112 100"></path>
+    <path d="M196 170 Q206 152 194 138 Q182 122 194 108"></path>
+  </g>
+  <g class="orbit">
+    <path d="M110 104 L190 104" stroke="#000000" stroke-width="1.5" stroke-dasharray="5 5"></path>
+    <path d="M110 104 Q150 74 190 104" fill="none" stroke="#000000" stroke-width="1.5" stroke-dasharray="5 5"></path>
+    <circle cx="110" cy="104" r="18" fill="rgba(252,179,22,0.3)"></circle>
+    <circle cx="190" cy="104" r="18" fill="rgba(252,179,22,0.3)"></circle>
+    <circle cx="110" cy="104" r="11" fill="#fcb316" stroke="#000000" stroke-width="2.5"></circle>
+    <circle cx="190" cy="104" r="11" fill="#fcb316" stroke="#000000" stroke-width="2.5"></circle>
+    <path d="M106 102 L110 98 L114 102 M186 106 L190 110 L194 106" fill="none" stroke="#000000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+  </g>
+  <path d="M150 42 L153 50 L161 52 L153 55 L150 63 L147 55 L139 52 L147 50 Z" fill="#ffffff" stroke="#000000" stroke-width="1.5" stroke-linejoin="round"></path>
+  <path d="M60 76 L62 81 L67 82 L62 84 L60 89 L58 84 L53 82 L58 81 Z" fill="#ffffff" stroke="#000000" stroke-width="1.5" stroke-linejoin="round"></path>
+  <path d="M240 70 L242 75 L247 76 L242 78 L240 83 L238 78 L233 76 L238 75 Z" fill="#ffffff" stroke="#000000" stroke-width="1.5" stroke-linejoin="round"></path>
+  <g stroke="#000000" stroke-width="2">
+    <circle class="bub" cx="120" cy="214" r="7" fill="#d3ffb5"></circle>
+    <circle class="bub bub2" cx="160" cy="214" r="9" fill="#d3ffb5"></circle>
+    <circle class="bub bub3" cx="186" cy="214" r="5" fill="#d3ffb5"></circle>
+    <circle class="bub bub4" cx="140" cy="214" r="4" fill="#d3ffb5"></circle>
+  </g>
+  <path d="M58 376 L94 352 M242 376 L206 352" stroke="#000000" stroke-width="3" stroke-linecap="round"></path>
+  <rect x="70" y="360" width="160" height="16" rx="8" fill="#c88f11" stroke="#000000" stroke-width="2.5"></rect>
+  <path d="M98 362 Q102 380 120 376 M170 362 Q176 380 196 374" fill="none" stroke="#000000" stroke-width="1.5"></path>
+  <path class="flame" d="M108 362 Q96 340 114 318 Q114 334 124 340 Q130 324 126 306 Q152 330 146 362 Z" fill="#ff5f05" stroke="#000000" stroke-width="2.5" stroke-linejoin="round"></path>
+  <path class="flame flame2" d="M150 362 Q144 336 164 316 Q162 334 172 338 Q182 330 178 314 Q200 340 190 362 Z" fill="#ff5f05" stroke="#000000" stroke-width="2.5" stroke-linejoin="round"></path>
+  <path class="flame" d="M122 362 Q120 346 132 336 Q132 348 140 350 Q146 344 144 336 Q156 350 150 362 Z" fill="#fcb316" stroke="#000000" stroke-width="2" stroke-linejoin="round"></path>
+  <path class="flame flame2" d="M162 362 Q162 348 172 340 Q172 350 178 352 Q182 346 180 340 Q190 352 184 362 Z" fill="#fcb316" stroke="#000000" stroke-width="2" stroke-linejoin="round"></path>
+  <path d="M44 220 Q32 330 150 344 Q268 330 256 220 Z" fill="#13294b" stroke="#000000" stroke-width="3" stroke-linejoin="round"></path>
+  <path d="M70 250 Q64 290 86 316" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="5" stroke-linecap="round"></path>
+  <ellipse cx="150" cy="220" rx="122" ry="20" fill="#0d1b33" stroke="#000000" stroke-width="3"></ellipse>
+  <ellipse cx="150" cy="220" rx="106" ry="13" fill="#338659" stroke="#000000" stroke-width="2"></ellipse>
+  <path d="M76 222 Q86 214 96 222 Q106 230 116 222 M184 222 Q194 214 204 222 Q214 230 224 222" fill="none" stroke="#006230" stroke-width="2" stroke-linecap="round"></path>
+</svg>

@@ -1,6 +1,10 @@
 import type { SeasonalTheme } from '../types';
 import Burst from './Burst';
 import { chsh3EntangledLine } from './Chsh3Line';
+import HomeDecorations from './decorations/HomeDecorations';
+import Qf1Decorations from './decorations/Qf1Decorations';
+import Qf2Decorations from './decorations/Qf2Decorations';
+import MeasuringDecorations from './decorations/MeasuringDecorations';
 
 /**
  * The hat's size and tilt, the same on every board that shows Whobit: the
@@ -15,17 +19,23 @@ const hat = {
 
 /**
  * The Halloween Seasonal Theme: the witch hat Whobit wears, the spooky
- * Flavour copy, the bat-and-pumpkin Celebration and the Measuring popup's
- * cream track, ported from the boards in docs/design/halloween/ (decision 12;
- * pumpkins are always #ff5f05, decision 7). Decorations come with the Scenes
- * in groups 2.2–2.4; the background and Whobit poses stay the Default
- * Theme's (decision 8).
+ * Flavour copy, the bat-and-pumpkin Celebration, the Measuring popup's cream
+ * track and cauldron illustration, and the Decorations of the home, qf1, qf2
+ * and measuring Scenes, ported from the boards in docs/design/halloween/
+ * (decision 12; pumpkins are always #ff5f05, decision 7). The CHSH and SSM
+ * Scenes' Decorations come in groups 2.3-2.4; the background and Whobit
+ * poses stay the Default Theme's (decision 8).
  */
 const halloween: SeasonalTheme = {
   palette: {
     // The Measuring popup's cream progress track (decision 11, agent
     // decision A5); primary.main stays the Default Theme's pumpkin.
     LinearProgress: { primaryBg: '#fff4dd' },
+  },
+  images: {
+    // The Measuring popup's cauldron illustration (decision 11), an SVG
+    // carrying its own animations and reduced-motion rule.
+    'measuring-illustration': '/images/measuring-cauldron.svg',
   },
   whobitAccessory: {
     svg: '/images/whobit-witch-hat.svg',
@@ -52,6 +62,12 @@ const halloween: SeasonalTheme = {
       3: 'Entangled particles are everywhere, so are we ever really alone? Maybe check behind you.',
     },
     'chsh3-entangled-line': chsh3EntangledLine,
+  },
+  decorations: {
+    home: HomeDecorations,
+    qf1: Qf1Decorations,
+    qf2: Qf2Decorations,
+    measuring: MeasuringDecorations,
   },
   celebration: Burst,
 };

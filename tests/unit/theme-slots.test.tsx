@@ -29,6 +29,9 @@ vi.mock('@/themes', async () => {
     }),
     activeMuiTheme: () =>
       createTheme({ palette: { primary: { main: sentinels.primaryMain } } }),
+    // The accessory has no sentinel here; tests/unit/theme-accessory.test.tsx
+    // holds the accessory tests.
+    activeWhobitAccessory: () => undefined,
   };
 });
 vi.mock('@/hooks/useSSE', async () =>

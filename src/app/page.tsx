@@ -12,6 +12,7 @@ import {
   fetchGamesAvailability,
   GamesAvailability,
 } from '@/calls';
+import { activeFlavourCopy } from '@/themes';
 
 const StyledHomeButton = styled(Button)<ButtonProps>({
   height: '6em',
@@ -21,6 +22,7 @@ const StyledHomeButton = styled(Button)<ButtonProps>({
 
 export default function Page() {
   const router = useRouter();
+  const flavourCopy = activeFlavourCopy();
   const { lastMessage, sendMessage, connect, disconnect } = useWebSocket();
   const [isFollowRequestModalOpen, setIsFollowRequestModalOpen] =
     useState(false);
@@ -82,9 +84,9 @@ export default function Page() {
       />
       <Stack direction="row" alignItems="flex-start" sx={{ width: '100%' }}>
         <Whobit>
-          <p>Hi, Quantum Adventurer!</p>
+          <p>{flavourCopy['home-greeting-first-line']}</p>
           <p>I&apos;m Whobit.</p>
-          <p>What would you like to do?</p>
+          <p>{flavourCopy['home-greeting-last-line']}</p>
         </Whobit>
 
         {/* Right side: All buttons */}

@@ -1,7 +1,13 @@
 import { createTheme, type Theme } from '@mui/material/styles';
 import defaultPalette from '@/theme';
+import defaultFortunes from '@/app/qf/page2/fortunes';
 import { KNOWN_THEME_NAMES, type SeasonalThemeName } from './names.mjs';
-import type { SeasonalImages, SeasonalTheme } from './types';
+import type {
+  FlavourCopy,
+  SeasonalImages,
+  SeasonalTheme,
+  WhobitAccessory,
+} from './types';
 
 export * from './types';
 
@@ -82,4 +88,58 @@ export function activeMuiTheme(
   // so the theme's Palette lands over the Default Palette and every value
   // it leaves out keeps the Default Theme's.
   return createTheme(base, { palette: theme.palette });
+}
+
+/**
+ * The Default Theme's Flavour copy (decision 13): today's text, the fallback
+ * for every slot a Seasonal Theme leaves unset. The lead-ins and the CHSH3
+ * line have no text today, so their Default value is nothing at all.
+ */
+export const DEFAULT_FLAVOUR_COPY = {
+  'home-greeting-first-line': 'Hi, Quantum Adventurer!',
+  'home-greeting-last-line': 'What would you like to do?',
+} satisfies Partial<FlavourCopy>;
+
+/**
+ * The Default Theme's Quantum Fortune fortunes by number (decision 13):
+ * today's list, the value a Seasonal Theme's override for a number falls
+ * back to.
+ */
+const DEFAULT_FORTUNES: Record<number, string> = Object.fromEntries(
+  defaultFortunes.map(({ number, description }) => [number, description])
+);
+
+/**
+ * The active theme's Flavour copy: its slots over the Default Theme's text,
+ * so a theme that sets one slot keeps every other Default text. Fortunes are
+ * resolved by number through `activeFortune`, not read off this object.
+ */
+export function activeFlavourCopy(
+  theme: SeasonalTheme = getActiveTheme()
+): FlavourCopy {
+  return { ...DEFAULT_FLAVOUR_COPY, ...theme.flavourCopy };
+}
+
+/**
+ * The active theme's fortune for a number: the theme's override if it has
+ * one, today's fortune otherwise, so a theme overriding one number changes
+ * only that number (decision 13).
+ */
+export function activeFortune(
+  fortuneNumber: number,
+  theme: SeasonalTheme = getActiveTheme()
+): string | undefined {
+  return (
+    theme.flavourCopy?.fortunes?.[fortuneNumber] ??
+    DEFAULT_FORTUNES[fortuneNumber]
+  );
+}
+
+/**
+ * The active theme's Whobit accessory, or nothing when the theme sets none.
+ */
+export function activeWhobitAccessory(
+  theme: SeasonalTheme = getActiveTheme()
+): WhobitAccessory | undefined {
+  return theme.whobitAccessory;
 }

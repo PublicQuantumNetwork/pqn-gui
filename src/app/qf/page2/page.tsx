@@ -5,7 +5,7 @@ import { Box, Stack, Typography } from '@mui/material';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Whobit from '@/components/Whobit';
 import PageTimeout from '@/components/PageTimeout';
-import fortune from '@/app/qf/page2/fortunes';
+import { activeFlavourCopy, activeFortune } from '@/themes';
 import { useEnterKey } from '@/hooks/useEnterKey';
 
 // Short values make the activity-reset behavior easy to verify at the kiosk.
@@ -15,6 +15,7 @@ const QUANTUM_FORTUNE_WARNING_DURATION_MS = 30 * 1000;
 function FortuneContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const flavourCopy = activeFlavourCopy();
 
   const value = Number(searchParams.get('value')).toFixed(0) ?? 42;
 
@@ -25,9 +26,7 @@ function FortuneContent() {
     router.push('/survey/');
   });
 
-  const fortuneText = fortune.find(
-    (item) => Number(item.number) === Number(value)
-  )?.description;
+  const fortuneText = activeFortune(Number(value));
 
   return (
     <Container maxWidth="lg">
@@ -42,7 +41,12 @@ function FortuneContent() {
                 Please try a different game.
               </p>
             ) : (
-              <p>Your fortune is...</p>
+              <>
+                {flavourCopy['qf2-lead-in'] && (
+                  <p>{flavourCopy['qf2-lead-in']}</p>
+                )}
+                <p>Your fortune is...</p>
+              </>
             )}
           </Whobit>
 

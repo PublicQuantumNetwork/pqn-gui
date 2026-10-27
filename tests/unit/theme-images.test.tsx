@@ -27,6 +27,13 @@ test('Whobit reads each pose image from the Images slots', () => {
   );
 });
 
+test('the Default Theme gives Whobit no accessory', () => {
+  const { container } = render(<Whobit variant="arms-down">Hello</Whobit>);
+
+  // Only the pose image renders: no accessory element at all.
+  expect(container.querySelectorAll('img')).toHaveLength(1);
+});
+
 test('the Measuring popup reads its illustration from the Images slots', () => {
   render(<ModalBox />);
   expect(

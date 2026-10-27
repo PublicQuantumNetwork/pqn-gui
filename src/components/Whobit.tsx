@@ -1,19 +1,21 @@
 import { Box, Stack, Typography } from '@mui/material';
 import { ReactNode } from 'react';
-import { activeImages } from '@/themes';
-
-type WhobitVariant = 'right-wing-up' | 'arms-up' | 'arms-down';
+import { activeImages, activeWhobitAccessory, type WhobitPose } from '@/themes';
 
 interface WhobitProps {
   children: ReactNode;
-  variant?: WhobitVariant;
+  variant?: WhobitPose;
   speechBubbleHeight?: string;
+  /** Whether Whobit wears the theme's accessory (decision 9: never on
+   * Maintenance; Survey does not use Whobit). */
+  accessory?: boolean;
 }
 
 export default function Whobit({
   children,
   variant = 'right-wing-up',
   speechBubbleHeight = '250px',
+  accessory = true,
 }: WhobitProps) {
   const getWhobitImage = () => {
     const images = activeImages();
@@ -27,6 +29,8 @@ export default function Whobit({
         return images['whobit-right-wing-up'];
     }
   };
+
+  const whobitAccessory = accessory ? activeWhobitAccessory() : undefined;
   return (
     <Stack position="relative" sx={{ minWidth: 'fit-content' }}>
       {/* Speech bubble */}
@@ -81,17 +85,37 @@ export default function Whobit({
         </Typography>
       </Box>
 
-      {/* Whobit character */}
+      {/* Whobit character, with the active theme's accessory over the pose */}
       <Box
-        component="img"
-        src={getWhobitImage()}
-        alt="Whobit"
         sx={{
+          position: 'relative',
+          display: 'flex',
           width: '288px',
           height: '288px',
-          transformOrigin: 'top center',
         }}
-      />
+      >
+        <Box
+          component="img"
+          src={getWhobitImage()}
+          alt="Whobit"
+          sx={{
+            width: '288px',
+            height: '288px',
+            transformOrigin: 'top center',
+          }}
+        />
+        {whobitAccessory && (
+          <Box
+            component="img"
+            src={whobitAccessory.svg}
+            alt=""
+            style={{
+              position: 'absolute',
+              ...whobitAccessory.positions[variant],
+            }}
+          />
+        )}
+      </Box>
     </Stack>
   );
 }

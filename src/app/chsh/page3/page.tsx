@@ -8,6 +8,7 @@ import { useEnterKey } from '@/hooks/useEnterKey';
 import Whobit from '@/components/Whobit';
 import CircleContainer from '@/components/CircleContainer';
 import Fireworks from '@/components/Fireworks';
+import { activeFlavourCopy } from '@/themes';
 
 export default function Home() {
   const router = useRouter();
@@ -18,6 +19,7 @@ export default function Home() {
 
   function MyComponent() {
     const searchParams = useSearchParams();
+    const flavourCopy = activeFlavourCopy();
 
     const value = Number(searchParams.get('value')) ?? 0;
     const error = Number(searchParams.get('error')) ?? 0;
@@ -117,6 +119,26 @@ export default function Home() {
                     ''
                   )}
                 </Typography>
+
+                {/* Flavour copy: nothing under an entangled result in the
+                    Default Theme (decision 13). */}
+                {fail !== 'true' &&
+                  value >= 2 &&
+                  flavourCopy['chsh3-entangled-line'] && (
+                    <Typography
+                      variant="h5"
+                      sx={{
+                        position: 'absolute',
+                        top: '75%',
+                        left: '29%',
+                        color: '#000000',
+                        fontSize: '.85em',
+                        textAlign: 'center',
+                      }}
+                    >
+                      {flavourCopy['chsh3-entangled-line']}
+                    </Typography>
+                  )}
               </CircleContainer>
             </Box>
           </Stack>

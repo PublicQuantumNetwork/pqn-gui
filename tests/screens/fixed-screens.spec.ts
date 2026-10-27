@@ -43,7 +43,11 @@ for (const theme of THEMES) {
       await page.waitForSelector('next-route-announcer', {
         state: 'attached',
       });
-      await page.clock.pauseAt(start + SURVEY_TIMEOUT_MS + 500);
+      // The fake clock keeps running after install(), so the timer was
+      // scheduled at hydration time, not at `start`: pause relative to the
+      // page's own now, read after the wait above.
+      const hydratedAt = await page.evaluate(() => Date.now());
+      await page.clock.pauseAt(hydratedAt + SURVEY_TIMEOUT_MS + 500);
       await expect(page.getByText('Still there?')).toBeVisible();
       await captureScreen(page, theme, 'timeout-card');
     });

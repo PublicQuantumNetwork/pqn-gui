@@ -19,7 +19,7 @@ for (const theme of THEMES) {
     test('Home, friend-invite popup', async ({ page, backend }) => {
       await page.goto(themeUrl(theme, '/'));
       await expect(page.getByText('Hi, Quantum Adventurer!')).toBeVisible();
-      backend.emitFollowRequest(FOLLOW_REQUEST_MESSAGE);
+      await backend.emitFollowRequest(FOLLOW_REQUEST_MESSAGE);
       await expect(page.getByText(FOLLOW_REQUEST_MESSAGE)).toBeVisible();
       await expect(page.getByRole('button', { name: 'Accept' })).toBeVisible();
       await captureScreen(page, theme, 'home-friend-invite');

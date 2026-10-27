@@ -1,5 +1,10 @@
 import { readFile } from 'node:fs/promises';
-import type { Page, Route, WebSocketRoute } from '@playwright/test';
+import {
+  expect,
+  type Page,
+  type Route,
+  type WebSocketRoute,
+} from '@playwright/test';
 
 /** Fixed data the mocked backend answers with (fixed fortune number, fixed CHSH value, fixed emoji). */
 export const FORTUNE_INDEX = 2; // /rng/fortune returns [2]; the GUI adds 1 → fortune #3
@@ -14,8 +19,12 @@ export const FOLLOW_REQUEST_MESSAGE =
   'Your friend would like to play Share a Secret Message with you!';
 
 export interface MockBackend {
-  /** Push a follow-request alert to the page over the backend WebSocket. */
-  emitFollowRequest(message: string): void;
+  /**
+   * Push a follow-request alert to the page over the backend WebSocket. The
+   * page only opens the WebSocket once React hydrates, so this waits (bounded
+   * well under the test timeout) for the page's socket before sending.
+   */
+  emitFollowRequest(message: string): Promise<void>;
 }
 
 function jsonResponse(route: Route, body: unknown): Promise<void> {
@@ -96,7 +105,8 @@ export async function installBackendMocks(page: Page): Promise<MockBackend> {
   // The Measuring popup's illustration (public/images/gif_pqn.gif) is an
   // animated GIF: serve its first frame so the popup's pixels are stable.
   // Halloween's measuring illustration is an animated SVG from another URL,
-  // which the screenshot settings themselves freeze.
+  // whose CSS animations both capture paths in harness.ts disable with
+  // `animations: 'disabled'` — a setting that cannot freeze a GIF.
   const measuringGif = firstGifFrame(
     await readFile('public/images/gif_pqn.gif')
   );
@@ -183,11 +193,16 @@ export async function installBackendMocks(page: Page): Promise<MockBackend> {
   );
 
   return {
-    emitFollowRequest(message: string) {
-      const socket = sockets[sockets.length - 1];
-      if (!socket)
-        throw new Error('No follow-request WebSocket has been opened yet');
-      socket.send(message);
+    async emitFollowRequest(message: string): Promise<void> {
+      // The greeting being visible only proves the server-rendered page is
+      // up; the socket opens later, from a client effect after hydration.
+      await expect
+        .poll(() => sockets.length, {
+          message: 'The page never opened the follow-request WebSocket',
+          timeout: 10_000,
+        })
+        .toBeGreaterThan(0);
+      sockets[sockets.length - 1].send(message);
     },
   };
 }

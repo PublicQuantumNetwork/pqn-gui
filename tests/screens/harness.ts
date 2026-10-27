@@ -25,8 +25,11 @@ export async function captureScreen(
   if (BASELINE_THEMES.has(theme.name)) {
     await expect(page).toHaveScreenshot([theme.name, `${screen}.png`]);
   } else {
+    // The same animation setting toHaveScreenshot compares with, so every
+    // theme's capture freezes CSS animations the same way.
     await page.screenshot({
       path: `tests/screens/${theme.name}/${screen}.png`,
+      animations: 'disabled',
     });
   }
 }

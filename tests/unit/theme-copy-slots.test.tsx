@@ -121,6 +121,20 @@ test('QF2 renders the theme’s fortune for a number and today’s for the other
   ).toBeInTheDocument();
 });
 
+test('the theme’s QF2 lead-in stays off the error screen', () => {
+  searchParams.current = new URLSearchParams('value=2&fail=true');
+  render(<QF2 />);
+
+  expect(
+    screen.getByText(/There was an error, we will work on this/)
+  ).toBeInTheDocument();
+  expect(
+    screen.queryByText(sentinels.flavourCopy['qf2-lead-in'])
+  ).not.toBeInTheDocument();
+  // The error screen shows no fortune text the lead-in could precede.
+  expect(screen.queryByText('Your fortune is...')).not.toBeInTheDocument();
+});
+
 test('CHSH3 renders the theme’s line under an entangled result', () => {
   searchParams.current = new URLSearchParams(
     'value=2.62&error=0.05&fail=false'
@@ -134,4 +148,25 @@ test('CHSH3 renders the theme’s line under an entangled result', () => {
     /show the photons are entangled/
   ).parentElement;
   expect(circle?.children).toHaveLength(3);
+});
+
+test('the theme’s CHSH3 line stays off a weak result and an error', () => {
+  searchParams.current = new URLSearchParams('value=1.5&error=0.05&fail=false');
+  const { unmount } = render(<CHSH3 />);
+  expect(
+    screen.getByText(/Some angles are better than others/)
+  ).toBeInTheDocument();
+  expect(
+    screen.queryByText(sentinels.flavourCopy['chsh3-entangled-line'])
+  ).not.toBeInTheDocument();
+  unmount();
+
+  searchParams.current = new URLSearchParams('value=2.62&error=0.05&fail=true');
+  render(<CHSH3 />);
+  expect(
+    screen.getByText(/There was an error, we will work on this/)
+  ).toBeInTheDocument();
+  expect(
+    screen.queryByText(sentinels.flavourCopy['chsh3-entangled-line'])
+  ).not.toBeInTheDocument();
 });

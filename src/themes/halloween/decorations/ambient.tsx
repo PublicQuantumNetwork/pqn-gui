@@ -14,12 +14,32 @@ import './decorations.css';
  */
 
 /**
+ * The clip-path that cuts the occluders' boxes out of a piece's box: where
+ * the page's own content occludes a piece on its board (the game buttons
+ * over the moon and the bats, the counter and the fortune over the ball
+ * mist), the same boxes are cut out of it here, so the piece never covers
+ * that content's text (decision 10). The clip's outer edge is generous: it
+ * only bounds the piece's own art, which its animations move (the bats
+ * drift, the peeking monster drops out of sight).
+ */
+function clipPathValue(
+  box: { left: number; top: number; width: number; height: number },
+  occluders: ElementBox[]
+): string {
+  const holes = occluders
+    .map((occluder) => {
+      const x = occluder.left - box.left;
+      const y = occluder.top - box.top;
+      return ` M${x} ${y} H${x + occluder.width} V${y + occluder.height} H${x} Z`;
+    })
+    .join('');
+  return `path(evenodd, "M-100 -100 H${box.width + 100} V${box.height + 100} H-100 Z${holes}")`;
+}
+
+/**
  * The wrapper a piece paints in: placed at its box, and where the page's own
- * content occludes the piece on its board (the game buttons over the moon and
- * the bats), the same boxes are cut out of it, so the piece never covers a
- * control's label (decision 10). The clip's outer edge is generous: it only
- * bounds the piece's own art, which its animations move (the bats drift, the
- * peeking monster drops out of sight).
+ * content occludes the piece on its board, that content's boxes are cut out
+ * of it (see `clipPathValue`).
  */
 export function pieceStyle(
   box: { left: number; top: number; width: number; height: number },
@@ -33,14 +53,7 @@ export function pieceStyle(
     height: `${box.height}px`,
   };
   if (occluders && occluders.length > 0) {
-    const holes = occluders
-      .map((occluder) => {
-        const x = occluder.left - box.left;
-        const y = occluder.top - box.top;
-        return ` M${x} ${y} H${x + occluder.width} V${y + occluder.height} H${x} Z`;
-      })
-      .join('');
-    style.clipPath = `path(evenodd, "M-100 -100 H${box.width + 100} V${box.height + 100} H-100 Z${holes}")`;
+    style.clipPath = clipPathValue(box, occluders);
   }
   return style;
 }
@@ -294,8 +307,9 @@ export function Ghost({
  *  (258px from its left, 340px down); QF2's face flickers. Pumpkins are
  *  always #ff5f05 (decision 7). `clipBottom` is the stage's bottom edge: the
  *  board's stage ends at the content box's bottom, below which the pose's
- *  feet are already cut off (agent decision A6), so the pumpkin shows only
- *  above that edge. */
+ *  feet are already cut off (agent decision A6), so when the board's spot
+ *  falls below that edge the pumpkin is clamped to rest its base on the
+ *  edge, beside the visible owl, and never shows below it. */
 export function Pumpkin({
   left,
   top,
@@ -307,20 +321,22 @@ export function Pumpkin({
   flicker?: boolean;
   clipBottom?: number;
 }) {
-  const height =
-    clipBottom === undefined ? undefined : Math.max(0, clipBottom - top);
-  if (height === 0) {
-    return null;
-  }
+  const height = 104;
+  const placedTop =
+    clipBottom === undefined ? top : Math.min(top, clipBottom - height);
+  const windowHeight =
+    clipBottom === undefined
+      ? undefined
+      : Math.max(height, clipBottom - placedTop);
   return (
     <div
       aria-hidden="true"
       style={{
         position: 'absolute',
         left: `${left}px`,
-        top: `${top}px`,
+        top: `${placedTop}px`,
         width: '120px',
-        ...(height !== undefined ? { height: `${height}px` } : {}),
+        ...(windowHeight !== undefined ? { height: `${windowHeight}px` } : {}),
         overflow: 'hidden',
       }}
     >
@@ -629,29 +645,44 @@ const twinkles = {
  * (their 560x500 ball svg) and scaled so the boards' ball circle lands on
  * the GUI's: the mist swirls clipped inside the ball as on the boards, the
  * twinkles sparkle on it, and QF2's gold halo pulses around it (the ring the
- * boards show, the ball itself covering the disc's middle). The ball, the
- * counter and the fortune text stay the page's own content underneath.
+ * boards show, the ball itself covering the disc's middle) and its white
+ * veil softens the mist over the ball's middle. The ball, the counter and
+ * the fortune text stay the page's own content: on the boards they are drawn
+ * after the ball svg, so their boxes are cut out of this whole layer, just
+ * as the game buttons are cut out of the moon and the bats (agent decision
+ * A8).
  */
 export function BallMist({
   ball,
   board,
+  occluders,
 }: {
   ball: BallCircle;
   board: keyof typeof twinkles;
+  occluders?: ElementBox[];
 }) {
   const clipId = `halloween-ball-${useId().replace(/[^a-zA-Z0-9]/g, '')}`;
   // The boards' ball circle: centre (280, 230), radius 190, in a 560x500 svg.
   const scale = ball.r / 190;
+  const box = {
+    left: ball.cx - 280 * scale,
+    top: ball.cy - 230 * scale,
+    width: 560 * scale,
+    height: 500 * scale,
+  };
   return (
     <svg
-      width={560 * scale}
-      height={500 * scale}
+      width={box.width}
+      height={box.height}
       viewBox="0 0 560 500"
       aria-hidden="true"
       style={{
         position: 'absolute',
-        left: `${ball.cx - 280 * scale}px`,
-        top: `${ball.cy - 230 * scale}px`,
+        left: `${box.left}px`,
+        top: `${box.top}px`,
+        ...(occluders && occluders.length > 0
+          ? { clipPath: clipPathValue(box, occluders) }
+          : {}),
       }}
     >
       <defs>
@@ -681,6 +712,9 @@ export function BallMist({
             strokeWidth={stroke.width}
           />
         ))}
+        {board === 'qf2' && (
+          <circle cx="280" cy="230" r="150" fill="#ffffff" opacity="0.55" />
+        )}
       </g>
       {twinkles[board].map((twinkle) => (
         <path

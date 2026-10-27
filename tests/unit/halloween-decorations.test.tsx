@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import { afterAll, beforeAll, expect, test, vi } from 'vitest';
 import { Dialog } from '@mui/material';
 import { readFileSync } from 'node:fs';
@@ -44,6 +44,7 @@ const sse = vi.hoisted(() => ({
 }));
 
 import Home from '@/app/page';
+import RootLayout from '@/app/layout';
 import QF1 from '@/app/qf/page1/page';
 import QF2 from '@/app/qf/page2/page';
 import ModalBox from '@/components/ModalBox';
@@ -60,6 +61,7 @@ import { activeImages, knownThemes, type Scene } from '@/themes';
 afterAll(() => {
   delete process.env.NEXT_PUBLIC_SEASONAL_THEME;
   vi.restoreAllMocks();
+  vi.unstubAllGlobals();
 });
 
 /** A plain box, as an element lays it out. */
@@ -103,6 +105,9 @@ const QF = {
   bubble: box(144, 245, 500, 250),
   ball: box(794, 239, 560, 560),
   pose: box(144, 505, 288, 358),
+  counter: box(1040, 440, 70, 90),
+  number: box(1015, 380, 120, 115),
+  text: box(880, 540, 390, 110),
 };
 const MEASURING = {
   dialog: box(270, 190, 900, 600),
@@ -114,7 +119,26 @@ const MEASURING = {
  *  for the Measuring popup, by role); each box stands in for layout. */
 const anchors: { current: Record<string, Box> } = { current: {} };
 
+/**
+ * A stub ResizeObserver: records every instance so a test can fire the
+ * callbacks by hand — the trigger the real browser fires when an element
+ * re-lays out (the Measuring popup growing as its QR image loads), which
+ * jsdom has none of.
+ */
+class ResizeObserverStub {
+  static instances: ResizeObserverStub[] = [];
+  callback: ResizeObserverCallback;
+  constructor(callback: ResizeObserverCallback) {
+    this.callback = callback;
+    ResizeObserverStub.instances.push(this);
+  }
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+
 beforeAll(() => {
+  vi.stubGlobal('ResizeObserver', ResizeObserverStub);
   vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(
     function (this: HTMLElement) {
       const name = this.getAttribute('data-decoration-anchor');
@@ -218,13 +242,21 @@ test('Home renders the Main board’s ambient set and both its monsters', () => 
   );
 
   // The pumpkin under Whobit's pose, at the board's own place beside the
-  // pose box — which on this page sits entirely below the stage's bottom
-  // edge, where the pose's feet are already cut off, so it is clipped away
-  // and only the small pumpkin beside the ghost remains.
+  // pose box — its board spot sits below the stage's bottom edge (where the
+  // pose's feet are already cut off), so it is clamped to rest its base on
+  // that edge, beside the visible owl, next to the small pumpkin.
   const pumpkins = container.querySelectorAll('svg[viewBox="0 0 120 104"]');
-  expect(pumpkins).toHaveLength(1);
+  expect(pumpkins).toHaveLength(2);
   expect(pumpkins[0].style.left).toBe(
     `${HOME.chsh.left + HOME.chsh.width - 84}px`
+  );
+  const posePumpkin = pumpkins[1].parentElement as HTMLElement;
+  expect(posePumpkin.style.left).toBe(`${HOME.pose.left + 258}px`);
+  expect(posePumpkin.style.top).toBe(
+    `${Math.min(HOME.pose.top + 340, STAGE.top + STAGE.height - 104)}px`
+  );
+  expect(parseFloat(posePumpkin.style.top) + 104).toBeLessThanOrEqual(
+    STAGE.top + STAGE.height
   );
 
   // The popping monster rises from the stage's own bottom edge.
@@ -353,6 +385,7 @@ test('QF1 renders the QF1 board’s spider, ball pieces and rising monster', () 
     stage: STAGE,
     'whobit-bubble': QF.bubble,
     'qf-ball': QF.ball,
+    'qf-counter': QF.counter,
   });
   const { container } = renderPage(<QF1 />);
 
@@ -374,6 +407,20 @@ test('QF1 renders the QF1 board’s spider, ball pieces and rising monster', () 
   );
   expect(twinkles).toHaveLength(3);
   expect(container.querySelector('.halloween-glow-pulse')).toBeNull();
+
+  // The counter is drawn over the ball on the board, so its box is cut out
+  // of the whole mist layer: the digit stays fully readable.
+  const mistLayer = mist.closest('svg') as SVGSVGElement;
+  const clip = mistLayer.style.clipPath;
+  expect(clip).toMatch(/^path\(evenodd,/);
+  const scale = ballOf(QF.ball).r / 190;
+  const layerLeft = ballOf(QF.ball).cx - 280 * scale;
+  const layerTop = ballOf(QF.ball).cy - 230 * scale;
+  const x = QF.counter.left - layerLeft;
+  const y = QF.counter.top - layerTop;
+  expect(clip).toContain(
+    ` M${x} ${y} H${x + QF.counter.width} V${y + QF.counter.height} H${x} Z`
+  );
 
   // The QF1 board carries no ghost.
   expect(container.querySelector('.halloween-ghost')).toBeNull();
@@ -448,6 +495,8 @@ test('QF2 renders the QF2 board’s ghost, glow, flickering pumpkin and sliding 
   setAnchors({
     stage: STAGE,
     'qf-ball': QF.ball,
+    'qf-fortune-number': QF.number,
+    'qf-fortune-text': QF.text,
     'whobit-pose': QF.pose,
   });
   const { container } = renderPage(<QF2 />);
@@ -462,16 +511,48 @@ test('QF2 renders the QF2 board’s ghost, glow, flickering pumpkin and sliding 
   expect(ghost.style.top).toBe(`${ball.top - 16}px`);
   expect(ghost.getAttribute('width')).toBe('84');
 
-  // The board's mist, twinkles and pulsing glow halo over the ball.
-  expect(container.querySelector('.halloween-mist')).not.toBeNull();
+  // The board's mist, twinkles and pulsing glow halo over the ball, with the
+  // board's white veil softening the mist over the ball's middle.
+  const mist = container.querySelector<HTMLElement>('.halloween-mist')!;
+  expect(mist).not.toBeNull();
   expect(
     container.querySelectorAll('.halloween-twinkle, .halloween-twinkle-late')
   ).toHaveLength(4);
   expect(container.querySelector('.halloween-glow-pulse')).not.toBeNull();
+  const veil = mist.querySelector('circle[cx="280"]');
+  expect(veil).not.toBeNull();
+  expect(veil!.getAttribute('fill')).toBe('#ffffff');
+  expect(veil!.getAttribute('opacity')).toBe('0.55');
 
-  // The pumpkin under the pose is entirely below the stage's bottom edge on
-  // this page too, so it is clipped away, face and all.
-  expect(container.querySelector('svg[viewBox="0 0 120 104"]')).toBeNull();
+  // The fortune's number and text are drawn over the ball on the board, so
+  // their boxes are cut out of the whole mist layer: the fortune stays fully
+  // readable.
+  const mistLayer = mist.closest('svg') as SVGSVGElement;
+  const clip = mistLayer.style.clipPath;
+  expect(clip).toMatch(/^path\(evenodd,/);
+  const scale = ball.r / 190;
+  const layerLeft = ball.cx - 280 * scale;
+  const layerTop = ball.cy - 230 * scale;
+  for (const fortune of [QF.number, QF.text]) {
+    const x = fortune.left - layerLeft;
+    const y = fortune.top - layerTop;
+    expect(clip).toContain(
+      ` M${x} ${y} H${x + fortune.width} V${y + fortune.height} H${x} Z`
+    );
+  }
+
+  // The pumpkin under the pose keeps its place beside the pose box, clamped
+  // to rest its base on the stage's bottom edge (its board spot on this page
+  // falls below it), and it is the board's flicker piece.
+  const pumpkin = container.querySelector<HTMLElement>(
+    'svg[viewBox="0 0 120 104"]'
+  )!;
+  expect(pumpkin).not.toBeNull();
+  expect(pumpkin.parentElement!.style.left).toBe(`${QF.pose.left + 258}px`);
+  expect(pumpkin.parentElement!.style.top).toBe(
+    `${Math.min(QF.pose.top + 340, STAGE.top + STAGE.height - 104)}px`
+  );
+  expect(pumpkin.querySelector('.halloween-flicker')).not.toBeNull();
 
   // The sliding monster slides in from the stage's own bottom right, 20px up.
   const slide = container.querySelector<HTMLElement>(
@@ -486,17 +567,22 @@ test('QF2 renders the QF2 board’s ghost, glow, flickering pumpkin and sliding 
   expect(container.querySelector('.halloween-spider')).toBeNull();
 });
 
-test('a piece clipped to the stage bottom shows only above that edge', () => {
-  // Directly, with a box straddling the edge: the wrapper ends at the edge.
-  const straddling = render(<Pumpkin left={100} top={700} clipBottom={755} />);
-  const wrapper = straddling.container.firstElementChild as HTMLElement;
-  expect(wrapper.style.height).toBe('55px');
-  expect(wrapper.style.overflow).toBe('hidden');
-  straddling.unmount();
-
-  // Fully below the edge (as on both QF pages): nothing renders.
+test('the pumpkin rests its base on the stage bottom when its board spot falls below it', () => {
+  // Directly, with the board spot below the edge (as on both QF pages): the
+  // pumpkin is clamped up to rest on the edge, never showing below it.
   const below = render(<Pumpkin left={100} top={800} clipBottom={755} />);
-  expect(below.container.firstElementChild).toBeNull();
+  const wrapper = below.container.firstElementChild as HTMLElement;
+  expect(wrapper.style.top).toBe('651px');
+  expect(wrapper.style.height).toBe('104px');
+  expect(wrapper.style.overflow).toBe('hidden');
+  below.unmount();
+
+  // With the board spot above the edge: the pumpkin keeps the board's place
+  // and its base stays above the edge.
+  const above = render(<Pumpkin left={100} top={600} clipBottom={755} />);
+  const kept = above.container.firstElementChild as HTMLElement;
+  expect(kept.style.top).toBe('600px');
+  expect(parseFloat(kept.style.top) + 104).toBeLessThanOrEqual(755);
 });
 
 test('the Measuring popup renders the peeker over its top edge and the bat riding its bar', () => {
@@ -723,4 +809,85 @@ test('the rising monster’s window is the ball’s own geometry, directly', () 
     parseFloat(riseWindow.style.top) + parseFloat(riseWindow.style.height)
   ).toBe(ball.cy - ball.r);
   expect(riseWindow.firstElementChild!.style.top).toBe('80px');
+});
+
+test('the Measuring Decorations follow the popup when only the ResizeObserver fires', () => {
+  const beforeRender = ResizeObserverStub.instances.length;
+  setAnchors(MEASURING);
+  sse.message = { event: 'rng_progress', current: 8, total: 16 };
+  render(
+    <Dialog open>
+      <ModalBox variant="rng" />
+    </Dialog>
+  );
+
+  // The popup grows (its QR image loads): the real browser fires the
+  // observers, and nothing else — no window resize is dispatched here — so
+  // the observer path alone must carry the Decorations along.
+  const grown = {
+    dialog: box(270, 112, 900, 755),
+    progressbar: box(320, 213, 800, 4),
+    'measuring-title': box(320, 162, 800, 35),
+  };
+  setAnchors(grown);
+  const observers = ResizeObserverStub.instances.slice(beforeRender);
+  expect(observers.length).toBeGreaterThan(0);
+  act(() => {
+    for (const observer of observers) {
+      observer.callback([], observer as unknown as ResizeObserver);
+    }
+  });
+
+  const peeker =
+    document.querySelector<HTMLElement>('.halloween-peeker')!.parentElement!;
+  expect(peeker.style.top).toBe(`${grown.dialog.top - 70}px`);
+  const rider = document.querySelector<HTMLElement>('.halloween-bar-rider')!;
+  expect(rider.parentElement).toHaveStyle({
+    left: `${grown.progressbar.left}px`,
+    top: `${grown.progressbar.top}px`,
+  });
+  expect(rider.style.top).toBe(
+    `${
+      grown['measuring-title'].top +
+      grown['measuring-title'].height -
+      grown.progressbar.top
+    }px`
+  );
+});
+
+test('the real layout carries the stage anchor on the content box', () => {
+  const { unmount } = render(
+    <RootLayout>
+      <p>page</p>
+    </RootLayout>
+  );
+
+  // The page tests stub the anchor with a plain div, so this proves the
+  // layout itself carries it — on the content box the boards' stage stands
+  // for: the box right under the header that carries the page and is painted
+  // with the theme's background image. (The emotion @layer rules do not
+  // reach jsdom's computed styles, so the background is checked in the
+  // injected styles' own text.)
+  const stage = document.querySelector('[data-decoration-anchor="stage"]');
+  expect(stage).not.toBeNull();
+  expect(stage!.querySelector('p')?.textContent).toBe('page');
+  expect(stage!.previousElementSibling?.textContent).toContain('Start Over');
+  const styles = Array.from(document.querySelectorAll('style'))
+    .map((style) => style.textContent)
+    .join('');
+  expect(styles).toContain('GUI-background');
+  unmount();
+});
+
+test('the ball’s visible circle is the ball box’s centred circle, 62px in', () => {
+  // Literal expectations, not ballCircle's own arithmetic: circle.png is
+  // 550px, centred in the 560px ball box, and draws its circle 57px inside
+  // itself, so the visible ball is the box inset 62px on every side.
+  expect(ballCircle(rectOf(box(794, 239, 560, 560)))).toEqual({
+    cx: 1074,
+    cy: 519,
+    r: 218,
+    left: 856,
+    top: 301,
+  });
 });

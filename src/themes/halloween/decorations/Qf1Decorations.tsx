@@ -6,13 +6,16 @@ import { useElementBox } from './useElementBox';
 
 /** The anchors the qf1 Scene's Decorations are placed against (agent
  *  decision A8): the stage, Whobit's speech bubble (the board hangs its
- *  spider just right of it) and the page's own ball. */
+ *  spider just right of it), the page's own ball and its counter (drawn
+ *  over the ball's mist on the board, so cut out of it here). */
 const stageAnchor = () =>
   document.querySelector<HTMLElement>('[data-decoration-anchor="stage"]');
 const bubbleAnchor = () =>
   document.querySelector('[data-decoration-anchor="whobit-bubble"]');
 const ballAnchor = () =>
   document.querySelector('[data-decoration-anchor="qf-ball"]');
+const counterAnchor = () =>
+  document.querySelector('[data-decoration-anchor="qf-counter"]');
 
 /**
  * The qf1 Scene's Decorations (docs/design/halloween/QF1.dc.html): the
@@ -27,6 +30,7 @@ export default function Qf1Decorations() {
   const stage = useElementBox(stageAnchor);
   const bubble = useElementBox(bubbleAnchor);
   const ballBox = useElementBox(ballAnchor);
+  const counter = useElementBox(counterAnchor);
   if (!stage || !bubble || !ballBox) {
     return null;
   }
@@ -42,7 +46,7 @@ export default function Qf1Decorations() {
         threadHeight={96}
         bobDuration="3.6s"
       />
-      <BallMist ball={ball} board="qf1" />
+      <BallMist ball={ball} board="qf1" occluders={counter ? [counter] : []} />
       <MonsterRise ball={ball} />
     </>
   );

@@ -130,3 +130,5 @@ above.
 
 - [Attract loop](./docs/plans/attract-loop.md): looping promo video on the
   home page while no visitor is present, plus remote dismiss for operator peek
+- [Interactive map](./docs/plans/interactive-map.md): `/map` rebuilt in MUI
+  from the Figma design, with 6 steps and the photon pair animation

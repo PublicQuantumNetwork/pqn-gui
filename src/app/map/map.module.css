@@ -46,14 +46,14 @@
 }
 
 .showHints :is(.hotspot, .fiberLabel, .digitalRelay, .stepOnlyButton) {
-  outline: 6px solid #ff5f05;
-  outline-offset: 5px;
+  outline: 4px solid rgb(244 216 120 / 68%);
+  outline-offset: 4px;
 }
 
 .showHints .stepBadge {
-  border-color: #ff5f05;
-  background: #ff5f05;
-  color: #fff;
+  border-color: rgb(232 194 75 / 76%);
+  background: rgb(244 216 120 / 82%);
+  color: #0d2436;
 }
 
 .locationDetails h2,
@@ -308,25 +308,29 @@
 }
 
 .waveplateIcon {
-  position: relative;
   display: block;
-  width: 76px;
+  width: 23px;
   height: 51px;
 }
 
-.polarizerImage,
 .waveplateImage {
-  position: absolute;
-  top: 0;
-  object-fit: cover;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
 }
 
-.polarizerImage {
-  left: 0;
+.waveplateDialRing {
+  fill: none;
+  stroke: #1c5a68;
+  stroke-width: 0.9px;
+  opacity: 0.55;
 }
 
-.waveplateImage {
-  left: 31px;
+.waveplateDialAxis {
+  stroke: #1c5a68;
+  stroke-width: 1.8px;
+  stroke-linecap: round;
 }
 
 .deviceLine {
@@ -532,6 +536,46 @@
   z-index: 4;
   width: 472px;
   height: 307px;
+}
+
+.photonLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  width: 1920px;
+  height: 1080px;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.labPhoton {
+  color: #00a8e8;
+}
+
+.libraryPhoton {
+  color: #ff6b00;
+}
+
+.photonHalo {
+  fill: currentcolor;
+  opacity: 0.35;
+}
+
+.polarizationOutline,
+.polarizationStroke {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.polarizationOutline {
+  stroke: #fff;
+  stroke-width: 7px;
+}
+
+.polarizationStroke {
+  stroke: currentcolor;
+  stroke-width: 3.5px;
 }
 
 .fiberLabel {
@@ -906,7 +950,7 @@
   }
 
   .showHints :is(.hotspot, .fiberLabel, .digitalRelay, .stepOnlyButton) {
-    animation: interactiveTargetPulse 800ms ease-in-out infinite;
+    animation: interactiveTargetPulse 1000ms ease-in-out infinite;
   }
 
   .alice {
@@ -926,6 +970,13 @@
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .photonLayer,
+  .waveplateDial {
+    display: none;
+  }
+}
+
 @keyframes touchHintEntrance {
   from {
     opacity: 0;
@@ -941,13 +992,13 @@
 @keyframes interactiveTargetPulse {
   0%,
   100% {
-    outline-color: #ff5f05;
+    outline-color: rgb(244 216 120 / 68%);
     outline-offset: 4px;
   }
 
   50% {
-    outline-color: #ffd0b5;
-    outline-offset: 10px;
+    outline-color: rgb(244 216 120 / 30%);
+    outline-offset: 7px;
   }
 }
 

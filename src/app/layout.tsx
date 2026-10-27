@@ -41,6 +41,10 @@ export default function RootLayout(props: { children: React.ReactNode }) {
               >
                 <HeaderBar />
                 <Box
+                  // The Halloween Decorations' stage anchor: the content box
+                  // whose edges are the design boards' stage edges (agent
+                  // decision A8). Non-visual, so no theme changes the look.
+                  data-decoration-anchor="stage"
                   sx={{
                     backgroundImage,
                     backgroundRepeat: 'no-repeat',

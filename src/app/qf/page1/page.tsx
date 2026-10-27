@@ -73,6 +73,11 @@ export default function MyComponent() {
             }}
           >
             <Box
+              // The Halloween Decorations' ball anchor (agent decision A8):
+              // the mist, the twinkles and the rising monster are placed
+              // against the page's own ball. Non-visual, so no theme changes
+              // the look.
+              data-decoration-anchor="qf-ball"
               sx={{
                 position: 'relative',
                 backgroundImage: 'url(/images/circle.png)',

@@ -53,6 +53,11 @@ export default function ModalBox({
       <Decorations scene="measuring" progress={progress} />
       <Stack flexDirection="column" sx={{}}>
         <Typography
+          // The Halloween Decorations' title anchor (agent decision A8):
+          // the bat riding the progress bar hangs from the title's bottom
+          // edge, never covering it. Non-visual, so no theme changes the
+          // look.
+          data-decoration-anchor="measuring-title"
           sx={{
             color: '#FF5F05',
             textAlign: 'center',

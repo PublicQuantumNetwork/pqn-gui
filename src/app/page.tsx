@@ -93,10 +93,15 @@ export default function Page() {
 
         {/* Right side: All buttons */}
         <Stack flexDirection="column" flex={1} sx={{ paddingLeft: '150px' }}>
+          {/* The buttons carry the Halloween Decorations' anchors (agent
+              decision A8): the moon, the bats and the peeking monster are
+              cut to shape around them, and the ghost's row sits under them.
+              Non-visual, so no theme changes the look. */}
           <StyledHomeButton
             variant="contained"
             component="a"
             href="/chsh/page1"
+            data-decoration-anchor="home-button-chsh"
             disabled={!gamesAvailability.chsh}
           >
             Verify Quantum Link (single player)
@@ -106,6 +111,7 @@ export default function Page() {
             variant="contained"
             component="a"
             href="/qf/page1"
+            data-decoration-anchor="home-button-qf"
             disabled={!gamesAvailability.qf}
           >
             Quantum Fortune (single player)
@@ -115,6 +121,7 @@ export default function Page() {
             variant="contained"
             component="a"
             href="/ssm/page1"
+            data-decoration-anchor="home-button-ssm"
             sx={{ marginTop: '40px' }}
             disabled={!gamesAvailability.ssm}
           >

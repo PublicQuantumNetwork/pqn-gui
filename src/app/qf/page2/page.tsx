@@ -62,6 +62,11 @@ function FortuneContent() {
             }}
           >
             <Box
+              // The Halloween Decorations' ball anchor (agent decision A8):
+              // the ghost, the mist, the twinkles and the glow are placed
+              // against the page's own ball. Non-visual, so no theme changes
+              // the look.
+              data-decoration-anchor="qf-ball"
               sx={{
                 position: 'relative',
                 backgroundImage: 'url(/images/circle.png)',

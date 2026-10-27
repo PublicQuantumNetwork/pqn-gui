@@ -35,6 +35,9 @@ export default function Whobit({
     <Stack position="relative" sx={{ minWidth: 'fit-content' }}>
       {/* Speech bubble */}
       <Box
+        // The Halloween Decorations' speech-bubble anchor (agent decision
+        // A8). Non-visual, so no theme changes the look.
+        data-decoration-anchor="whobit-bubble"
         sx={{
           position: 'relative',
           backgroundColor: '#FFFFFF',
@@ -87,6 +90,9 @@ export default function Whobit({
 
       {/* Whobit character, with the active theme's accessory over the pose */}
       <Box
+        // The Halloween Decorations' pose anchor (agent decision A8).
+        // Non-visual, so no theme changes the look.
+        data-decoration-anchor="whobit-pose"
         sx={{
           position: 'relative',
           display: 'flex',

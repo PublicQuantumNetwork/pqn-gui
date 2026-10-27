@@ -149,6 +149,38 @@
   }
 }
 
+/* QF1.dc.html and QF2.dc.html: the mist swirls inside the ball. */
+@keyframes halloween-swirl {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* QF1.dc.html and QF2.dc.html: the twinkles sparkle on the ball. */
+@keyframes halloween-twinkle {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+
+/* QF2.dc.html: the halo around the ball pulses. */
+@keyframes halloween-glow {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+
 /* QF1.dc.html: the lit pumpkin faces flicker. */
 @keyframes halloween-flicker {
   0%,
@@ -239,6 +271,24 @@
   animation: halloween-wave 12s ease-in-out 3s infinite;
 }
 
+.halloween-mist {
+  transform-box: view-box;
+  transform-origin: 280px 230px;
+  animation: halloween-swirl 28s linear infinite;
+}
+
+.halloween-twinkle {
+  animation: halloween-twinkle 2.4s ease-in-out infinite;
+}
+
+.halloween-twinkle-late {
+  animation: halloween-twinkle 2.4s ease-in-out 1.2s infinite;
+}
+
+.halloween-glow-pulse {
+  animation: halloween-glow 3s ease-in-out infinite;
+}
+
 .halloween-flicker {
   animation: halloween-flicker 1.8s ease-in-out infinite;
 }
@@ -268,6 +318,10 @@
   .halloween-monster-rise,
   .halloween-monster-slide,
   .halloween-monster-arm,
+  .halloween-mist,
+  .halloween-twinkle,
+  .halloween-twinkle-late,
+  .halloween-glow-pulse,
   .halloween-flicker,
   .halloween-wing,
   .halloween-peeker {

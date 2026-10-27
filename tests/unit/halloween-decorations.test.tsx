@@ -176,8 +176,14 @@ function mistHolesClip(container: HTMLElement): string | null {
   if (!reference) {
     return null;
   }
-  const clipPath = document.getElementById(reference.slice(5, -1));
-  return clipPath?.querySelector('path')?.getAttribute('d') ?? null;
+  const path = document
+    .getElementById(reference.slice(5, -1))
+    ?.querySelector('path');
+  // The holes only stay holes under the path's own even-odd rule: without
+  // clip-rule="evenodd" the holes' outlines fill back in and the mist covers
+  // the counter and the fortune again.
+  expect(path?.getAttribute('clip-rule')).toBe('evenodd');
+  return path?.getAttribute('d') ?? null;
 }
 
 /** An occluder's hole in the mist layer's own ball coordinates. */
@@ -457,6 +463,13 @@ test('QF1 renders the QF1 board’s spider, ball pieces and rising monster', () 
     expect((twinkle as HTMLElement).style.clipPath).toBe('');
   }
 
+  // And none of them lives inside the hole-clipped wrapper around the mist:
+  // only the mist (and the veil with it) may be cut by the occluder holes.
+  const holesWrapper = mist.parentElement!;
+  expect(
+    holesWrapper.querySelector('.halloween-twinkle, .halloween-twinkle-late')
+  ).toBeNull();
+
   // The QF1 board carries no ghost.
   expect(container.querySelector('.halloween-ghost')).toBeNull();
 });
@@ -580,6 +593,15 @@ test('QF2 renders the QF2 board’s ghost, glow, flickering pumpkin and sliding 
     expect(piece.getAttribute('clip-path')).toBeNull();
     expect((piece as HTMLElement).style.clipPath).toBe('');
   }
+
+  // And none of them lives inside the hole-clipped wrapper around the mist:
+  // only the mist (and the veil with it) may be cut by the occluder holes —
+  // the halo's ring stays whole even where the fortune's box reaches over it.
+  const holesWrapper = mist.parentElement!;
+  expect(
+    holesWrapper.querySelector('.halloween-twinkle, .halloween-twinkle-late')
+  ).toBeNull();
+  expect(holesWrapper.querySelector('.halloween-glow-pulse')).toBeNull();
 
   // The pumpkin under the pose keeps its place beside the pose box, clamped
   // to rest its base on the stage's bottom edge (its board spot on this page
@@ -893,6 +915,24 @@ test('the Measuring Decorations follow the popup when only the ResizeObserver fi
   expect(titleElement).toBeDefined();
   expect(dialogElement!.contains(barElement!)).toBe(true);
   expect(dialogElement!.contains(titleElement!)).toBe(true);
+
+  // Per observer, not just across them all: the hook watches an element and
+  // every container around it with one and the same observer, so the
+  // observer that watches the bar (the title) must itself watch the dialog
+  // too — otherwise the ancestor loop could be deleted and the bar would
+  // never follow the popup when it moves inside it without resizing.
+  expect(
+    observers.some((observer) => observer.observed.includes(barElement!))
+  ).toBe(true);
+  expect(
+    observers.some((observer) => observer.observed.includes(titleElement!))
+  ).toBe(true);
+  for (const observer of observers) {
+    const watched = observer.observed;
+    if (watched.includes(barElement!) || watched.includes(titleElement!)) {
+      expect(watched.includes(dialogElement!)).toBe(true);
+    }
+  }
 
   // The real browser fires the observers, and nothing else — no window
   // resize is dispatched here — so the observer path alone must carry the

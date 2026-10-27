@@ -1,5 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { afterAll, expect, test, vi } from 'vitest';
+import { LinearProgress } from '@mui/material';
+import { ThemeProvider } from '@mui/material/styles';
 
 /**
  * The Halloween Seasonal Theme through the real registry and resolvers: with
@@ -55,7 +57,9 @@ import Fireworks from '@/components/Fireworks';
 import {
   activeCelebration,
   activeFortune,
+  activeImages,
   activeMuiTheme,
+  DEFAULT_IMAGES,
   getActiveTheme,
   knownThemes,
 } from '@/themes';
@@ -152,8 +156,11 @@ test('CHSH3 renders the spooky line under an entangled result, letter by letter'
   expect(letters[0]).toHaveStyle({ animationDelay: '0s' });
   expect(letters[1]).toHaveStyle({ animationDelay: '0.12s' });
   expect(letters[5]).toHaveStyle({ animationDelay: '0.6s' });
-  expect(screen.getByText(/action at a distance/)).toBeInTheDocument();
-  expect(screen.getByText('— Albert Einstein')).toBeInTheDocument();
+  // The whole line, as one piece of text: the space between "spooky" and
+  // "action" is part of the line and easy to lose to JSX.
+  const line = screen.getByText(/action at a distance/);
+  expect(line.textContent).toMatch(/^spooky action at a distance/);
+  expect(line.textContent).toContain('— Albert Einstein');
   // Whobit wears the hat in the arms-up pose.
   expect(hatImage(container)).not.toBeNull();
 });
@@ -211,6 +218,42 @@ test('the hat sits over each pose at that pose’s position', () => {
     height: '110px',
     transform: 'rotate(-8deg)',
   });
+});
+
+test('the accessory gap moves only Whobit’s own pose, not the layout', () => {
+  const { container } = render(<Whobit variant="right-wing-up">Hello</Whobit>);
+
+  // Agent decision A6: the pose box grows the boards' 70px gap above the
+  // pose and gives the 70px straight back at its bottom, so its layout
+  // height contribution stays today's 288px and no other element moves.
+  const poseBox = hatImage(container)!.parentElement!;
+  expect(poseBox).toHaveStyle({
+    paddingTop: '70px',
+    height: '358px',
+    marginBottom: '-70px',
+  });
+  expect(
+    parseFloat(poseBox.style.height) + parseFloat(poseBox.style.marginBottom)
+  ).toBe(288);
+});
+
+test('without an accessory the pose box keeps today’s style', () => {
+  const saved = process.env.NEXT_PUBLIC_SEASONAL_THEME;
+  delete process.env.NEXT_PUBLIC_SEASONAL_THEME;
+  try {
+    const { container } = render(
+      <Whobit variant="right-wing-up">Hello</Whobit>
+    );
+
+    const poseBox =
+      container.querySelector('img[alt="Whobit"]')!.parentElement!;
+    // No gap override at all: the box carries no inline style, so it is
+    // exactly the sx box the Default Theme has today.
+    expect(poseBox.getAttribute('style')).toBeNull();
+    expect(hatImage(container)).toBeNull();
+  } finally {
+    process.env.NEXT_PUBLIC_SEASONAL_THEME = saved;
+  }
 });
 
 test('the hat renders on every Whobit screen except Maintenance and Survey', () => {
@@ -319,7 +362,13 @@ test('SSM4 renders the burst only for a perfect match', () => {
       <SSM4 />
     </PageRedirectProvider>
   );
-  expect(burst(perfect.container)).not.toBeNull();
+  const burstLayer = burst(perfect.container);
+  expect(burstLayer).not.toBeNull();
+  // The burst sits around Whobit, as on CHSH3: Whobit's pose is inside the
+  // same relative box the burst is positioned against.
+  expect(
+    burstLayer!.parentElement?.querySelector('img[alt="Whobit"]')
+  ).not.toBeNull();
   perfect.unmount();
 
   searchParams.current = new URLSearchParams(
@@ -348,6 +397,52 @@ test('the Halloween palette gives the Measuring popup’s track the cream colour
   expect(merged.components.MuiButton).toEqual(
     activeMuiTheme(knownThemes.default).components.MuiButton
   );
+});
+
+test('the rendered Measuring popup track is the cream under Halloween', () => {
+  // ModalBox renders its LinearProgress with no color prop, so the
+  // primary-colour track override is the one that shows (agent decision A5).
+  const halloween = render(
+    <ThemeProvider theme={activeMuiTheme(knownThemes.halloween)}>
+      <LinearProgress variant="determinate" value={50} />
+    </ThemeProvider>
+  );
+  const halloweenTrack = halloween.container.querySelector<HTMLElement>(
+    '.MuiLinearProgress-root'
+  );
+  expect(halloweenTrack).not.toBeNull();
+  expect(getComputedStyle(halloweenTrack!).backgroundColor).toBe(
+    'rgb(255, 244, 221)'
+  );
+  halloween.unmount();
+
+  // Under the Default Theme the track is MUI's own lighten(primary.main),
+  // not the cream.
+  const deflt = render(
+    <ThemeProvider theme={activeMuiTheme(knownThemes.default)}>
+      <LinearProgress variant="determinate" value={50} />
+    </ThemeProvider>
+  );
+  const defaultTrack = deflt.container.querySelector<HTMLElement>(
+    '.MuiLinearProgress-root'
+  );
+  expect(getComputedStyle(defaultTrack!).backgroundColor).toBe(
+    'rgb(255, 194, 160)'
+  );
+});
+
+test('Halloween keeps the Default Theme’s background and Whobit poses', () => {
+  const images = activeImages(knownThemes.halloween);
+
+  // Decision 8: the design's background and Whobit images are byte-for-byte
+  // today's; only the measuring illustration is a theme's to change
+  // (group 2.2), so it stays free here.
+  expect(images.background).toBe(DEFAULT_IMAGES.background);
+  expect(images['whobit-right-wing-up']).toBe(
+    DEFAULT_IMAGES['whobit-right-wing-up']
+  );
+  expect(images['whobit-arms-up']).toBe(DEFAULT_IMAGES['whobit-arms-up']);
+  expect(images['whobit-arms-down']).toBe(DEFAULT_IMAGES['whobit-arms-down']);
 });
 
 test('a theme setting only the track keeps every other Default Palette value', () => {

@@ -92,12 +92,19 @@ export default function Whobit({
           display: 'flex',
           width: '288px',
           height: '288px',
-          // The boards place the accessory in a 70px gap above the pose
-          // (every board's Whobit container has padding-top: 70px), so the
-          // gap appears only while Whobit wears an accessory: the Default
-          // Theme, which has none, keeps today's layout untouched.
-          ...(whobitAccessory ? { paddingTop: '70px', height: '358px' } : {}),
         }}
+        // The boards place the accessory in a 70px gap above the pose
+        // (every board's Whobit container has padding-top: 70px). The gap
+        // moves only Whobit's own pose (agent decision A6): the box grows
+        // to hold it and gives the 70px straight back as a bottom margin,
+        // so its layout height contribution stays today's 288px and no
+        // other element moves. Inline, so the layout contract is testable;
+        // the Default Theme wears no accessory and keeps today's box.
+        style={
+          whobitAccessory
+            ? { paddingTop: '70px', height: '358px', marginBottom: '-70px' }
+            : undefined
+        }
       >
         <Box
           component="img"

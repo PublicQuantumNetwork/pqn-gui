@@ -127,33 +127,42 @@ export default function Home() {
       <Container maxWidth="lg" sx={{ my: 4 }}>
         <Decorations scene={scene} />
         <Stack direction="row" alignItems="flex-start" sx={{ width: '100%' }}>
-          <Whobit
-            variant={
-              success &&
+          {/* Left side: Whobit with the message, and the Celebration
+              positioned as a sibling to Whobit, as on CHSH3, so the burst
+              sits around Whobit the same way on both pages. */}
+          <Box sx={{ position: 'relative' }}>
+            <Whobit
+              variant={
+                success &&
+                Number(n_matching_bits) === Number(n_total_bits) &&
+                Number(n_total_bits) > 0
+                  ? 'arms-up'
+                  : 'arms-down'
+              }
+              speechBubbleHeight="250px"
+            >
+              <Box sx={{ fontSize: '0.85em' }}>
+                {!success ? (
+                  <>
+                    <p>{message}</p>
+                    <p>{message2}</p>
+                  </>
+                ) : Number(n_matching_bits) === Number(n_total_bits) &&
+                  Number(n_total_bits) > 0 ? (
+                  <>
+                    <p>{message}</p>
+                    <p>{message2}</p>
+                  </>
+                ) : (
+                  <p>{message}</p>
+                )}
+              </Box>
+            </Whobit>
+            {success &&
+              emoji &&
               Number(n_matching_bits) === Number(n_total_bits) &&
-              Number(n_total_bits) > 0
-                ? 'arms-up'
-                : 'arms-down'
-            }
-            speechBubbleHeight="250px"
-          >
-            <Box sx={{ fontSize: '0.85em' }}>
-              {!success ? (
-                <>
-                  <p>{message}</p>
-                  <p>{message2}</p>
-                </>
-              ) : Number(n_matching_bits) === Number(n_total_bits) &&
-                Number(n_total_bits) > 0 ? (
-                <>
-                  <p>{message}</p>
-                  <p>{message2}</p>
-                </>
-              ) : (
-                <p>{message}</p>
-              )}
-            </Box>
-          </Whobit>
+              Number(n_total_bits) > 0 && <Celebration />}
+          </Box>
 
           <Stack
             flexDirection="column"
@@ -243,14 +252,11 @@ export default function Home() {
           emoji &&
           Number(n_matching_bits) === Number(n_total_bits) &&
           Number(n_total_bits) > 0 && (
-            <>
-              <EmojiConfetti
-                emoji={emoji}
-                triggerKey={confettiTrigger}
-                emojiRef={emojiRef}
-              />
-              <Celebration />
-            </>
+            <EmojiConfetti
+              emoji={emoji}
+              triggerKey={confettiTrigger}
+              emojiRef={emojiRef}
+            />
           )}
       </Container>
     );

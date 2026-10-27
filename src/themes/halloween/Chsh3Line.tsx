@@ -31,7 +31,7 @@ export const chsh3EntangledLine: ReactNode = (
       >
         {letter}
       </span>
-    ))}
+    ))}{' '}
     action at a distance
     <br />
     <span

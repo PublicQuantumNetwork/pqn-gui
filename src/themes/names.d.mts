@@ -3,7 +3,7 @@
  * lives in the .mjs file so `next.config.mjs` can import it; keep the two
  * in sync (a Vitest test checks the registry against the runtime list).
  */
-export declare const KNOWN_THEME_NAMES: readonly ['default'];
+export declare const KNOWN_THEME_NAMES: readonly ['default', 'halloween'];
 
 /** A name in the registry of known Seasonal Themes. */
 export type SeasonalThemeName = (typeof KNOWN_THEME_NAMES)[number];

@@ -15,7 +15,7 @@ test('an unknown NEXT_PUBLIC_SEASONAL_THEME fails the build check, naming the ba
   process.env.NEXT_PUBLIC_SEASONAL_THEME = 'nosuchtheme';
   try {
     await expect(importNextConfig()).rejects.toThrow(
-      /nosuchtheme[\s\S]*\bdefault\b/
+      /nosuchtheme[\s\S]*\bdefault, halloween\b/
     );
   } finally {
     delete process.env.NEXT_PUBLIC_SEASONAL_THEME;
@@ -30,6 +30,16 @@ test('an unset NEXT_PUBLIC_SEASONAL_THEME passes the build check', async () => {
 
 test('a known name passes the build check', async () => {
   process.env.NEXT_PUBLIC_SEASONAL_THEME = 'default';
+  try {
+    const config = await importNextConfig();
+    expect(config.default).toEqual({ distDir: '.next' });
+  } finally {
+    delete process.env.NEXT_PUBLIC_SEASONAL_THEME;
+  }
+});
+
+test('halloween passes the build check', async () => {
+  process.env.NEXT_PUBLIC_SEASONAL_THEME = 'halloween';
   try {
     const config = await importNextConfig();
     expect(config.default).toEqual({ distDir: '.next' });

@@ -18,9 +18,15 @@ export interface ThemeServer {
   seasonalTheme?: string;
 }
 
-/** The themes the harness serves. Group 2.1 adds `halloween` here. */
+/** The themes the harness serves. */
 export const THEMES: ThemeServer[] = [
   { name: 'default', port: 3300, buildDir: '.next-a' },
+  {
+    name: 'halloween',
+    port: 3301,
+    buildDir: '.next-b',
+    seasonalTheme: 'halloween',
+  },
 ];
 
 /**

@@ -134,7 +134,8 @@ export default function Home() {
                 </Typography>
 
                 {/* Flavour copy: nothing under an entangled result in the
-                    Default Theme (decision 13). */}
+                    Default Theme (decision 13). Placed as the boards place
+                    it: top 70%, the full circle's width, centred, 22px. */}
                 {fail !== 'true' &&
                   value >= 2 &&
                   flavourCopy['chsh3-entangled-line'] && (
@@ -142,10 +143,12 @@ export default function Home() {
                       variant="h5"
                       sx={{
                         position: 'absolute',
-                        top: '75%',
-                        left: '29%',
+                        top: '70%',
+                        left: 0,
+                        right: 0,
                         color: '#000000',
-                        fontSize: '.85em',
+                        fontSize: '22px',
+                        lineHeight: '34px',
                         textAlign: 'center',
                       }}
                     >

@@ -2,6 +2,7 @@ import { createTheme, type Theme } from '@mui/material/styles';
 import defaultPalette from '@/theme';
 import defaultFortunes from '@/app/qf/page2/fortunes';
 import Fireworks from '@/components/Fireworks';
+import halloween from './halloween';
 import { KNOWN_THEME_NAMES, type SeasonalThemeName } from './names.mjs';
 import type {
   Celebration,
@@ -25,10 +26,11 @@ const defaultTheme: SeasonalTheme = {};
 /**
  * The registry of known Seasonal Themes, keyed by name; `satisfies` keeps
  * its keys exactly the known names, which `next.config.mjs` and the tests
- * rely on. Group 2.1 adds `halloween` here.
+ * rely on.
  */
 export const knownThemes: Record<string, SeasonalTheme> = {
   default: defaultTheme,
+  halloween,
 } satisfies Record<SeasonalThemeName, SeasonalTheme>;
 
 /**
@@ -88,10 +90,35 @@ export function activeMuiTheme(
   if (!theme.palette) {
     return base;
   }
+  // The Measuring popup's progress track (decision 11, agent decision A5):
+  // the palette's LinearProgress.primaryBg becomes a MuiLinearProgress
+  // override on the primary-colour track, which MUI would otherwise derive
+  // from primary.main — the bar's fill, which keeps the Default Theme's
+  // colour. A theme that sets no track gets no override at all.
+  const track = theme.palette.LinearProgress?.primaryBg;
   // createTheme deep-merges its extra arguments into the theme it builds,
   // so the theme's Palette lands over the Default Palette and every value
   // it leaves out keeps the Default Theme's.
-  return createTheme(base, { palette: theme.palette });
+  return createTheme(
+    base,
+    { palette: theme.palette },
+    ...(track
+      ? [
+          {
+            components: {
+              MuiLinearProgress: {
+                variants: [
+                  {
+                    props: { color: 'primary' },
+                    style: { backgroundColor: track },
+                  },
+                ],
+              },
+            },
+          },
+        ]
+      : [])
+  );
 }
 
 /**

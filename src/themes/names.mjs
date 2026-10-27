@@ -8,7 +8,7 @@
  * (whose entries carry React components from group 1.3 on) must stay out
  * of the config bundle.
  */
-export const KNOWN_THEME_NAMES = ['default'];
+export const KNOWN_THEME_NAMES = ['default', 'halloween'];
 
 /** Whether `name` is a known Seasonal Theme name (exact, case-sensitive). */
 export function isKnownThemeName(name) {

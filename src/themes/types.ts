@@ -1,4 +1,4 @@
-import type { ComponentType, CSSProperties } from 'react';
+import type { ComponentType, CSSProperties, ReactNode } from 'react';
 import type { PaletteOptions } from '@mui/material/styles';
 
 /**
@@ -6,7 +6,18 @@ import type { PaletteOptions } from '@mui/material/styles';
  * Palette (src/theme.ts). Anything the theme leaves out keeps the Default
  * Theme's value.
  */
-export type SeasonalPalette = PaletteOptions;
+export type SeasonalPalette = PaletteOptions & {
+  /**
+   * The Measuring popup's progress track (decision 11, agent decision A5),
+   * under MUI's own name for it: MUI's css-variables mode reads the track
+   * from `palette.LinearProgress.primaryBg`, and `activeMuiTheme` maps this
+   * value to a MuiLinearProgress track override, because the track MUI
+   * derives from `primary.main` must not change (it is also the fill).
+   */
+  LinearProgress?: {
+    primaryBg?: string;
+  };
+};
 
 /**
  * The Images part of a Seasonal Theme: the slots a theme may replace with
@@ -37,7 +48,9 @@ export type WhobitPose = 'right-wing-up' | 'arms-up' | 'arms-down';
 export interface WhobitAccessory {
   /** The accessory's SVG file. */
   svg: string;
-  /** How the accessory sits over the pose: CSS over the 288×288 pose image. */
+  /** How the accessory sits over the pose: CSS over the pose Box, which
+   * grows the boards' 70px gap above the 288×288 pose while Whobit wears
+   * an accessory, so the positions are the boards' own. */
   positions: Record<WhobitPose, CSSProperties>;
 }
 
@@ -59,8 +72,10 @@ export interface FlavourCopy {
   'qf2-lead-in'?: string;
   /** Quantum Fortune's fortunes, overridden by number (decision 13). */
   fortunes?: Record<number, string>;
-  /** CHSH3 line under an entangled result. */
-  'chsh3-entangled-line'?: string;
+  /** CHSH3 line under an entangled result. A theme may give a ReactNode so
+   * the line can animate letter by letter (agent decision A4); a plain
+   * string renders as it is. */
+  'chsh3-entangled-line'?: string | ReactNode;
 }
 
 /**

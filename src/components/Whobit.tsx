@@ -92,6 +92,11 @@ export default function Whobit({
           display: 'flex',
           width: '288px',
           height: '288px',
+          // The boards place the accessory in a 70px gap above the pose
+          // (every board's Whobit container has padding-top: 70px), so the
+          // gap appears only while Whobit wears an accessory: the Default
+          // Theme, which has none, keeps today's layout untouched.
+          ...(whobitAccessory ? { paddingTop: '70px', height: '358px' } : {}),
         }}
       >
         <Box

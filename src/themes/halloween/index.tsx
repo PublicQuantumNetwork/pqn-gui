@@ -1,0 +1,59 @@
+import type { SeasonalTheme } from '../types';
+import Burst from './Burst';
+import { chsh3EntangledLine } from './Chsh3Line';
+
+/**
+ * The hat's size and tilt, the same on every board that shows Whobit: the
+ * boards draw it 160×110, rotated -8°, 30px from the left and 6px above the
+ * top of the pose container (which holds the pose 70px down).
+ */
+const hat = {
+  width: '160px',
+  height: '110px',
+  transform: 'rotate(-8deg)',
+} as const;
+
+/**
+ * The Halloween Seasonal Theme: the witch hat Whobit wears, the spooky
+ * Flavour copy, the bat-and-pumpkin Celebration and the Measuring popup's
+ * cream track, ported from the boards in docs/design/halloween/ (decision 12;
+ * pumpkins are always #ff5f05, decision 7). Decorations come with the Scenes
+ * in groups 2.2–2.4; the background and Whobit poses stay the Default
+ * Theme's (decision 8).
+ */
+const halloween: SeasonalTheme = {
+  palette: {
+    // The Measuring popup's cream progress track (decision 11, agent
+    // decision A5); primary.main stays the Default Theme's pumpkin.
+    LinearProgress: { primaryBg: '#fff4dd' },
+  },
+  whobitAccessory: {
+    svg: '/images/whobit-witch-hat.svg',
+    positions: {
+      // Every board places the hat the same way over the pose container:
+      // left 30px, top -6px. Each pose's SVG is centred in the 288×288 pose
+      // box while the boards anchor the pose top-left, so each pose's
+      // position shifts by how far its own aspect moves the owl: the
+      // right-wing-up pose is ~6.5px right, the arms-down pose ~36.4px
+      // right, the arms-up pose ~18.9px down.
+      'right-wing-up': { ...hat, left: '36.5px', top: '-6px' },
+      'arms-down': { ...hat, left: '66.4px', top: '-6px' },
+      'arms-up': { ...hat, left: '30px', top: '12.9px' },
+    },
+  },
+  flavourCopy: {
+    'home-greeting-first-line': 'Happy Halloween, Quantum Adventurer!',
+    'home-greeting-last-line': 'Pick a game… if you dare!',
+    'qf1-lead-in': 'Gaze into my crystal ball…',
+    'qf2-lead-in': 'The spirits have spoken…',
+    fortunes: {
+      1: 'Is that a ghost, or a particle in superposition? Nobody knows until somebody looks.',
+      2: 'Quantum means smallest quantity. Even the tiniest pumpkin can light up the whole night.',
+      3: 'Entangled particles are everywhere, so are we ever really alone? Maybe check behind you.',
+    },
+    'chsh3-entangled-line': chsh3EntangledLine,
+  },
+  celebration: Burst,
+};
+
+export default halloween;

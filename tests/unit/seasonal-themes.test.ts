@@ -85,6 +85,8 @@ test('the Default Theme renders today’s image files', () => {
     'whobit-arms-up': '/images/whobit-arms-up.svg',
     'whobit-arms-down': '/images/whobit-arms-down.svg',
     'measuring-illustration': '/images/gif_pqn.gif',
+    'polarization-wheel': '/images/circle.png',
+    'polarization-arrow': '/images/arrow.png',
   });
 });
 

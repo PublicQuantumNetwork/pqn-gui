@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="60" height="432" viewBox="0 0 60 432">
+  <!-- The CHSH2 board's broom needle (docs/design/halloween/CHSH2.dc.html),
+       pointing up at rest and pivoting on its hub at the box's centre, as
+       arrow.png does. The tip is the pumpkin colour #ff5f05 (decision 7). -->
+  <path d="M30 46 L30 312" fill="none" stroke="#000000" stroke-width="13" stroke-linecap="round"/>
+  <path d="M30 46 L30 312" fill="none" stroke="#13294b" stroke-width="7" stroke-linecap="round"/>
+  <path d="M30 2 L54 54 L30 42 L6 54 Z" fill="#ff5f05" stroke="#000000" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M14 330 L46 330 L58 418 Q30 432 2 418 Z" fill="#fcb316" stroke="#000000" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M22 336 L16 418 M30 336 L30 424 M38 336 L44 418" fill="none" stroke="#000000" stroke-width="1.5" stroke-linecap="round"/>
+  <rect x="12" y="312" width="36" height="20" rx="4" fill="#13294b" stroke="#000000" stroke-width="3"/>
+  <circle cx="30" cy="216" r="9" fill="#fcb316" stroke="#000000" stroke-width="3"/>
+</svg>

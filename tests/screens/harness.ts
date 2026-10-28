@@ -47,12 +47,8 @@ export async function expectArrowRotation(
     .poll(
       async () =>
         page.evaluate(() => {
-          const arrow = Array.from(
-            document.querySelectorAll<HTMLElement>('div, img')
-          ).find(
-            (el) =>
-              getComputedStyle(el).backgroundImage.includes('arrow.png') ||
-              el.getAttribute('src') === '/images/arrow.png'
+          const arrow = document.querySelector<HTMLElement>(
+            '[data-polarization-arrow]'
           );
           if (!arrow) return null;
           const transform = getComputedStyle(arrow).transform;

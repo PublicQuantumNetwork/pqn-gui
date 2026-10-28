@@ -52,6 +52,9 @@ const halloween: SeasonalTheme = {
     // The Measuring popup's cauldron illustration (decision 11), an SVG
     // carrying its own animations and reduced-motion rule.
     'measuring-illustration': '/images/measuring-cauldron.svg',
+    // The CHSH2 board's cream wheel face and broom needle.
+    'polarization-wheel': '/images/polarization-wheel-halloween.svg',
+    'polarization-arrow': '/images/polarization-broom-halloween.svg',
   },
   whobitAccessory: {
     svg: '/images/whobit-witch-hat.svg',

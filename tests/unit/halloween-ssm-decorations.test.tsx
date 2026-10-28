@@ -764,6 +764,24 @@ test(
   }
 );
 
+test('SSM3’s wheel wears the board’s cream face and broom needle', async () => {
+  setAnchors({
+    stage: STAGE,
+    'whobit-bubble': SSM.bubble,
+    'whobit-pose': SSM.pose,
+  });
+  renderPage(<SSM3 />);
+  // The wheel shows once the question order arrives.
+  const needle = await screen.findByAltText('Arrow');
+  expect(needle).toHaveAttribute('data-polarization-arrow');
+  expect(needle.getAttribute('src')).toBe(
+    '/images/polarization-broom-halloween.svg'
+  );
+  expect(getComputedStyle(needle.parentElement!).backgroundImage).toContain(
+    '/images/polarization-wheel-halloween.svg'
+  );
+});
+
 test('SSM3 renders the board’s own web and spider, and the tentacle monster — no moon, no bats', () => {
   setAnchors({
     stage: STAGE,

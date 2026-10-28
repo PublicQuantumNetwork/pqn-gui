@@ -32,6 +32,11 @@ export interface SeasonalImages {
   'whobit-arms-down'?: string;
   /** The Measuring popup's illustration (ModalBox, SSMModalBox). */
   'measuring-illustration'?: string;
+  /** The CHSH polarization wheel's face, 550px with its circle centred at
+   *  275 with radius 218, and its needle, pointing up and pivoting on the
+   *  centre of a 432px square (RotatorCircle, SSM3). */
+  'polarization-wheel'?: string;
+  'polarization-arrow'?: string;
 }
 
 /**

@@ -31,8 +31,7 @@ export const stepDetails: Record<StepNumber, StepDetail> = {
     kicker: 'In and between both buildings',
     title: 'Optical Fiber',
     image: `${ASSET_ROOT}/step-2-optical-fiber.png`,
-    imageAlt: 'Optical fiber equipment connecting the experiment',
-    imagePosition: 'center bottom',
+    imageAlt: 'Yellow optical fiber connected to a fiber coupler mount',
     summary:
       'The pair is separated at birth and sent to different destinations.',
     description:
@@ -50,7 +49,8 @@ export const stepDetails: Record<StepNumber, StepDetail> = {
   4: {
     kicker: 'In and between both buildings',
     title: 'Digital Relay System',
-    caption: 'Placeholder graphic — final artwork pending',
+    image: `${ASSET_ROOT}/step-4-digital-relay.jpg`,
+    imageAlt: 'Close-up of a computer circuit board',
     summary: 'Your choices are relayed to the equipment.',
     description:
       'Turning the wheel and pressing the button sends your chosen angle over the network to motors on the half-waveplates at both buildings, rotating them to match your selection.',
@@ -58,11 +58,8 @@ export const stepDetails: Record<StepNumber, StepDetail> = {
   5: {
     kicker: 'At each building',
     title: 'Half-waveplate and Polarizer',
-    image: `${ASSET_ROOT}/step-4-waveplate-polarizer.png`,
-    imageAlt: 'Half-waveplate and polarizer rotation mounts',
-    imagePosition: 'center 65%',
-    caption:
-      'Stand-in photo of the half-waveplate rotation mount — final photography pending',
+    image: `${ASSET_ROOT}/step-5-waveplate-polarizer.jpg`,
+    imageAlt: 'Half-waveplate in a rotation mount next to a polarizing cube',
     summary:
       'When the photons arrive, they are prepared by an outside power (you!) to answer a yes/no question.',
     description:
@@ -71,7 +68,7 @@ export const stepDetails: Record<StepNumber, StepDetail> = {
   6: {
     kicker: 'On the lab side',
     title: 'Detection System',
-    image: `${ASSET_ROOT}/step-5-detection-system.png`,
+    image: `${ASSET_ROOT}/step-6-detection-system.png`,
     imageAlt: 'Photon detection system equipment',
     imagePosition: 'center 31%',
     summary:

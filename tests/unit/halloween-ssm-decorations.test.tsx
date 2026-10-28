@@ -1049,6 +1049,19 @@ test(
       {},
       { timeout: 5000 }
     );
+    // The error state has just switched the Scene to ssm2-waiting, whose
+    // pieces render only once their own anchors are measured — the text
+    // can appear before the new Decorations' effects have run — so wait
+    // for the set to render before asserting it, as the file's other
+    // Scene-switch tests gate their pieces (all the hooks measure in one
+    // effects flush, so the web's arrival carries the rest with it).
+    await waitFor(
+      () =>
+        expect(
+          container.querySelector('svg[viewBox="0 0 200 200"]')
+        ).not.toBeNull(),
+      { timeout: 5000 }
+    );
     fireEvent(window, new Event('resize'));
 
     // The stage-anchored pieces all stay: web, moon, bats, the spider and

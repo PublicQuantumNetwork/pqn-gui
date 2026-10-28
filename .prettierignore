@@ -1,7 +1,6 @@
 # Build directories
 .next
-.next-a
-.next-b
+.next-*
 out
 build
 
@@ -20,8 +19,11 @@ package-lock.json
 yarn.lock
 pnpm-lock.yaml
 
-# Docs, agent workflow and test output
+# Docs: Prettier pads every table row to the widest cell, which makes
+# the plan and ADR tables unreadable as plain text
 docs/
+
+# Agent workflow, glossary and test output
 .agents/
 CONTEXT.md
 tsconfig.json

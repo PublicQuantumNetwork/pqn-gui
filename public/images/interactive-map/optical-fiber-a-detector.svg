@@ -1,0 +1,13 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="101.981" height="69.8895" viewBox="0 0 101.981 69.8895" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="Vector 4 (Stroke)">
+<use xlink:href="#stroke0_0_56" fill="#F1FC5A"/>
+<mask id="stroke1_0_56" maskUnits="userSpaceOnUse" x="0" y="1.66893e-06" width="102" height="70" fill="black">
+<rect fill="white" y="1.66893e-06" width="102" height="70"/>
+<use xlink:href="#stroke0_0_56"/>
+</mask>
+<path d="M2 2C29.1509 2 42 2 50.5 15.5C59 29 65.1219 55.5925 80.5 62C86.5 64.5 93.5 63 94.9432 53.7171C94.9432 53.7171 95.1417 50.7041 98 51C100.5 51.2588 99.9242 54.1482 99.9242 54.1482C98 66.5 90.5 69 81 67.5C64.9204 64.9611 51.5 27.9375 46 19C40.5 10.0625 33 5.5 2 7V2Z" stroke-width="4" stroke="black" mask="url(#stroke1_0_56)"/>
+</g>
+<defs>
+<path id="stroke0_0_56" d="M2 2C29.1509 2 42 2 50.5 15.5C59 29 65.1219 55.5925 80.5 62C86.5 64.5 93.5 63 94.9432 53.7171C94.9432 53.7171 95.1417 50.7041 98 51C100.5 51.2588 99.9242 54.1482 99.9242 54.1482C98 66.5 90.5 69 81 67.5C64.9204 64.9611 51.5 27.9375 46 19C40.5 10.0625 33 5.5 2 7V2Z"/>
+</defs>
+</svg>

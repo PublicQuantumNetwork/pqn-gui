@@ -55,11 +55,15 @@ export default function Page() {
         </Whobit>
 
         <Stack flex={1} justifyContent="flex-end" alignItems="flex-end">
+          {/* The button carries the Halloween Decorations' anchor (agent
+              decision A8): the board's pumpkin pair sits above it.
+              Non-visual, so no theme changes the look. */}
           <Button
             variant="contained"
             component="a"
             href="#"
             onClick={handleNextPageClick}
+            data-decoration-anchor="chsh1-next"
             sx={{
               height: '5em',
               width: '8em',

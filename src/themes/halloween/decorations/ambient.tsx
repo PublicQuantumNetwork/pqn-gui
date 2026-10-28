@@ -238,19 +238,72 @@ export function Spider({
   );
 }
 
-/** The ghost (Main.dc.html, QF2.dc.html), floating. The two boards draw it
- *  the same but for a couple of pixels in the mouth; this is Main's drawing,
- *  worn at each board's own size and place. */
+/** The ghost's mouth, each board its own: Main's and QF2's open mouth, and
+ *  the CHSH boards' smile (CHSH1.dc.html, CHSH3-error.dc.html), little o
+ *  (CHSH2.dc.html), grin (CHSH3.dc.html) and frown (CHSH3-weak.dc.html),
+ *  each ported as its board draws it. */
+export type GhostMouth = 'open' | 'smile' | 'o' | 'grin' | 'frown';
+
+function ghostMouth(mouth: GhostMouth) {
+  switch (mouth) {
+    case 'smile':
+      return (
+        <path
+          d="M44 64 Q52 72 60 64"
+          fill="none"
+          stroke="#000000"
+          strokeWidth="3"
+          strokeLinecap="round"
+        />
+      );
+    case 'o':
+      return <ellipse cx="52" cy="66" rx="5" ry="6" fill="#000000" />;
+    case 'grin':
+      return (
+        <path
+          d="M42 62 Q52 74 62 62 Z"
+          fill="#000000"
+          stroke="#000000"
+          strokeWidth="2"
+          strokeLinejoin="round"
+        />
+      );
+    case 'frown':
+      return (
+        <path
+          d="M46 66 Q52 62 58 66"
+          fill="none"
+          stroke="#000000"
+          strokeWidth="3"
+          strokeLinecap="round"
+        />
+      );
+    case 'open':
+    default:
+      return (
+        <>
+          <ellipse cx="52" cy="64" rx="6" ry="8" fill="#000000" />
+          <ellipse cx="52" cy="68" rx="3.5" ry="3" fill="#f48fb1" />
+        </>
+      );
+  }
+}
+
+/** The ghost (every board), floating. The boards draw it the same but for
+ *  the mouth, so each board's Scene wears its own mouth (see `GhostMouth`)
+ *  at its own size and place; this is Main's drawing otherwise. */
 export function Ghost({
   left,
   top,
   width,
   height,
+  mouth = 'open',
 }: {
   left: number;
   top: number;
   width: number;
   height: number;
+  mouth?: GhostMouth;
 }) {
   return (
     <svg
@@ -296,8 +349,7 @@ export function Ghost({
       <circle cx="66" cy="43" r="2.2" fill="#ffffff" />
       <ellipse cx="31" cy="58" rx="6" ry="3.5" fill="rgba(240,128,170,0.55)" />
       <ellipse cx="73" cy="58" rx="6" ry="3.5" fill="rgba(240,128,170,0.55)" />
-      <ellipse cx="52" cy="64" rx="6" ry="8" fill="#000000" />
-      <ellipse cx="52" cy="68" rx="3.5" ry="3" fill="#f48fb1" />
+      {ghostMouth(mouth)}
     </svg>
   );
 }
@@ -448,13 +500,25 @@ export function Pumpkin({
 }
 
 /** The small pumpkin beside the ghost under the game buttons
- *  (Main.dc.html), 84x73, the board's own smaller drawing with its smooth
- *  face, at the place the Scene measures for the ghost's row. */
-export function PumpkinSmall({ left, top }: { left: number; top: number }) {
+ *  (Main.dc.html), the board's own smaller drawing with its smooth face,
+ *  at the place the Scene measures for the ghost's row. CHSH3.dc.html (and
+ *  its weak and error boards) wears the same drawing beside the results
+ *  circle at its own bigger size. */
+export function PumpkinSmall({
+  left,
+  top,
+  width = 84,
+  height = 73,
+}: {
+  left: number;
+  top: number;
+  width?: number;
+  height?: number;
+}) {
   return (
     <svg
-      width="84"
-      height="73"
+      width={width}
+      height={height}
       viewBox="0 0 120 104"
       aria-hidden="true"
       style={{ position: 'absolute', left: `${left}px`, top: `${top}px` }}
@@ -537,6 +601,194 @@ export function PumpkinSmall({ left, top }: { left: number; top: number }) {
         <path d="M38 72 Q60 94 82 72 Q60 80 38 72 Z" />
       </g>
     </svg>
+  );
+}
+
+/** The pumpkin pair under the buttons column (CHSH1.dc.html): a 132x114
+ *  pumpkin with droopy eyes and a jagged grin and, 12px right of it with
+ *  their bottoms level, an 84x73 round-eyed one, both faces flickering.
+ *  The board floats the pair at the bottom of the Next button's column,
+ *  180px left of its right edge and 32px above the button, so the Scene
+ *  passes that spot as the GUI lays the button out (agent decision A8). */
+export function PumpkinPair({
+  right,
+  bottom,
+}: {
+  /** The pair row's right edge (the button's right, 180px left). */
+  right: number;
+  /** The pair row's bottom edge (32px above the button's top). */
+  bottom: number;
+}) {
+  return (
+    <>
+      <svg
+        width="132"
+        height="114"
+        viewBox="0 0 120 104"
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          left: `${right - 84 - 12 - 132}px`,
+          top: `${bottom - 114}px`,
+        }}
+      >
+        <ellipse cx="60" cy="100" rx="46" ry="4" fill="rgba(0,0,0,0.15)" />
+        <path
+          d="M54 26 Q52 10 62 2 Q69 1 70 6 Q62 11 65 27 Z"
+          fill="#006230"
+          stroke="#000000"
+          strokeWidth="2.5"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M66 20 Q78 14 90 24 Q78 32 66 20 Z"
+          fill="#338659"
+          stroke="#000000"
+          strokeWidth="2"
+          strokeLinejoin="round"
+        />
+        <ellipse
+          cx="32"
+          cy="62"
+          rx="28"
+          ry="34"
+          fill="#ff5f05"
+          stroke="#000000"
+          strokeWidth="3"
+        />
+        <ellipse
+          cx="88"
+          cy="62"
+          rx="28"
+          ry="34"
+          fill="#ff5f05"
+          stroke="#000000"
+          strokeWidth="3"
+        />
+        <ellipse
+          cx="46"
+          cy="62"
+          rx="22"
+          ry="37"
+          fill="#ff5f05"
+          stroke="#000000"
+          strokeWidth="3"
+        />
+        <ellipse
+          cx="74"
+          cy="62"
+          rx="22"
+          ry="37"
+          fill="#ff5f05"
+          stroke="#000000"
+          strokeWidth="3"
+        />
+        <ellipse
+          cx="60"
+          cy="62"
+          rx="16"
+          ry="38"
+          fill="#ff5f05"
+          stroke="#000000"
+          strokeWidth="3"
+        />
+        <path
+          d="M16 48 Q12 60 16 76"
+          fill="none"
+          stroke="rgba(255,255,255,0.55)"
+          strokeWidth="3"
+          strokeLinecap="round"
+        />
+        <g
+          className="halloween-flicker"
+          fill="#fcb316"
+          stroke="#000000"
+          strokeWidth="2"
+          strokeLinejoin="round"
+        >
+          <path d="M34 50 Q44 36 54 50 Q44 46 34 50 Z" />
+          <path d="M66 50 Q76 36 86 50 Q76 46 66 50 Z" />
+          <path d="M36 70 Q60 92 84 70 L78 72 L74 64 L68 74 L60 66 L52 74 L46 64 L42 72 Z" />
+        </g>
+        <path d="M40 48 Q44 42 48 48 Z M72 48 Q76 42 80 48 Z" fill="#fdca5c" />
+      </svg>
+      <svg
+        width="84"
+        height="73"
+        viewBox="0 0 120 104"
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          left: `${right - 84}px`,
+          top: `${bottom - 73}px`,
+        }}
+      >
+        <ellipse cx="60" cy="100" rx="46" ry="4" fill="rgba(0,0,0,0.15)" />
+        <path
+          d="M54 26 Q52 10 62 2 Q69 1 70 6 Q62 11 65 27 Z"
+          fill="#006230"
+          stroke="#000000"
+          strokeWidth="3"
+          strokeLinejoin="round"
+        />
+        <ellipse
+          cx="32"
+          cy="62"
+          rx="28"
+          ry="34"
+          fill="#ff5f05"
+          stroke="#000000"
+          strokeWidth="3.5"
+        />
+        <ellipse
+          cx="88"
+          cy="62"
+          rx="28"
+          ry="34"
+          fill="#ff5f05"
+          stroke="#000000"
+          strokeWidth="3.5"
+        />
+        <ellipse
+          cx="46"
+          cy="62"
+          rx="22"
+          ry="37"
+          fill="#ff5f05"
+          stroke="#000000"
+          strokeWidth="3.5"
+        />
+        <ellipse
+          cx="74"
+          cy="62"
+          rx="22"
+          ry="37"
+          fill="#ff5f05"
+          stroke="#000000"
+          strokeWidth="3.5"
+        />
+        <ellipse
+          cx="60"
+          cy="62"
+          rx="16"
+          ry="38"
+          fill="#ff5f05"
+          stroke="#000000"
+          strokeWidth="3.5"
+        />
+        <g
+          className="halloween-flicker"
+          fill="#fcb316"
+          stroke="#000000"
+          strokeWidth="2.5"
+          strokeLinejoin="round"
+        >
+          <circle cx="44" cy="50" r="7" />
+          <circle cx="76" cy="50" r="7" />
+          <path d="M46 72 Q60 84 74 72 Q60 76 46 72 Z" />
+        </g>
+      </svg>
+    </>
   );
 }
 

@@ -532,3 +532,793 @@ export function BarBat({
     </div>
   );
 }
+
+/** The mummy leaning out from the stage's right edge (CHSH1.dc.html):
+ *  124x140 at the board's own place (right 0, 230px down), leaning in and
+ *  reaching with its arm. At rest it leans fully outside the stage, where
+ *  the content box's own edge hides it, as on the board. */
+export function MonsterLean({ stage }: { stage: ElementBox }) {
+  return (
+    <div
+      aria-hidden="true"
+      style={pieceStyle({
+        left: stage.right - 124,
+        top: stage.top + 230,
+        width: 124,
+        height: 140,
+      })}
+    >
+      <div
+        className="halloween-monster-lean"
+        style={{ width: '100%', height: '100%' }}
+      >
+        <svg
+          width="124"
+          height="140"
+          viewBox="0 0 124 140"
+          overflow="visible"
+          style={{ display: 'block' }}
+        >
+          <path
+            d="M36 140 L36 54 Q36 16 78 16 Q120 16 120 54 L120 140 Z"
+            fill="#fff4dd"
+            stroke="#000000"
+            strokeWidth="3"
+            strokeLinejoin="round"
+          />
+          <g
+            fill="none"
+            stroke="#000000"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          >
+            <path d="M42 34 Q80 24 118 38" />
+            <path d="M37 70 Q78 62 120 74" />
+            <path d="M37 92 Q78 84 120 96" />
+            <path d="M37 114 Q78 106 120 118" />
+            <path d="M37 132 Q78 126 120 136" />
+          </g>
+          <path
+            d="M38 40 Q78 32 119 46 L120 62 Q78 50 37 58 Z"
+            fill="#424242"
+            stroke="#000000"
+            strokeWidth="2"
+            strokeLinejoin="round"
+          />
+          <circle
+            cx="60"
+            cy="52"
+            r="10"
+            fill="#ffffff"
+            stroke="#000000"
+            strokeWidth="2.5"
+          />
+          <circle
+            cx="90"
+            cy="51"
+            r="7"
+            fill="#ffffff"
+            stroke="#000000"
+            strokeWidth="2.5"
+          />
+          <circle cx="56" cy="53" r="4" fill="#000000" />
+          <circle cx="87" cy="52" r="3" fill="#000000" />
+          <path
+            d="M58 82 Q64 78 70 82 Q76 86 82 82"
+            fill="none"
+            stroke="#000000"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+          />
+          <path
+            d="M120 76 Q132 86 124 100"
+            fill="none"
+            stroke="#000000"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+          <g className="halloween-monster-reach">
+            <path
+              d="M42 96 L6 88 Q0 94 6 102 L42 108 Z"
+              fill="#fff4dd"
+              stroke="#000000"
+              strokeWidth="2.5"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M30 94 L26 106 M18 91 L14 104"
+              fill="none"
+              stroke="#000000"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+            />
+            <path
+              d="M6 88 Q-4 86 -2 92 M6 102 Q-4 104 -2 98"
+              fill="none"
+              stroke="#000000"
+              strokeWidth="2"
+              strokeLinecap="round"
+            />
+          </g>
+        </svg>
+      </div>
+    </div>
+  );
+}
+
+/** The blob oozing out of the witch's brew pot (CHSH2.dc.html): the board's
+ *  own 150x190 stand — the pot with its brewing bubbles at the bottom, the
+ *  monster rising out of it through a window whose bottom edge sits 66px
+ *  above — placed on the stage's bottom edge, 250px left of its centre.
+ *  The Scene passes the stand's own left edge (clamped past the pose
+ *  pumpkin beside it, whose clamped spot the GUI lays right of the board's)
+ *  and the stage's bottom edge (agent decision A8). At rest the monster
+ *  sits fully below the window's bottom edge, hidden inside the pot, as on
+ *  the board. */
+export function MonsterOoze({
+  left,
+  bottom,
+}: {
+  left: number;
+  bottom: number;
+}) {
+  return (
+    <div
+      aria-hidden="true"
+      style={{
+        position: 'absolute',
+        left: `${left}px`,
+        top: `${bottom - 190}px`,
+        width: '150px',
+        height: '190px',
+      }}
+    >
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          left: '15px',
+          top: '0px',
+          width: '120px',
+          height: '124px',
+          overflow: 'hidden',
+        }}
+      >
+        <div
+          className="halloween-monster-ooze"
+          style={{
+            position: 'absolute',
+            left: 0,
+            bottom: 0,
+            width: '120px',
+            height: '124px',
+          }}
+        >
+          <svg
+            width="120"
+            height="124"
+            viewBox="0 0 120 124"
+            style={{ display: 'block' }}
+          >
+            <path
+              d="M48 34 Q44 20 38 8 M72 34 Q76 20 82 8"
+              fill="none"
+              stroke="#000000"
+              strokeWidth="3"
+              strokeLinecap="round"
+            />
+            <path
+              d="M14 124 Q8 70 28 54 Q34 30 60 30 Q86 30 92 54 Q112 70 106 124 Z"
+              fill="#eaffbb"
+              stroke="#000000"
+              strokeWidth="3"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M22 90 Q20 100 24 104 Q28 100 26 90 M96 84 Q94 96 98 100 Q102 96 100 84"
+              fill="#eaffbb"
+              stroke="#000000"
+              strokeWidth="2"
+              strokeLinejoin="round"
+            />
+            <circle cx="40" cy="98" r="6" fill="#338659" />
+            <circle cx="84" cy="108" r="8" fill="#338659" />
+            <circle cx="78" cy="70" r="4" fill="#338659" />
+            <g className="halloween-ooze-eye">
+              <circle
+                cx="38"
+                cy="8"
+                r="9"
+                fill="#ffffff"
+                stroke="#000000"
+                strokeWidth="2.5"
+              />
+              <circle
+                cx="82"
+                cy="8"
+                r="9"
+                fill="#ffffff"
+                stroke="#000000"
+                strokeWidth="2.5"
+              />
+              <circle cx="40" cy="10" r="4" fill="#000000" />
+              <circle cx="80" cy="10" r="4" fill="#000000" />
+            </g>
+            <path
+              d="M44 62 Q60 82 76 62 Z"
+              fill="#000000"
+              stroke="#000000"
+              strokeWidth="2"
+              strokeLinejoin="round"
+            />
+            <ellipse cx="60" cy="72" rx="6" ry="3.5" fill="#f48fb1" />
+            <path d="M50 64 L55 64 L52.5 70 Z" fill="#ffffff" />
+          </svg>
+        </div>
+      </div>
+      <svg
+        width="150"
+        height="110"
+        viewBox="0 0 150 110"
+        aria-hidden="true"
+        style={{ position: 'absolute', left: 0, bottom: 0, display: 'block' }}
+      >
+        <circle
+          className="halloween-brew"
+          cx="54"
+          cy="36"
+          r="5"
+          fill="#eaffbb"
+          stroke="#000000"
+          strokeWidth="1.5"
+        />
+        <circle
+          className="halloween-brew-late"
+          cx="100"
+          cy="34"
+          r="4"
+          fill="#eaffbb"
+          stroke="#000000"
+          strokeWidth="1.5"
+        />
+        <path
+          d="M30 106 L24 96 M120 106 L126 96"
+          fill="none"
+          stroke="#000000"
+          strokeWidth="5"
+          strokeLinecap="round"
+        />
+        <path
+          d="M14 46 Q6 98 75 100 Q144 98 136 46 Z"
+          fill="#13294b"
+          stroke="#000000"
+          strokeWidth="3"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M28 64 Q34 84 52 90"
+          fill="none"
+          stroke="rgba(255,255,255,0.35)"
+          strokeWidth="4"
+          strokeLinecap="round"
+        />
+        <ellipse
+          cx="75"
+          cy="44"
+          rx="66"
+          ry="12"
+          fill="#0d1b33"
+          stroke="#000000"
+          strokeWidth="3"
+        />
+        <path
+          d="M18 44 Q75 54 132 44 Q75 36 18 44 Z"
+          fill="#eaffbb"
+          stroke="#000000"
+          strokeWidth="2"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M24 48 Q22 58 27 60 Q30 56 30 48 M120 48 Q118 60 124 62 Q127 56 126 48"
+          fill="#eaffbb"
+          stroke="#000000"
+          strokeWidth="1.5"
+          strokeLinejoin="round"
+        />
+      </svg>
+    </div>
+  );
+}
+
+/** The vampire rising from the stage's bottom edge (CHSH3.dc.html):
+ *  124x150 at the board's own place (right 28px, bottom 0), waving its arm.
+ *  At rest it sits fully below the stage's bottom edge: a window with its
+ *  bottom edge there hides it, as the board's own stage edge does (the
+ *  Decorations layer is not the stage's child, so nothing else would clip
+ *  it). */
+export function MonsterVamp({ stage }: { stage: ElementBox }) {
+  return (
+    <div
+      aria-hidden="true"
+      style={{
+        position: 'absolute',
+        left: `${stage.right - 28 - 124}px`,
+        top: `${stage.bottom - 150}px`,
+        width: '124px',
+        height: '150px',
+        overflow: 'hidden',
+      }}
+    >
+      <div
+        className="halloween-monster-vamp"
+        style={{
+          position: 'absolute',
+          left: 0,
+          top: 0,
+          width: '124px',
+          height: '150px',
+        }}
+      >
+        <svg
+          width="124"
+          height="150"
+          viewBox="0 0 124 150"
+          overflow="visible"
+          style={{ display: 'block' }}
+        >
+          <path
+            d="M10 150 L20 100 Q62 82 104 100 L114 150 Z"
+            fill="#9c9a9d"
+            stroke="#000000"
+            strokeWidth="3"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M46 94 L62 118 L78 94 Q62 88 46 94 Z"
+            fill="#ffffff"
+            stroke="#000000"
+            strokeWidth="2"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M30 112 L32 150 M94 112 L92 150"
+            fill="none"
+            stroke="#000000"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          />
+          <g className="halloween-vamp-arm">
+            <path
+              d="M100 108 Q116 94 118 70"
+              fill="none"
+              stroke="#000000"
+              strokeWidth="13"
+              strokeLinecap="round"
+            />
+            <path
+              d="M100 108 Q116 94 118 70"
+              fill="none"
+              stroke="#9c9a9d"
+              strokeWidth="8"
+              strokeLinecap="round"
+            />
+            <rect
+              x="114"
+              y="46"
+              width="7"
+              height="16"
+              rx="2"
+              fill="#ffffff"
+              stroke="#000000"
+              strokeWidth="1.5"
+              transform="rotate(18 117 54)"
+            />
+            <circle
+              cx="118"
+              cy="64"
+              r="8"
+              fill="#f5ddff"
+              stroke="#000000"
+              strokeWidth="2.5"
+            />
+          </g>
+          <path
+            d="M40 22 L42 6 L52 18 Z M84 22 L82 6 L72 18 Z"
+            fill="#fcb316"
+            stroke="#000000"
+            strokeWidth="2"
+            strokeLinejoin="round"
+          />
+          <g fill="#ffffff" stroke="#000000" strokeWidth="2.5">
+            <circle cx="26" cy="58" r="13" />
+            <circle cx="28" cy="38" r="14" />
+            <circle cx="42" cy="24" r="14" />
+            <circle cx="62" cy="20" r="14" />
+            <circle cx="82" cy="24" r="14" />
+            <circle cx="96" cy="38" r="14" />
+            <circle cx="98" cy="58" r="13" />
+          </g>
+          <path
+            d="M14 40 L4 34 M16 62 L4 66 M108 40 L120 34 M108 62 L120 66 M50 8 L46 0 M74 8 L78 0"
+            fill="none"
+            stroke="#000000"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+          <ellipse
+            cx="62"
+            cy="62"
+            rx="30"
+            ry="32"
+            fill="#f5ddff"
+            stroke="#000000"
+            strokeWidth="3"
+          />
+          <path
+            d="M38 46 Q46 38 56 46 M68 46 Q78 38 86 46"
+            fill="none"
+            stroke="#000000"
+            strokeWidth="6"
+            strokeLinecap="round"
+          />
+          <path
+            d="M38 46 Q46 38 56 46 M68 46 Q78 38 86 46"
+            fill="none"
+            stroke="#ffffff"
+            strokeWidth="3"
+            strokeLinecap="round"
+          />
+          <circle
+            cx="48"
+            cy="58"
+            r="8"
+            fill="#ffffff"
+            stroke="#000000"
+            strokeWidth="2.5"
+          />
+          <circle
+            cx="76"
+            cy="58"
+            r="8"
+            fill="#ffffff"
+            stroke="#000000"
+            strokeWidth="2.5"
+          />
+          <circle cx="50" cy="59" r="3.5" fill="#000000" />
+          <circle cx="78" cy="59" r="3.5" fill="#000000" />
+          <ellipse
+            cx="38"
+            cy="72"
+            rx="5"
+            ry="3"
+            fill="rgba(240,128,170,0.55)"
+          />
+          <ellipse
+            cx="86"
+            cy="72"
+            rx="5"
+            ry="3"
+            fill="rgba(240,128,170,0.55)"
+          />
+          <path
+            d="M40 78 Q50 70 62 75 Q74 70 84 78 Q76 86 62 81 Q48 86 40 78 Z"
+            fill="#ffffff"
+            stroke="#000000"
+            strokeWidth="2.5"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M54 88 Q62 94 70 88"
+            fill="none"
+            stroke="#000000"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+          />
+        </svg>
+      </div>
+    </div>
+  );
+}
+
+/** The sock monster dangling from the stage's top edge (CHSH3-weak.dc.html):
+ *  90x156, 82px left of the board's stage centre (the Scene clamps it past
+ *  the speech bubble's right edge, which the GUI lays right of the board's
+ *  stage), scratching itself. At rest it hangs fully above its window's top
+ *  edge, which sits on the stage's own top edge and hides it, as the board's
+ *  stage edge does (the Decorations layer is not the stage's child, so
+ *  nothing else would clip it). */
+export function MonsterDangle({ left, top }: { left: number; top: number }) {
+  return (
+    <div
+      aria-hidden="true"
+      style={{
+        position: 'absolute',
+        left: `${left}px`,
+        top: `${top}px`,
+        width: '90px',
+        height: '156px',
+        overflow: 'hidden',
+      }}
+    >
+      <div
+        className="halloween-monster-dangle"
+        style={{
+          position: 'absolute',
+          left: 0,
+          top: 0,
+          width: '90px',
+          height: '156px',
+        }}
+      >
+        <svg
+          width="90"
+          height="156"
+          viewBox="0 0 90 156"
+          overflow="visible"
+          style={{ display: 'block' }}
+        >
+          <path
+            d="M45 0 Q45 30 36 46 Q28 60 42 64 Q54 66 48 80"
+            fill="none"
+            stroke="#000000"
+            strokeWidth="8"
+            strokeLinecap="round"
+          />
+          <path
+            d="M45 0 Q45 30 36 46 Q28 60 42 64 Q54 66 48 80"
+            fill="none"
+            stroke="#1d58a7"
+            strokeWidth="4"
+            strokeLinecap="round"
+          />
+          <path
+            d="M22 132 Q14 142 18 148 M68 132 Q76 142 72 148"
+            fill="none"
+            stroke="#000000"
+            strokeWidth="4"
+            strokeLinecap="round"
+          />
+          <path
+            d="M18 116 Q6 124 12 136"
+            fill="none"
+            stroke="#000000"
+            strokeWidth="9"
+            strokeLinecap="round"
+          />
+          <path
+            d="M18 116 Q6 124 12 136"
+            fill="none"
+            stroke="#1d58a7"
+            strokeWidth="5"
+            strokeLinecap="round"
+          />
+          <path
+            d="M45 76 Q30 76 22 86 L14 82 L18 92 Q12 102 14 112 L6 114 L15 120 Q18 134 32 140 L32 148 L40 141 Q45 142 50 141 L58 148 L58 140 Q72 134 75 120 L84 114 L76 112 Q78 102 72 92 L76 82 L68 86 Q60 76 45 76 Z"
+            fill="#1d58a7"
+            stroke="#000000"
+            strokeWidth="3"
+            strokeLinejoin="round"
+          />
+          <ellipse
+            cx="45"
+            cy="124"
+            rx="17"
+            ry="12"
+            fill="#d0f9ff"
+            stroke="#000000"
+            strokeWidth="2"
+          />
+          <circle
+            cx="34"
+            cy="100"
+            r="9"
+            fill="#ffffff"
+            stroke="#000000"
+            strokeWidth="2.5"
+          />
+          <circle
+            cx="57"
+            cy="100"
+            r="9"
+            fill="#ffffff"
+            stroke="#000000"
+            strokeWidth="2.5"
+          />
+          <circle cx="36" cy="96" r="4" fill="#000000" />
+          <circle cx="59" cy="96" r="4" fill="#000000" />
+          <ellipse cx="46" cy="115" rx="3.5" ry="4" fill="#000000" />
+          <g className="halloween-dangle-arm">
+            <path
+              d="M70 112 Q86 98 74 82"
+              fill="none"
+              stroke="#000000"
+              strokeWidth="9"
+              strokeLinecap="round"
+            />
+            <path
+              d="M70 112 Q86 98 74 82"
+              fill="none"
+              stroke="#1d58a7"
+              strokeWidth="5"
+              strokeLinecap="round"
+            />
+            <circle
+              cx="72"
+              cy="80"
+              r="5"
+              fill="#1d58a7"
+              stroke="#000000"
+              strokeWidth="2"
+            />
+          </g>
+        </svg>
+      </div>
+    </div>
+  );
+}
+
+/** The monster tiptoeing in from the stage's right edge
+ *  (CHSH3-error.dc.html): 140x120 at the board's own place (right 0, 12px
+ *  above the bottom), its ears twitching. At rest it stands fully right of
+ *  the stage's right edge, where the content box's own edge hides it, as on
+ *  the board. */
+export function MonsterTiptoe({ stage }: { stage: ElementBox }) {
+  return (
+    <div
+      aria-hidden="true"
+      style={pieceStyle({
+        left: stage.right - 140,
+        top: stage.bottom - 12 - 120,
+        width: 140,
+        height: 120,
+      })}
+    >
+      <div
+        className="halloween-monster-tiptoe"
+        style={{ width: '100%', height: '100%' }}
+      >
+        <svg
+          width="140"
+          height="120"
+          viewBox="0 0 140 120"
+          overflow="visible"
+          style={{ display: 'block' }}
+        >
+          <path
+            d="M100 88 Q124 106 170 96"
+            fill="none"
+            stroke="#000000"
+            strokeWidth="8"
+            strokeLinecap="round"
+          />
+          <path
+            d="M100 88 Q124 106 170 96"
+            fill="none"
+            stroke="#424242"
+            strokeWidth="4"
+            strokeLinecap="round"
+          />
+          <ellipse
+            cx="52"
+            cy="110"
+            rx="10"
+            ry="5"
+            fill="#c88f11"
+            stroke="#000000"
+            strokeWidth="2.5"
+          />
+          <ellipse
+            cx="84"
+            cy="110"
+            rx="10"
+            ry="5"
+            fill="#c88f11"
+            stroke="#000000"
+            strokeWidth="2.5"
+          />
+          <g className="halloween-tiptoe-ears">
+            <path
+              d="M40 50 L6 28 L36 64 Z M96 50 L130 28 L100 64 Z"
+              fill="#c88f11"
+              stroke="#000000"
+              strokeWidth="2.5"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M34 52 L16 38 L32 60 Z M102 52 L120 38 L104 60 Z"
+              fill="#fdca5c"
+            />
+          </g>
+          <ellipse
+            cx="68"
+            cy="76"
+            rx="36"
+            ry="34"
+            fill="#c88f11"
+            stroke="#000000"
+            strokeWidth="3"
+          />
+          <ellipse
+            cx="68"
+            cy="92"
+            rx="20"
+            ry="13"
+            fill="#fdca5c"
+            stroke="#000000"
+            strokeWidth="1.5"
+          />
+          <circle
+            cx="56"
+            cy="64"
+            r="9"
+            fill="#ffffff"
+            stroke="#000000"
+            strokeWidth="2.5"
+          />
+          <circle
+            cx="80"
+            cy="64"
+            r="9"
+            fill="#ffffff"
+            stroke="#000000"
+            strokeWidth="2.5"
+          />
+          <circle cx="59" cy="67" r="4" fill="#000000" />
+          <circle cx="83" cy="67" r="4" fill="#000000" />
+          <path
+            d="M48 52 L62 50 M74 50 L88 52"
+            fill="none"
+            stroke="#000000"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+          />
+          <path
+            d="M58 80 Q62 77 66 80 Q70 83 74 80 Q78 77 80 80"
+            fill="none"
+            stroke="#000000"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+          />
+          <path
+            d="M108 42 Q113 51 108 56 Q103 51 108 42 Z"
+            fill="#d0f9ff"
+            stroke="#000000"
+            strokeWidth="1.5"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M84 94 L76 94 M84 100 L76 100"
+            fill="none"
+            stroke="#000000"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+          />
+          <rect
+            x="84"
+            y="88"
+            width="18"
+            height="16"
+            rx="3"
+            fill="#13294b"
+            stroke="#000000"
+            strokeWidth="2"
+          />
+          <path
+            d="M98 82 Q106 88 100 96"
+            fill="none"
+            stroke="#000000"
+            strokeWidth="8"
+            strokeLinecap="round"
+          />
+          <path
+            d="M98 82 Q106 88 100 96"
+            fill="none"
+            stroke="#c88f11"
+            strokeWidth="4"
+            strokeLinecap="round"
+          />
+        </svg>
+      </div>
+    </div>
+  );
+}

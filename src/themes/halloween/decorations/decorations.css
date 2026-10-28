@@ -234,6 +234,225 @@
   }
 }
 
+/* CHSH1.dc.html: the mummy leaning in from the right and its reaching arm. */
+@keyframes halloween-lean {
+  0%,
+  50% {
+    transform: translateX(100%) rotate(0);
+  }
+  58% {
+    transform: translateX(18%) rotate(-6deg);
+  }
+  62% {
+    transform: translateX(22%) rotate(2deg);
+  }
+  66%,
+  76% {
+    transform: translateX(18%) rotate(-3deg);
+  }
+  84%,
+  100% {
+    transform: translateX(100%) rotate(0);
+  }
+}
+
+@keyframes halloween-reach {
+  0%,
+  58%,
+  82%,
+  100% {
+    transform: rotate(0);
+  }
+  64% {
+    transform: rotate(-10deg);
+  }
+  70% {
+    transform: rotate(6deg);
+  }
+  76% {
+    transform: rotate(-8deg);
+  }
+}
+
+/* CHSH2.dc.html: the blob oozing out of the brew pot, its blinking eyes and
+ * the pot's brewing bubbles. */
+@keyframes halloween-ooze {
+  0%,
+  46% {
+    transform: translateY(100%) scale(1);
+  }
+  54% {
+    transform: translateY(0) scale(1.06, 0.94);
+  }
+  58% {
+    transform: translateY(0) scale(0.96, 1.05);
+  }
+  62%,
+  76% {
+    transform: translateY(0) scale(1);
+  }
+  86%,
+  100% {
+    transform: translateY(100%) scale(1);
+  }
+}
+
+@keyframes halloween-blink {
+  0%,
+  64%,
+  68%,
+  100% {
+    transform: scaleY(1);
+  }
+  66% {
+    transform: scaleY(0.1);
+  }
+}
+
+@keyframes halloween-bubble {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-34px);
+    opacity: 0;
+  }
+}
+
+/* CHSH3.dc.html: the vampire rising and its waving arm. */
+@keyframes halloween-vamp {
+  0%,
+  52% {
+    transform: translateY(105%);
+  }
+  58% {
+    transform: translateY(0);
+  }
+  61% {
+    transform: translateY(4%);
+  }
+  64%,
+  82% {
+    transform: translateY(0);
+  }
+  90%,
+  100% {
+    transform: translateY(105%);
+  }
+}
+
+@keyframes halloween-vamp-wave {
+  0%,
+  62% {
+    transform: rotate(0);
+  }
+  66% {
+    transform: rotate(-22deg);
+  }
+  70% {
+    transform: rotate(10deg);
+  }
+  74% {
+    transform: rotate(-22deg);
+  }
+  78% {
+    transform: rotate(10deg);
+  }
+  82%,
+  100% {
+    transform: rotate(0);
+  }
+}
+
+/* CHSH3-weak.dc.html: the sock monster dangling down and its scratching arm. */
+@keyframes halloween-dangle {
+  0%,
+  48% {
+    transform: translateY(-105%) rotate(0);
+  }
+  56% {
+    transform: translateY(0) rotate(0);
+  }
+  60% {
+    transform: translateY(0) rotate(8deg);
+  }
+  66% {
+    transform: translateY(0) rotate(-7deg);
+  }
+  72% {
+    transform: translateY(0) rotate(4deg);
+  }
+  78% {
+    transform: translateY(0) rotate(0);
+  }
+  86%,
+  100% {
+    transform: translateY(-105%) rotate(0);
+  }
+}
+
+@keyframes halloween-scratch {
+  0%,
+  60%,
+  80%,
+  100% {
+    transform: rotate(0);
+  }
+  64%,
+  72% {
+    transform: rotate(-14deg);
+  }
+  68%,
+  76% {
+    transform: rotate(6deg);
+  }
+}
+
+/* CHSH3-error.dc.html: the monster tiptoeing in and its twitching ears. */
+@keyframes halloween-tiptoe {
+  0%,
+  44% {
+    transform: translate(110%, 0);
+  }
+  48% {
+    transform: translate(80%, -6px);
+  }
+  52% {
+    transform: translate(55%, 0);
+  }
+  56% {
+    transform: translate(30%, -6px);
+  }
+  60%,
+  80% {
+    transform: translate(0, 0);
+  }
+  86% {
+    transform: translate(50%, -6px);
+  }
+  92%,
+  100% {
+    transform: translate(110%, 0);
+  }
+}
+
+@keyframes halloween-shrug {
+  0%,
+  62%,
+  78%,
+  100% {
+    transform: translateY(0);
+  }
+  66%,
+  72% {
+    transform: translateY(-5px);
+  }
+}
+
 .halloween-spider {
   animation: halloween-bob 3.2s ease-in-out infinite;
 }
@@ -304,6 +523,75 @@
   animation: halloween-peeker 12s ease-in-out 2s infinite;
 }
 
+/* CHSH1.dc.html: the mummy. */
+.halloween-monster-lean {
+  transform: translateX(100%);
+  transform-origin: 100% 100%;
+  animation: halloween-lean 12s ease-in-out 2s infinite;
+}
+
+.halloween-monster-reach {
+  transform-box: fill-box;
+  transform-origin: 100% 50%;
+  animation: halloween-reach 12s ease-in-out 2s infinite;
+}
+
+/* CHSH2.dc.html: the blob in the brew pot. */
+.halloween-monster-ooze {
+  transform: translateY(100%);
+  transform-origin: 50% 100%;
+  animation: halloween-ooze 11s ease-in-out 3s infinite;
+}
+
+.halloween-ooze-eye {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation: halloween-blink 11s linear 3s infinite;
+}
+
+.halloween-brew {
+  animation: halloween-bubble 2.4s ease-out infinite;
+}
+
+.halloween-brew-late {
+  animation: halloween-bubble 2.4s ease-out 1.2s infinite;
+}
+
+/* CHSH3.dc.html: the vampire. */
+.halloween-monster-vamp {
+  transform: translateY(105%);
+  animation: halloween-vamp 10s ease-in-out 1.5s infinite;
+}
+
+.halloween-vamp-arm {
+  transform-box: fill-box;
+  transform-origin: 0% 100%;
+  animation: halloween-vamp-wave 10s ease-in-out 1.5s infinite;
+}
+
+/* CHSH3-weak.dc.html: the sock monster. */
+.halloween-monster-dangle {
+  transform: translateY(-105%);
+  transform-origin: 50% 0;
+  animation: halloween-dangle 12s ease-in-out 2.5s infinite;
+}
+
+.halloween-dangle-arm {
+  transform-box: fill-box;
+  transform-origin: 0% 100%;
+  animation: halloween-scratch 12s ease-in-out 2.5s infinite;
+}
+
+/* CHSH3-error.dc.html: the tiptoeing monster. */
+.halloween-monster-tiptoe {
+  transform: translate(110%, 0);
+  animation: halloween-tiptoe 13s ease-in-out 2s infinite;
+}
+
+.halloween-tiptoe-ears {
+  animation: halloween-shrug 13s ease-in-out 2s infinite;
+}
+
 /* Measuring.dc.html: the bat rides the bar's fill as it grows. */
 .halloween-bar-rider {
   transition: left 400ms linear;
@@ -324,7 +612,19 @@
   .halloween-glow-pulse,
   .halloween-flicker,
   .halloween-wing,
-  .halloween-peeker {
+  .halloween-peeker,
+  .halloween-monster-lean,
+  .halloween-monster-reach,
+  .halloween-monster-ooze,
+  .halloween-ooze-eye,
+  .halloween-brew,
+  .halloween-brew-late,
+  .halloween-monster-vamp,
+  .halloween-vamp-arm,
+  .halloween-monster-dangle,
+  .halloween-dangle-arm,
+  .halloween-monster-tiptoe,
+  .halloween-tiptoe-ears {
     animation: none;
   }
 

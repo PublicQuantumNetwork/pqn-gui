@@ -29,6 +29,10 @@ export default function RotatorCircle({
   }, [onRotationChange]);
   return (
     <Box
+      // The Halloween Decorations' wheel anchor (agent decision A8): the
+      // CHSH2 board hangs its ghost beside the wheel. Non-visual, so no
+      // theme changes the look.
+      data-decoration-anchor="chsh2-wheel"
       sx={{
         backgroundImage: 'url(/images/circle.png)',
         height: '560px',

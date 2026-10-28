@@ -4,15 +4,16 @@ import { Dialog } from '@mui/material';
 import { readFileSync } from 'node:fs';
 
 /**
- * The Halloween Decorations of group 2.2 through the real registry and
- * resolvers: with NEXT_PUBLIC_SEASONAL_THEME=halloween the home, qf1, qf2 and
- * measuring Scenes render the Decorations of their boards
- * (docs/design/halloween/Main, QF1, QF2 and Measuring.dc.html), and only
- * those Scenes. Every piece is placed against the page element its board ties
- * it to, as the page lays that element out (agent decision A8), so the tests
- * hand each anchor a box (probed from the real pages at the boards'
- * 1440x980) and follow the pieces as the anchors move. The env var is set in
- * vi.hoisted so it is in place before the pages are imported.
+ * The Halloween Decorations of groups 2.2-2.3 through the real registry and
+ * resolvers: with NEXT_PUBLIC_SEASONAL_THEME=halloween the home, qf1, qf2,
+ * measuring and CHSH Scenes render the Decorations of their boards
+ * (docs/design/halloween/Main, QF1, QF2, Measuring, CHSH1, CHSH2 and the
+ * CHSH3 boards), and only those Scenes. Every piece is placed against the
+ * page element its board ties it to, as the page lays that element out
+ * (agent decision A8), so the tests hand each anchor a box (probed from the
+ * real pages at the boards' 1440x980) and follow the pieces as the anchors
+ * move. The env var is set in vi.hoisted so it is in place before the pages
+ * are imported.
  */
 vi.hoisted(() => {
   process.env.NEXT_PUBLIC_SEASONAL_THEME = 'halloween';
@@ -29,9 +30,11 @@ vi.mock('@/hooks/useSSE', () => ({
 vi.mock('@/hooks/WebSocketHook', async () =>
   (await import('./backend-mocks')).useWebSocketMock()
 );
-vi.mock('next/navigation', async () =>
-  (await import('./backend-mocks')).navigationMock()
-);
+vi.mock('next/navigation', () => ({
+  useRouter: () => router,
+  usePathname: () => '/',
+  useSearchParams: () => searchParams.current,
+}));
 
 // Home renders the attract loop; disabled, it opens no display-command
 // stream (and no EventSource exists under jsdom).
@@ -43,10 +46,20 @@ const sse = vi.hoisted(() => ({
   message: null as null | { event: string; current: number; total: number },
 }));
 
+// The CHSH3 page picks its Scene from its search params, so the mock hands
+// them per test.
+const router = vi.hoisted(() => ({ push: vi.fn(), replace: vi.fn() }));
+const searchParams = vi.hoisted(() => ({
+  current: new URLSearchParams(),
+}));
+
 import Home from '@/app/page';
 import RootLayout from '@/app/layout';
 import QF1 from '@/app/qf/page1/page';
 import QF2 from '@/app/qf/page2/page';
+import CHSH1 from '@/app/chsh/page1/page';
+import CHSH2 from '@/app/chsh/page2/page';
+import CHSH3 from '@/app/chsh/page3/page';
 import ModalBox from '@/components/ModalBox';
 import SSMModalBox from '@/components/SSMModalBox';
 import {
@@ -113,6 +126,27 @@ const MEASURING = {
   dialog: box(270, 190, 900, 600),
   progressbar: box(320, 291, 800, 4),
   'measuring-title': box(320, 240, 800, 35),
+};
+/** The CHSH pages' anchors at the boards' 1440x980 (probed): Whobit's bubble
+ *  and pose, CHSH1's Next button, CHSH2's wheel and CHSH3's results circle.
+ *  The GUI lays the bubble and the pose right of the boards' stage, and the
+ *  results circle hangs below the content box's bottom edge. */
+const CHSH = {
+  chsh1: {
+    bubble: box(144, 199, 500, 250),
+    pose: box(144, 459, 288, 358),
+    next: box(1342, 601, 154, 96),
+  },
+  chsh2: {
+    bubble: box(144, 205, 500, 250),
+    pose: box(144, 465, 288, 358),
+    wheel: box(756, 199, 560, 560),
+  },
+  chsh3: {
+    bubble: box(144, 199, 500, 250),
+    pose: box(144, 459, 288, 358),
+    circle: box(774, 199, 560, 560),
+  },
 };
 
 /** The anchors' boxes for the current render, keyed by data attribute (or,
@@ -224,8 +258,18 @@ function ballOf(ball: Box): BallCircle {
   return ballCircle(rectOf(ball));
 }
 
-test('Halloween decorates the home, qf1, qf2 and measuring Scenes, and only those', () => {
-  const decorated = ['home', 'qf1', 'qf2', 'measuring'] as const;
+test('Halloween decorates the home, qf1, qf2, measuring and CHSH Scenes, and only those', () => {
+  const decorated = [
+    'home',
+    'qf1',
+    'qf2',
+    'measuring',
+    'chsh1',
+    'chsh2',
+    'chsh3-entangled',
+    'chsh3-weak',
+    'chsh3-error',
+  ] as const;
   const theme = knownThemes.halloween;
   for (const scene of decorated) {
     expect(
@@ -233,13 +277,8 @@ test('Halloween decorates the home, qf1, qf2 and measuring Scenes, and only thos
       `${scene} has Decorations`
     ).toBeDefined();
   }
-  // The CHSH and SSM Scenes' Decorations come with groups 2.3 and 2.4.
+  // The SSM Scenes' Decorations come with group 2.4.
   const later: Scene[] = [
-    'chsh1',
-    'chsh2',
-    'chsh3-entangled',
-    'chsh3-weak',
-    'chsh3-error',
     'ssm1',
     'ssm2-asking',
     'ssm2-waiting',
@@ -645,6 +684,484 @@ test('the pumpkin rests its base on the stage bottom when its board spot falls b
   const kept = above.container.firstElementChild as HTMLElement;
   expect(kept.style.top).toBe('600px');
   expect(parseFloat(kept.style.top) + 104).toBeLessThanOrEqual(755);
+});
+
+/** The ghost's mouth each CHSH board draws its own (the boards' own d). */
+const ghostMouths = {
+  smile: 'M44 64 Q52 72 60 64',
+  grin: 'M42 62 Q52 74 62 62 Z',
+  frown: 'M46 66 Q52 62 58 66',
+} as const;
+
+test('CHSH1 renders the CHSH1 board’s ambient set, its pumpkin pair and the mummy', () => {
+  setAnchors({
+    stage: STAGE,
+    'whobit-bubble': CHSH.chsh1.bubble,
+    'whobit-pose': CHSH.chsh1.pose,
+    'chsh1-next': CHSH.chsh1.next,
+  });
+  const { container } = renderPage(<CHSH1 />);
+
+  // The Next button carries the pair's anchor, as Home's buttons carry
+  // theirs (agent decision A8).
+  expect(screen.getByRole('link', { name: 'Next' })).toHaveAttribute(
+    'data-decoration-anchor',
+    'chsh1-next'
+  );
+
+  // The stage-anchored pieces at the board's own stage placements.
+  expect(container.querySelector('svg[viewBox="0 0 200 200"]')).not.toBeNull();
+  expect(container.querySelector('svg[viewBox="0 0 160 160"]')).not.toBeNull();
+  expect(container.querySelector('.halloween-bats')).not.toBeNull();
+
+  // The spider 100px left of the stage's centre on the board's own 70px
+  // thread, bobbing its own 3.4s. The board hangs it beside the bubble's
+  // right edge, which the GUI lays right of the board's stage, so it is
+  // clamped to never cross that edge.
+  const spider = container.querySelector<HTMLElement>('.halloween-spider')!;
+  expect(spider.style.left).toBe('644px');
+  expect(
+    CHSH.chsh1.bubble.left + CHSH.chsh1.bubble.width,
+    'the board’s spot crosses the bubble’s edge, so the clamp above can fail'
+  ).toBeGreaterThan(STAGE.left + STAGE.width / 2 - 100);
+  expect(spider.style.top).toBe(`${STAGE.top}px`);
+  expect(spider.firstElementChild).toHaveStyle({ height: '70px' });
+  expect(spider).toHaveStyle({ animationDuration: '3.4s' });
+
+  // The ghost at the board's own place (124px left of the stage's centre,
+  // 250px down) with the board's smile, clamped past the bubble's edge too.
+  const ghost = container.querySelector<HTMLElement>('.halloween-ghost')!;
+  expect(ghost.style.left).toBe('644px');
+  expect(CHSH.chsh1.bubble.left + CHSH.chsh1.bubble.width).toBeGreaterThan(
+    STAGE.left + STAGE.width / 2 - 124
+  );
+  expect(ghost.style.top).toBe(`${STAGE.top + 250}px`);
+  expect(ghost.querySelector(`path[d="${ghostMouths.smile}"]`)).not.toBeNull();
+
+  // The mummy leaning in from the stage's right edge, 230px down.
+  const lean = container.querySelector<HTMLElement>(
+    '.halloween-monster-lean'
+  )!.parentElement!;
+  expect(lean).toHaveStyle({
+    left: `${STAGE.left + STAGE.width - 124}px`,
+    top: `${STAGE.top + 230}px`,
+  });
+
+  // The flickering pumpkin under Whobit's pose, clamped to rest its base on
+  // the stage's bottom edge.
+  const pumpkin = container.querySelector<HTMLElement>(
+    'svg[width="120"][viewBox="0 0 120 104"]'
+  )!;
+  expect(pumpkin.parentElement).toHaveStyle({
+    left: `${CHSH.chsh1.pose.left + 258}px`,
+    top: `${Math.min(CHSH.chsh1.pose.top + 340, STAGE.top + STAGE.height - 104)}px`,
+  });
+  expect(pumpkin.querySelector('.halloween-flicker')).not.toBeNull();
+
+  // The pumpkin pair above the Next button: 180px left of its right edge,
+  // 32px above its top, the small one 12px right of the big one with their
+  // bottoms level, both faces flickering.
+  const big = container.querySelector<HTMLElement>('svg[width="132"]')!;
+  const small = Array.from(container.querySelectorAll('svg[width="84"]')).find(
+    (svg) => !svg.classList.contains('halloween-ghost')
+  ) as HTMLElement;
+  const pairRight = CHSH.chsh1.next.left + CHSH.chsh1.next.width - 180;
+  const pairBottom = CHSH.chsh1.next.top - 32;
+  expect(big.style.left).toBe(`${pairRight - 84 - 12 - 132}px`);
+  expect(big.style.top).toBe(`${pairBottom - 114}px`);
+  expect(big.querySelector('.halloween-flicker')).not.toBeNull();
+  expect(small.style.left).toBe(`${pairRight - 84}px`);
+  expect(small.style.top).toBe(`${pairBottom - 73}px`);
+  expect(small.querySelector('.halloween-flicker')).not.toBeNull();
+
+  // No other Scene's monster leaks onto the page.
+  for (const other of [
+    '.halloween-monster-ooze',
+    '.halloween-monster-vamp',
+    '.halloween-monster-dangle',
+    '.halloween-monster-tiptoe',
+    '.halloween-monster-pop',
+    '.halloween-monster-rise',
+    '.halloween-monster-slide',
+  ]) {
+    expect(container.querySelector(other)).toBeNull();
+  }
+});
+
+test('the CHSH1 pieces follow the Next button and clamp past the bubble', () => {
+  setAnchors({
+    stage: STAGE,
+    'whobit-bubble': CHSH.chsh1.bubble,
+    'whobit-pose': CHSH.chsh1.pose,
+    'chsh1-next': CHSH.chsh1.next,
+  });
+  const { container } = renderPage(<CHSH1 />);
+
+  // The button moves down 50px; the pair keeps its offsets from it.
+  const moved = box(1342, 651, 154, 96);
+  setAnchors({
+    stage: STAGE,
+    'whobit-bubble': CHSH.chsh1.bubble,
+    'whobit-pose': CHSH.chsh1.pose,
+    'chsh1-next': moved,
+  });
+  fireEvent(window, new Event('resize'));
+  const big = container.querySelector<HTMLElement>('svg[width="132"]')!;
+  expect(big.style.top).toBe(`${moved.top - 32 - 114}px`);
+  const small = Array.from(container.querySelectorAll('svg[width="84"]')).find(
+    (svg) => !svg.classList.contains('halloween-ghost')
+  ) as HTMLElement;
+  expect(small.style.top).toBe(`${moved.top - 32 - 73}px`);
+
+  // The bubble widens past the board's spots; the spider and the ghost
+  // clamp past its right edge.
+  const wide = box(144, 199, 600, 250);
+  setAnchors({
+    stage: STAGE,
+    'whobit-bubble': wide,
+    'whobit-pose': CHSH.chsh1.pose,
+    'chsh1-next': moved,
+  });
+  fireEvent(window, new Event('resize'));
+  expect(
+    container.querySelector<HTMLElement>('.halloween-spider')!.style.left
+  ).toBe(`${wide.left + wide.width}px`);
+  expect(
+    container.querySelector<HTMLElement>('.halloween-ghost')!.style.left
+  ).toBe(`${wide.left + wide.width}px`);
+});
+
+test('CHSH2 renders the CHSH2 board’s ambient set and the ooze in its brew pot', () => {
+  setAnchors({
+    stage: STAGE,
+    'whobit-bubble': CHSH.chsh2.bubble,
+    'whobit-pose': CHSH.chsh2.pose,
+    'chsh2-wheel': CHSH.chsh2.wheel,
+  });
+  const { container } = renderPage(<CHSH2 />);
+
+  // The wheel anchor sits on the page's own wheel: the wheel's own labels
+  // render inside it.
+  const wheel = container.querySelector(
+    '[data-decoration-anchor="chsh2-wheel"]'
+  )!;
+  expect(wheel.textContent).toContain('V');
+
+  // The stage-anchored pieces at the board's own stage placements — and the
+  // board carries no bats here.
+  expect(container.querySelector('svg[viewBox="0 0 200 200"]')).not.toBeNull();
+  expect(container.querySelector('svg[viewBox="0 0 160 160"]')).not.toBeNull();
+  expect(container.querySelector('.halloween-bats')).toBeNull();
+
+  // The spider 3% in from the stage's right, on the board's 210px thread.
+  const spider = container.querySelector<HTMLElement>('.halloween-spider')!;
+  expect(parseFloat(spider.style.left)).toBe(
+    STAGE.left + STAGE.width - STAGE.width * 0.03 - 40
+  );
+  expect(spider.firstElementChild).toHaveStyle({ height: '210px' });
+  expect(spider).toHaveStyle({ animationDuration: '3.2s' });
+
+  // The ghost beside the wheel at the board's own offsets from it (128px
+  // left, 8px down), clamped past the bubble's right edge, with the board's
+  // own little o mouth.
+  const ghost = container.querySelector<HTMLElement>('.halloween-ghost')!;
+  expect(ghost.style.left).toBe('644px');
+  expect(CHSH.chsh2.bubble.left + CHSH.chsh2.bubble.width).toBeGreaterThan(
+    CHSH.chsh2.wheel.left - 128
+  );
+  expect(ghost.style.top).toBe(`${CHSH.chsh2.wheel.top + 8}px`);
+  expect(ghost.querySelector('ellipse[cx="52"][cy="66"]')).not.toBeNull();
+
+  // The blob oozing out of the brew pot on the stage's bottom edge, 250px
+  // left of its centre, clamped past the pose pumpkin beside it (whose
+  // clamped spot the GUI lays right of the board's). The monster rises
+  // through a window that hides it inside the pot at rest.
+  const ooze = container.querySelector<HTMLElement>('.halloween-monster-ooze')!;
+  const oozeWindow = ooze.parentElement!;
+  const stand = oozeWindow.parentElement!;
+  expect(stand.style.left).toBe('522px');
+  expect(
+    CHSH.chsh2.pose.left + 258 + 120,
+    'the pumpkin’s clamped spot crosses the pot’s board spot, so the clamp above can fail'
+  ).toBeGreaterThan(STAGE.left + STAGE.width / 2 - 250);
+  expect(stand.style.top).toBe(`${STAGE.top + STAGE.height - 190}px`);
+  expect(oozeWindow).toHaveStyle({
+    left: '15px',
+    top: '0px',
+    width: '120px',
+    height: '124px',
+    overflow: 'hidden',
+  });
+  expect(ooze.style.bottom).toBe('0px');
+  const pot = stand.querySelector('svg[width="150"]');
+  expect(pot).not.toBeNull();
+  expect(pot!.querySelector('.halloween-brew')).not.toBeNull();
+  expect(pot!.querySelector('.halloween-brew-late')).not.toBeNull();
+
+  // The flickering pumpkin under Whobit's pose, clamped to the stage's
+  // bottom edge.
+  const pumpkin = container.querySelector<HTMLElement>(
+    'svg[width="120"][viewBox="0 0 120 104"]'
+  )!;
+  expect(pumpkin.parentElement).toHaveStyle({
+    left: `${CHSH.chsh2.pose.left + 258}px`,
+    top: `${Math.min(CHSH.chsh2.pose.top + 340, STAGE.top + STAGE.height - 104)}px`,
+  });
+
+  // No other Scene's monster leaks onto the page.
+  for (const other of [
+    '.halloween-monster-lean',
+    '.halloween-monster-vamp',
+    '.halloween-monster-dangle',
+    '.halloween-monster-tiptoe',
+    '.halloween-monster-pop',
+    '.halloween-monster-rise',
+    '.halloween-monster-slide',
+  ]) {
+    expect(container.querySelector(other)).toBeNull();
+  }
+});
+
+test('the CHSH2 pieces follow the wheel and the pose when they move', () => {
+  setAnchors({
+    stage: STAGE,
+    'whobit-bubble': CHSH.chsh2.bubble,
+    'whobit-pose': CHSH.chsh2.pose,
+    'chsh2-wheel': CHSH.chsh2.wheel,
+  });
+  const { container } = renderPage(<CHSH2 />);
+
+  // The wheel moves right and the pose column with it; the ghost keeps its
+  // offsets from the wheel and the pot stays clamped past the pumpkin.
+  const movedWheel = box(856, 199, 560, 560);
+  const movedPose = box(244, 465, 288, 358);
+  setAnchors({
+    stage: STAGE,
+    'whobit-bubble': CHSH.chsh2.bubble,
+    'whobit-pose': movedPose,
+    'chsh2-wheel': movedWheel,
+  });
+  fireEvent(window, new Event('resize'));
+
+  const ghost = container.querySelector<HTMLElement>('.halloween-ghost')!;
+  expect(ghost.style.left).toBe(`${movedWheel.left - 128}px`);
+  const ooze = container.querySelector<HTMLElement>('.halloween-monster-ooze')!;
+  expect(ooze.parentElement!.parentElement!.style.left).toBe(
+    `${movedPose.left + 258 + 120}px`
+  );
+});
+
+test('CHSH3 shows the vampire, and only that monster, under an entangled result', () => {
+  searchParams.current = new URLSearchParams(
+    'value=2.42&error=0.05&fail=false'
+  );
+  setAnchors({
+    stage: STAGE,
+    'whobit-bubble': CHSH.chsh3.bubble,
+    'whobit-pose': CHSH.chsh3.pose,
+    'chsh3-circle': CHSH.chsh3.circle,
+  });
+  const { container } = renderPage(<CHSH3 />);
+
+  // The circle anchor sits on the page's own results circle: the value
+  // heading renders inside it.
+  const circle = container.querySelector(
+    '[data-decoration-anchor="chsh3-circle"]'
+  )!;
+  expect(circle.querySelector('h1')?.textContent).toContain('Your value was');
+
+  // The stage-anchored pieces at the board's own stage placements.
+  expect(container.querySelector('svg[viewBox="0 0 200 200"]')).not.toBeNull();
+  expect(container.querySelector('svg[viewBox="0 0 160 160"]')).not.toBeNull();
+  expect(container.querySelector('.halloween-bats')).not.toBeNull();
+
+  // The spider 3% in from the stage's right, on the board's 210px thread.
+  const spider = container.querySelector<HTMLElement>('.halloween-spider')!;
+  expect(parseFloat(spider.style.left)).toBe(
+    STAGE.left + STAGE.width - STAGE.width * 0.03 - 40
+  );
+  expect(spider.firstElementChild).toHaveStyle({ height: '210px' });
+
+  // The vampire rising from the stage's bottom right (28px in), through a
+  // window whose bottom edge is the stage's own bottom edge, which hides it
+  // at rest.
+  const vamp = container.querySelector<HTMLElement>('.halloween-monster-vamp')!;
+  expect(vamp.parentElement).toHaveStyle({
+    left: `${STAGE.left + STAGE.width - 28 - 124}px`,
+    top: `${STAGE.top + STAGE.height - 150}px`,
+    overflow: 'hidden',
+  });
+
+  // The ghost on the circle's bottom-left (124px left of it, 470px down)
+  // with the board's grin, its base clamped onto the stage's bottom edge
+  // where the circle hangs below it, never crossing the bubble's edge.
+  const ghost = container.querySelector<HTMLElement>('.halloween-ghost')!;
+  expect(ghost.style.left).toBe('650px');
+  expect(ghost.style.top).toBe('655px');
+  expect(
+    CHSH.chsh3.circle.top + 470,
+    'the circle hangs below the stage’s bottom edge, so the clamp above can fail'
+  ).toBeGreaterThan(STAGE.top + STAGE.height - 100);
+  expect(ghost.querySelector(`path[d="${ghostMouths.grin}"]`)).not.toBeNull();
+
+  // The small pumpkin on the circle's bottom-right (52px in, 30px up), at
+  // the board's own bigger size.
+  const small = container.querySelector<HTMLElement>('svg[width="96"]')!;
+  expect(small.style.left).toBe(
+    `${CHSH.chsh3.circle.left + CHSH.chsh3.circle.width - 52 - 96}px`
+  );
+  expect(small.style.top).toBe(
+    `${CHSH.chsh3.circle.top + CHSH.chsh3.circle.height - 30 - 83}px`
+  );
+
+  // The flickering pumpkin under Whobit's pose, clamped to the stage's
+  // bottom edge.
+  const pumpkin = container.querySelector<HTMLElement>(
+    'svg[width="120"][viewBox="0 0 120 104"]'
+  )!;
+  expect(pumpkin.parentElement).toHaveStyle({
+    left: `${CHSH.chsh3.pose.left + 258}px`,
+    top: `${Math.min(CHSH.chsh3.pose.top + 340, STAGE.top + STAGE.height - 104)}px`,
+  });
+
+  // Only this Scene's monster: neither of the other CHSH3 boards' monsters,
+  // nor any other Scene's.
+  for (const other of [
+    '.halloween-monster-dangle',
+    '.halloween-monster-tiptoe',
+    '.halloween-monster-lean',
+    '.halloween-monster-ooze',
+    '.halloween-monster-pop',
+    '.halloween-monster-rise',
+    '.halloween-monster-slide',
+  ]) {
+    expect(container.querySelector(other)).toBeNull();
+  }
+});
+
+test('CHSH3 shows the sock monster, and only that monster, under a weak result', () => {
+  searchParams.current = new URLSearchParams(
+    'value=1.42&error=0.07&fail=false'
+  );
+  setAnchors({
+    stage: STAGE,
+    'whobit-bubble': CHSH.chsh3.bubble,
+    'whobit-pose': CHSH.chsh3.pose,
+    'chsh3-circle': CHSH.chsh3.circle,
+  });
+  const { container } = renderPage(<CHSH3 />);
+
+  // The sock monster dangling over the stage's top edge (82px left of its
+  // centre), through a window whose top edge is the stage's own, which
+  // hides it at rest; its board spot crosses the bubble's right edge, so it
+  // is clamped past it.
+  const dangle = container.querySelector<HTMLElement>(
+    '.halloween-monster-dangle'
+  )!;
+  expect(dangle.parentElement).toHaveStyle({
+    left: '644px',
+    top: `${STAGE.top}px`,
+    overflow: 'hidden',
+  });
+  expect(CHSH.chsh3.bubble.left + CHSH.chsh3.bubble.width).toBeGreaterThan(
+    STAGE.left + STAGE.width / 2 - 82
+  );
+
+  // The ghost wears this board's frown; the spider and the small pumpkin
+  // sit as on the entangled board.
+  const ghost = container.querySelector<HTMLElement>('.halloween-ghost')!;
+  expect(ghost.querySelector(`path[d="${ghostMouths.frown}"]`)).not.toBeNull();
+  expect(
+    container.querySelector<HTMLElement>('svg[width="96"]')!.style.left
+  ).toBe(`${CHSH.chsh3.circle.left + CHSH.chsh3.circle.width - 52 - 96}px`);
+
+  // Only this Scene's monster.
+  for (const other of [
+    '.halloween-monster-vamp',
+    '.halloween-monster-tiptoe',
+    '.halloween-monster-lean',
+    '.halloween-monster-ooze',
+  ]) {
+    expect(container.querySelector(other)).toBeNull();
+  }
+});
+
+test('CHSH3 shows the tiptoeing monster, and only that monster, on an error', () => {
+  searchParams.current = new URLSearchParams('value=0&error=0&fail=true');
+  setAnchors({
+    stage: STAGE,
+    'whobit-bubble': CHSH.chsh3.bubble,
+    'whobit-pose': CHSH.chsh3.pose,
+    'chsh3-circle': CHSH.chsh3.circle,
+  });
+  const { container } = renderPage(<CHSH3 />);
+
+  // The monster tiptoeing in from the stage's right edge, 12px above its
+  // bottom.
+  const tiptoe = container.querySelector<HTMLElement>(
+    '.halloween-monster-tiptoe'
+  )!;
+  expect(tiptoe.parentElement).toHaveStyle({
+    left: `${STAGE.left + STAGE.width - 140}px`,
+    top: `${STAGE.top + STAGE.height - 12 - 120}px`,
+  });
+
+  // This board's own spider: 60px left of the stage's centre on a 120px
+  // thread.
+  const spider = container.querySelector<HTMLElement>('.halloween-spider')!;
+  expect(parseFloat(spider.style.left)).toBe(STAGE.left + STAGE.width / 2 - 60);
+  expect(spider.firstElementChild).toHaveStyle({ height: '120px' });
+
+  // The ghost wears this board's smile.
+  const ghost = container.querySelector<HTMLElement>('.halloween-ghost')!;
+  expect(ghost.querySelector(`path[d="${ghostMouths.smile}"]`)).not.toBeNull();
+
+  // Only this Scene's monster.
+  for (const other of [
+    '.halloween-monster-vamp',
+    '.halloween-monster-dangle',
+    '.halloween-monster-lean',
+    '.halloween-monster-ooze',
+  ]) {
+    expect(container.querySelector(other)).toBeNull();
+  }
+});
+
+test('the CHSH3 pieces follow the results circle when it moves', () => {
+  searchParams.current = new URLSearchParams(
+    'value=2.42&error=0.05&fail=false'
+  );
+  setAnchors({
+    stage: STAGE,
+    'whobit-bubble': CHSH.chsh3.bubble,
+    'whobit-pose': CHSH.chsh3.pose,
+    'chsh3-circle': CHSH.chsh3.circle,
+  });
+  const { container } = renderPage(<CHSH3 />);
+
+  // The circle moves right and up; the ghost and the small pumpkin keep
+  // their offsets from it (the ghost's base now rests clear of the stage's
+  // bottom edge, so no clamp moves it).
+  const moved = box(874, 150, 560, 560);
+  setAnchors({
+    stage: STAGE,
+    'whobit-bubble': CHSH.chsh3.bubble,
+    'whobit-pose': CHSH.chsh3.pose,
+    'chsh3-circle': moved,
+  });
+  fireEvent(window, new Event('resize'));
+
+  const ghost = container.querySelector<HTMLElement>('.halloween-ghost')!;
+  expect(ghost.style.left).toBe(`${moved.left - 124}px`);
+  expect(ghost.style.top).toBe(
+    `${Math.min(moved.top + 470, STAGE.top + STAGE.height - 100)}px`
+  );
+  expect(
+    container.querySelector<HTMLElement>('svg[width="96"]')!.style.left
+  ).toBe(`${moved.left + moved.width - 52 - 96}px`);
+
+  // Back to the params the other tests render with.
+  searchParams.current = new URLSearchParams();
 });
 
 test('the Measuring popup renders the peeker over its top edge and the bat riding its bar', () => {

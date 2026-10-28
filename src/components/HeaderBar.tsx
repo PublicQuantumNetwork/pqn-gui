@@ -1,6 +1,7 @@
 'use client';
 import { Box, Button, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import MapOutlinedIcon from '@mui/icons-material/MapOutlined';
 import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
 import { usePathname } from 'next/navigation';
 import * as React from 'react';
@@ -13,9 +14,12 @@ const HeaderImage = styled('img')(({ theme }) => ({
 }));
 
 export default function HeaderBar() {
+  const pathname = usePathname();
   // The attract loop only exists on the home page, so the button that replays it
   // is offered only there — elsewhere it would be a control that does nothing.
-  const showAttractButton = usePathname() === '/' && attractLoopEnabled();
+  const showAttractButton = pathname === '/' && attractLoopEnabled();
+  const showMapButton = pathname === '/';
+  const showMapHeading = pathname === '/map';
 
   return (
     <Stack
@@ -47,6 +51,37 @@ export default function HeaderBar() {
             border: `1px solid ${theme.palette.grey[900]}`,
           })}
         />
+
+        {showMapHeading && (
+          <Stack component="header" spacing={0.5}>
+            <Box
+              component="h1"
+              sx={{
+                m: 0,
+                color: '#0d2436',
+                fontFamily: "'PP Museum', Georgia, 'Times New Roman', serif",
+                fontSize: 26,
+                fontWeight: 400,
+                lineHeight: 1.2,
+              }}
+            >
+              How the experiment works
+            </Box>
+            <Box
+              component="p"
+              sx={{
+                m: 0,
+                color: '#3c5568',
+                fontSize: 16,
+                lineHeight: 1.25,
+                whiteSpace: 'nowrap',
+              }}
+            >
+              Tap any numbered element to learn more about that step in the
+              process!
+            </Box>
+          </Stack>
+        )}
       </Stack>
 
       {/* Right group */}
@@ -59,6 +94,18 @@ export default function HeaderBar() {
             sx={{ minWidth: 64 }}
           >
             <OndemandVideoIcon /> &nbsp; Intro Video
+          </Button>
+        )}
+
+        {showMapButton && (
+          <Button
+            variant="contained"
+            component="a"
+            href="/map"
+            aria-label="Open the experiment map"
+            sx={{ minWidth: 96 }}
+          >
+            <MapOutlinedIcon /> &nbsp; Map
           </Button>
         )}
 

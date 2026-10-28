@@ -12,13 +12,12 @@ import {
 import { MonsterLean } from './monsters';
 import { useElementBox } from './useElementBox';
 
-/** The anchors the chsh1 Scene's Decorations are placed against (agent
- *  decision A8): the stage, Whobit's speech bubble (the board floats its
- *  spider and its ghost beside the bubble, 56px and 32px right of its right
- *  edge, which the GUI lays right of the board's stage, so both are clamped
- *  to keep their board gap from it), Whobit's pose (the board leans its
- *  pumpkin out from under it) and the Next button (the board floats its
- *  pumpkin pair above it). */
+/** The anchors the chsh1 Scene's Decorations are placed against: the stage,
+ *  Whobit's speech bubble (the board floats its spider and its ghost beside the
+ *  bubble, 56px and 32px right of its right edge, which the GUI lays right of
+ *  the board's stage, so both are clamped to keep their board gap from it),
+ *  Whobit's pose (the board leans its pumpkin out from under it) and the Next
+ *  button (the board floats its pumpkin pair above it). */
 const stageAnchor = () =>
   document.querySelector<HTMLElement>('[data-decoration-anchor="stage"]');
 const bubbleAnchor = () =>
@@ -29,7 +28,7 @@ const nextAnchor = () =>
   document.querySelector('[data-decoration-anchor="chsh1-next"]');
 
 /**
- * The chsh1 Scene's Decorations (docs/design/halloween/CHSH1.dc.html): the
+ * The chsh1 Scene's Decorations (the CHSH1 design board): the
  * stage's ambient set — web, moon, bats, the spider and the ghost beside the
  * speech bubble, the flickering pumpkin under Whobit's pose and the pumpkin
  * pair above the Next button — plus the mummy leaning in from the right. The

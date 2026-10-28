@@ -191,7 +191,7 @@ test('SSM2 renders ssm2-asking while the request to the friend is in flight', ()
   render(<SSM2 />);
 
   expectScene('ssm2-asking');
-  // Today's text stays: the two states differ only in Decorations (A2).
+  // Today's text stays: the two states differ only in Decorations.
   expect(screen.getByText('Waiting for response...')).toBeInTheDocument();
 });
 
@@ -256,7 +256,7 @@ test('SSM4 renders the Scene its result calls for', () => {
 });
 
 test('Maintenance and Survey render no Decorations in any Seasonal Theme', () => {
-  // Decision 9: the two pages stay exactly as today, so the Decorations
+  // The two pages stay exactly as today, so the Decorations
   // slot never renders on them, whatever the theme maps.
   const maintenance = render(<MaintenancePage />);
   expect(
@@ -363,7 +363,7 @@ test('the player’s own emoji still bursts on a perfect match, whatever the Cel
     </PageRedirectProvider>
   );
 
-  // EmojiConfetti is the same in every theme (decision 14): the player's
+  // EmojiConfetti is the same in every theme: the player's
   // emoji bursts alongside the theme's Celebration.
   const particles = document.querySelectorAll('.emoji-confetti-particle');
   expect(particles.length).toBeGreaterThan(0);

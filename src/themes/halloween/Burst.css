@@ -1,6 +1,6 @@
 /*
- * The bat-and-pumpkin burst (docs/design/halloween/CHSH3.dc.html), ported as
- * the board has it, including its prefers-reduced-motion rule (decision 12).
+ * The bat-and-pumpkin burst (the CHSH3 design board), ported as
+ * the board has it, including its prefers-reduced-motion rule.
  */
 @keyframes halloween-chsh-burst {
   0% {

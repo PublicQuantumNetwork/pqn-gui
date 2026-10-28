@@ -38,26 +38,25 @@ const hat = {
  * The Halloween Seasonal Theme: the witch hat Whobit wears, the spooky
  * Flavour copy, the bat-and-pumpkin Celebration, the Measuring popup's cream
  * track and cauldron illustration, and the Decorations of every Game's
- * Scenes, ported from the boards in docs/design/halloween/ (decision 12;
- * pumpkins are always #ff5f05, decision 7). The background and Whobit poses
- * stay the Default Theme's (decision 8).
+ * Scenes, ported from the Halloween design boards (pumpkins are always
+ * #ff5f05). The background and Whobit poses stay the Default Theme's.
  */
 const halloween: SeasonalTheme = {
   palette: {
-    // The Measuring popup's cream progress track (decision 11, agent
-    // decision A5); primary.main stays the Default Theme's pumpkin.
+    // The Measuring popup's cream progress track; primary.main stays the
+    // Default Theme's pumpkin.
     LinearProgress: { primaryBg: '#fff4dd' },
   },
   images: {
-    // The Measuring popup's cauldron illustration (decision 11), an SVG
+    // The Measuring popup's cauldron illustration, an SVG
     // carrying its own animations and reduced-motion rule.
-    'measuring-illustration': '/images/measuring-cauldron.svg',
+    'measuring-illustration': '/images/halloween/measuring-cauldron.svg',
     // The CHSH2 board's cream wheel face and broom needle.
-    'polarization-wheel': '/images/polarization-wheel-halloween.svg',
-    'polarization-arrow': '/images/polarization-broom-halloween.svg',
+    'polarization-wheel': '/images/halloween/polarization-wheel.svg',
+    'polarization-arrow': '/images/halloween/polarization-broom.svg',
   },
   whobitAccessory: {
-    svg: '/images/whobit-witch-hat.svg',
+    svg: '/images/halloween/whobit-witch-hat.svg',
     positions: {
       // Every board places the hat the same way over the pose container:
       // left 30px, top -6px. Each pose's SVG is centred in the 288×288 pose

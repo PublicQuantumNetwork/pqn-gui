@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  The witch hat Whobit wears (docs/design/halloween/Main.dc.html and every
+  The witch hat Whobit wears (the Main design board and every
   board that shows Whobit), ported as it is; the band's pumpkin is always
-  #ff5f05 (decision 7).
+  #ff5f05.
 -->
 <svg width="160" height="110" viewBox="0 0 160 110" xmlns="http://www.w3.org/2000/svg">
   <path d="M42 94 Q60 60 70 30 Q76 10 102 2 Q90 20 92 40 Q100 70 118 94 Z" fill="#13294b" stroke="#000000" stroke-width="3" stroke-linejoin="round"/>

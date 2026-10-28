@@ -48,12 +48,11 @@ export default function ModalBox({
 
   return (
     <DialogContent sx={{ padding: '50px' }}>
-      {/* The `measuring` Scene's Decorations, with the read-only progress
-          (decision 11). */}
+      {/* The `measuring` Scene's Decorations, with the read-only progress. */}
       <Decorations scene="measuring" progress={progress} />
       <Stack flexDirection="column" sx={{}}>
         <Typography
-          // The Halloween Decorations' title anchor (agent decision A8):
+          // The Halloween Decorations' title anchor:
           // the bat riding the progress bar hangs from the title's bottom
           // edge, never covering it. Non-visual, so no theme changes the
           // look.

@@ -5,7 +5,7 @@ import {
   type ThemeServer,
 } from './tests/screens/themes';
 
-// Viewport matches the Halloween design boards (docs/design/halloween/canvas.json).
+// Viewport matches the Halloween design boards (1440×980).
 
 /** Build and serve one theme with its own env, build directory and port. */
 function themeServerCommand(theme: ThemeServer): string {

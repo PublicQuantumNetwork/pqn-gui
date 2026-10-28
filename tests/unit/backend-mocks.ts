@@ -1,7 +1,7 @@
 import { vi } from 'vitest';
 
 /**
- * Module-level backend mocks for the Vitest harness (plan, Testing rule 1):
+ * Module-level backend mocks for the Vitest harness:
  * `@/calls`, `useSSE` and `WebSocketHook` never touch the network, and
  * `next/navigation` works outside a real Next app.
  */

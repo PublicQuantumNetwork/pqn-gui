@@ -20,14 +20,12 @@ yarn.lock
 pnpm-lock.yaml
 
 # Docs: Prettier pads every table row to the widest cell, which makes
-# the plan and ADR tables unreadable as plain text
+# the ADR tables unreadable as plain text
 docs/
 
-# Agent workflow, glossary and test output
-.agents/
+# Glossary, agent run output and test output
 CONTEXT.md
 tsconfig.json
 orchestration/
-opencode.json
 test-results/
 playwright-report/

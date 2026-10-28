@@ -73,7 +73,7 @@ export default function MyComponent() {
             }}
           >
             <Box
-              // The Halloween Decorations' ball anchor (agent decision A8):
+              // The Halloween Decorations' ball anchor:
               // the mist, the twinkles and the rising monster are placed
               // against the page's own ball. Non-visual, so no theme changes
               // the look.

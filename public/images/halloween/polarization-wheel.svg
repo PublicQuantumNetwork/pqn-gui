@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="550" height="550" viewBox="0 0 550 550">
-  <!-- The CHSH2 board's wheel face (docs/design/halloween/CHSH2.dc.html, a
+  <!-- The CHSH2 design board's wheel face (a
        r=250 circle in a 560px svg), scaled onto circle.png's own circle
        (centre 275, r 218) so it replaces circle.png in place. -->
   <g transform="translate(275 275) scale(0.872) translate(-280 -280)">

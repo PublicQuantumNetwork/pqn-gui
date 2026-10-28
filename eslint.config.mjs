@@ -14,7 +14,6 @@ const eslintConfig = defineConfig([
     'out/**',
     'build/**',
     'next-env.d.ts',
-    'docs/design/halloween/runtime/**',
     'test-results/**',
     'playwright-report/**',
     'orchestration/**',

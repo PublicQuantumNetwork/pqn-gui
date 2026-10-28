@@ -4,22 +4,21 @@ import { Pumpkin, Spider, Web } from './ambient';
 import { MonsterTentacle } from './monsters';
 import { useElementBox } from './useElementBox';
 
-/** The anchors the ssm3 Scene's Decorations are placed against (agent
- *  decision A8): the stage and Whobit's pose (the board leans its pumpkin
- *  out from under it). The board carries no moon, no bats and no speech
- *  bubble piece: its spider hangs from the stage's top left of the bubble,
- *  where no clamp is needed. */
+/** The anchors the ssm3 Scene's Decorations are placed against: the stage and
+ *  Whobit's pose (the board leans its pumpkin out from under it). The board
+ *  carries no moon, no bats and no speech bubble piece: its spider hangs from
+ *  the stage's top left of the bubble, where no clamp is needed. */
 const stageAnchor = () =>
   document.querySelector<HTMLElement>('[data-decoration-anchor="stage"]');
 const poseAnchor = () =>
   document.querySelector('[data-decoration-anchor="whobit-pose"]');
 
 /**
- * The ssm3 Scene's Decorations (docs/design/halloween/SSM3.dc.html): the
+ * The ssm3 Scene's Decorations (the SSM3 design board): the
  * board's own ambient set — the web, the spider on its 230px thread — plus
  * the flickering pumpkin under Whobit's pose and the tentacle monster
  * rising from the stage's bottom right. The board's broom is the wheel's
- * own pointer, which the page draws (decision 10), so it is not a
+ * own pointer, which the page draws, so it is not a
  * Decoration.
  */
 export default function Ssm3Decorations() {

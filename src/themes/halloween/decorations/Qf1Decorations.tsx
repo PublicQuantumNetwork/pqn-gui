@@ -4,9 +4,9 @@ import { Bats, BallMist, Moon, Spider, Web, ballCircle } from './ambient';
 import { MonsterRise } from './monsters';
 import { useElementBox } from './useElementBox';
 
-/** The anchors the qf1 Scene's Decorations are placed against (agent
- *  decision A8): the stage, Whobit's speech bubble (the board hangs its
- *  spider just right of it) and the page's own ball. */
+/** The anchors the qf1 Scene's Decorations are placed against: the stage,
+ *  Whobit's speech bubble (the board hangs its spider just right of it) and the
+ *  page's own ball. */
 const stageAnchor = () =>
   document.querySelector<HTMLElement>('[data-decoration-anchor="stage"]');
 const bubbleAnchor = () =>
@@ -15,7 +15,7 @@ const ballAnchor = () =>
   document.querySelector('[data-decoration-anchor="qf-ball"]');
 
 /**
- * The qf1 Scene's Decorations (docs/design/halloween/QF1.dc.html): the
+ * The qf1 Scene's Decorations (the QF1 design board): the
  * stage's ambient set — web, moon, bats, the spider by the speech bubble and
  * the mist with the twinkles over the ball — plus the rising monster behind
  * the ball. The stage-anchored pieces keep the board's stage placements; the

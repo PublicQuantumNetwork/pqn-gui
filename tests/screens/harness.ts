@@ -10,10 +10,9 @@ export function themeUrl(theme: ThemeServer, path: string): string {
 /**
  * Capture one screen of one theme.
  *
- * The Default Theme is compared with the committed Default baselines
- * (decision 15): any difference fails. A theme without baselines is captured
- * without comparison into tests/screens/&lt;theme&gt;/ (gitignored) for the
- * design checker to review against the design boards.
+ * The Default Theme is compared with the committed Default baselines: any
+ * difference fails. A theme without baselines is captured without comparison
+ * into tests/screens/&lt;theme&gt;/ (gitignored) for review by eye.
  */
 export async function captureScreen(
   page: Page,

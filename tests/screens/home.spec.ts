@@ -2,7 +2,7 @@ import { FOLLOW_REQUEST_MESSAGE } from './backend';
 import { captureScreen, expect, test, themeUrl } from './harness';
 import { THEMES, type ThemeServer } from './themes';
 
-/** The Home greeting's first line is Flavour copy (decision 13): each theme
+/** The Home greeting's first line is Flavour copy: each theme
  * waits for its own line before the screenshot is captured. */
 const homeGreeting: Record<ThemeServer['name'], string> = {
   default: 'Hi, Quantum Adventurer!',

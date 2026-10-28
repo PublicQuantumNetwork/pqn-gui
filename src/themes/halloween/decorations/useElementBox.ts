@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 
 /**
  * An element's box in viewport coordinates: the box a Decoration is placed
- * against, as the page lays the element out (agent decision A8).
+ * against, as the page lays the element out.
  */
 export interface ElementBox {
   left: number;
@@ -40,7 +40,7 @@ function sameBox(a: ElementBox, b: ElementBox): boolean {
 
 /**
  * An element's box, measured where the page lays the element out and
- * re-measured whenever it moves or resizes (agent decision A8): a
+ * re-measured whenever it moves or resizes: a
  * ResizeObserver watches the element and every container around it — an
  * element can move without resizing, as the Measuring popup's bar does when
  * the popup grows around it — plus the window's resize event.
@@ -68,7 +68,7 @@ export function useElementBox(
         // stop rendering instead of floating on its last box (a page state
         // can swap its element away, as SSM1's send error swaps the emoji
         // circle for the broken computer), while the set's other pieces,
-        // each placed against its own anchor, stay (agent decision A8).
+        // each placed against its own anchor, stay.
         setBox(null);
         return;
       }

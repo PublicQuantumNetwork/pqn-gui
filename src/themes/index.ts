@@ -34,9 +34,9 @@ export const knownThemes: Record<string, SeasonalTheme> = {
 } satisfies Record<SeasonalThemeName, SeasonalTheme>;
 
 /**
- * The active Seasonal Theme (decision 5): `NEXT_PUBLIC_SEASONAL_THEME`
+ * The active Seasonal Theme: `NEXT_PUBLIC_SEASONAL_THEME`
  * names it, read at build time; unset means the Default Theme. An unknown
- * name cannot survive the build (next.config.mjs, decision 6), so it is an
+ * name cannot survive the build (next.config.mjs), so it is an
  * error here too. Tests pass a name and registry directly to try other
  * themes.
  */
@@ -92,7 +92,7 @@ export function activeMuiTheme(
   if (!theme.palette) {
     return base;
   }
-  // The Measuring popup's progress track (decision 11, agent decision A5):
+  // The Measuring popup's progress track:
   // the palette's LinearProgress.primaryBg becomes a MuiLinearProgress
   // override on the primary-colour track, which MUI would otherwise derive
   // from primary.main — the bar's fill, which keeps the Default Theme's
@@ -124,7 +124,7 @@ export function activeMuiTheme(
 }
 
 /**
- * The Default Theme's Flavour copy (decision 13): today's text, the fallback
+ * The Default Theme's Flavour copy: today's text, the fallback
  * for every slot a Seasonal Theme leaves unset. The lead-ins and the CHSH3
  * line have no text today, so their Default value is nothing at all.
  */
@@ -134,7 +134,7 @@ export const DEFAULT_FLAVOUR_COPY = {
 } satisfies Partial<FlavourCopy>;
 
 /**
- * The Default Theme's Quantum Fortune fortunes by number (decision 13):
+ * The Default Theme's Quantum Fortune fortunes by number:
  * today's list, the value a Seasonal Theme's override for a number falls
  * back to.
  */
@@ -156,7 +156,7 @@ export function activeFlavourCopy(
 /**
  * The active theme's fortune for a number: the theme's override if it has
  * one, today's fortune otherwise, so a theme overriding one number changes
- * only that number (decision 13).
+ * only that number.
  */
 export function activeFortune(
   fortuneNumber: number,
@@ -178,7 +178,7 @@ export function activeWhobitAccessory(
 }
 
 /**
- * The active theme's Decorations for a Scene (decision 10): the component
+ * The active theme's Decorations for a Scene: the component
  * the theme maps the Scene to, or nothing when it maps none — the Default
  * Theme maps no Scene, so it renders no Decorations at all.
  */
@@ -190,7 +190,7 @@ export function activeDecorations(
 }
 
 /**
- * The active theme's Celebration (decision 14): the effect when a Game
+ * The active theme's Celebration: the effect when a Game
  * succeeds. The Default Theme sets none, so it keeps today's Fireworks.
  */
 export function activeCelebration(

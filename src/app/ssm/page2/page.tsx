@@ -15,7 +15,7 @@ export default function MyComponent() {
   const [hasError, setHasError] = useState(false);
   const [wasAccepted, setWasAccepted] = useState<boolean | null>(null);
   // Whether the collect_follower request has answered, which tells the
-  // asking and waiting Scenes apart (agent decision A2).
+  // asking and waiting Scenes apart.
   const [hasAnswered, setHasAnswered] = useState(false);
 
   useEffect(() => {
@@ -36,9 +36,9 @@ export default function MyComponent() {
     fetchFollowerRequest();
   }, [router]);
 
-  // The Scene the page's state calls for (decision 10): asking while the
+  // The Scene the page's state calls for: asking while the
   // request is still in flight, waiting once it has answered without an
-  // answer, declined when the friend declined (agent decision A2).
+  // answer, declined when the friend declined.
   const scene: Scene =
     wasAccepted === false
       ? 'ssm2-declined'
@@ -96,10 +96,10 @@ export default function MyComponent() {
             />
           ) : wasAccepted === false ? (
             <Typography
-              // The Halloween Decorations' waiting-status anchor (agent
-              // decision A8), on the declined face that takes the spinner's
-              // place: the SSM2-declined board draws its sad pieces around
-              // this spot. Non-visual, so no theme changes the look.
+              // The Halloween Decorations' waiting-status anchor, on the
+              // declined face that takes the spinner's place: the SSM2-declined
+              // board draws its sad pieces around this spot. Non-visual, so no
+              // theme changes the look.
               data-decoration-anchor="ssm2-status"
               sx={{
                 fontSize: '150px',
@@ -110,10 +110,9 @@ export default function MyComponent() {
           ) : (
             <>
               <CircularProgress
-                // The Halloween Decorations' waiting-status anchor (agent
-                // decision A8): the SSM2 boards draw their waiting pieces
-                // around this spot. Non-visual, so no theme changes the
-                // look.
+                // The Halloween Decorations' waiting-status anchor: the SSM2
+                // boards draw their waiting pieces around this spot.
+                // Non-visual, so no theme changes the look.
                 data-decoration-anchor="ssm2-status"
                 size={80}
                 thickness={4}

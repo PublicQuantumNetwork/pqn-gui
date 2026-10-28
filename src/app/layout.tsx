@@ -10,7 +10,7 @@ import { PageRedirectProvider } from '@/app/contexts/PageRedirectContext';
 import HeaderBar from '@/components/HeaderBar';
 import './globals.css';
 
-// The active theme is fixed at build time (decision 5), so its Palette and
+// The active theme is fixed at build time, so its Palette and
 // background are computed once here, not on every render.
 const muiTheme = activeMuiTheme();
 const backgroundImage = `url(${activeImages().background})`;
@@ -42,8 +42,8 @@ export default function RootLayout(props: { children: React.ReactNode }) {
                 <HeaderBar />
                 <Box
                   // The Halloween Decorations' stage anchor: the content box
-                  // whose edges are the design boards' stage edges (agent
-                  // decision A8). Non-visual, so no theme changes the look.
+                  // whose edges are the design boards' stage edges.
+                  // Non-visual, so no theme changes the look.
                   data-decoration-anchor="stage"
                   sx={{
                     backgroundImage,

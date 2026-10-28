@@ -18,9 +18,9 @@ export default function CircleContainer({
 }: CircleContainerProps) {
   return (
     <Box
-      // The Halloween Decorations' results-circle anchor (agent decision
-      // A8): the CHSH3 boards hang their ghost and their small pumpkin on
-      // the results circle. Non-visual, so no theme changes the look.
+      // The Halloween Decorations' results-circle anchor: the CHSH3 boards hang
+      // their ghost and their small pumpkin on the results circle. Non-visual,
+      // so no theme changes the look.
       data-decoration-anchor="chsh3-circle"
       sx={{
         backgroundImage: 'url(/images/circle.png)',

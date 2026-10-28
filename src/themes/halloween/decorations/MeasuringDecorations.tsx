@@ -5,11 +5,11 @@ import { BarBat, Peeker } from './monsters';
 import { useElementBox } from './useElementBox';
 
 /**
- * The measuring Scene's Decorations (docs/design/halloween/Measuring.dc.html):
+ * The measuring Scene's Decorations (the Measuring design board):
  * the peeking monster over the popup's top edge and, when the popup shows its
  * progress bar, the bat riding the bar's fill. Both are placed against the
  * popup's own geometry, measured where the popup renders and re-measured
- * whenever it moves or grows (agent decision A8) — the popup grows when its
+ * whenever it moves or grows — the popup grows when its
  * QR image loads, and the two popup variants are different shapes: the
  * bar-less one stands taller, and each page's dialog is as wide as its page
  * makes it.
@@ -17,11 +17,11 @@ import { useElementBox } from './useElementBox';
 export default function MeasuringDecorations({
   progress,
 }: {
-  /** The popup's read-only progress, 0-100 (decision 11). */
+  /** The popup's read-only progress, 0-100. */
   progress?: number;
 }) {
   const root = useRef<HTMLDivElement>(null);
-  // The Decorations render inside the popup (group 1.4), so the popup is
+  // The Decorations render inside the popup, so the popup is
   // this node's own dialog.
   const popup = useCallback(
     () => root.current?.closest<HTMLElement>('[role="dialog"]') ?? null,

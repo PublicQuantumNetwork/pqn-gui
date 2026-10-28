@@ -17,13 +17,12 @@ import {
 import { MonsterCat, MonsterFrank, MonsterFuzz, SadPumpkin } from './monsters';
 import { useElementBox, type ElementBox } from './useElementBox';
 
-/** The anchors the ssm2 Scenes' Decorations are placed against (agent
- *  decision A8): the stage, Whobit's speech bubble (the spider keeps its
- *  board's own gap from its right edge) and pose (the board leans its
- *  pumpkin out from under it), and the status the page shows while the
- *  friend decides (the spinner while waiting, the declined face once the
- *  friend said no) — the spot each board draws its waiting content
- *  around. */
+/** The anchors the ssm2 Scenes' Decorations are placed against: the stage,
+ *  Whobit's speech bubble (the spider keeps its board's own gap from its right
+ *  edge) and pose (the board leans its pumpkin out from under it), and the
+ *  status the page shows while the friend decides (the spinner while waiting,
+ *  the declined face once the friend said no) — the spot each board draws its
+ *  waiting content around. */
 const stageAnchor = () =>
   document.querySelector<HTMLElement>('[data-decoration-anchor="stage"]');
 const bubbleAnchor = () =>
@@ -34,8 +33,7 @@ const statusAnchor = () =>
   document.querySelector('[data-decoration-anchor="ssm2-status"]');
 
 /** What the three SSM2 boards each draw their own: the spider's place and
- *  timing (SSM2.dc.html, SSM2-waiting.dc.html and
- *  SSM2-declined.dc.html). */
+ *  timing (the SSM2, SSM2-waiting and SSM2-declined boards). */
 type Ssm2Board = 'asking' | 'waiting' | 'declined';
 
 const boards: Record<
@@ -48,7 +46,7 @@ const boards: Record<
 };
 
 /**
- * The ssm2 Scenes' Decorations (docs/design/halloween/SSM2.dc.html and its
+ * The ssm2 Scenes' Decorations (the SSM2 design board and its
  * waiting and declined boards): the stage's ambient set — web, moon, bats,
  * the spider on its own thread and the flickering pumpkin under Whobit's
  * pose — plus each board's own waiting pieces, placed against the status as
@@ -61,12 +59,12 @@ const boards: Record<
  * declined face, the crossed-out envelope, the sad ghost and the monster
  * leaning in from the stage's right edge. While the page shows its
  * connection-error image instead of a status, the status-placed pieces are
- * omitted and the set's other pieces stay (agent decision A8). The asking
+ * omitted and the set's other pieces stay. The asking
  * board hangs its spider behind the bubble's right edge, and the declined
  * board's spider joins it there where the sad pumpkin the GUI clamps beside
  * the declined face crosses its own spot, so the bubble is cut out of both
  * spiders here; the asking board draws the status over its flight path's
- * lower corner, so the status is cut out of that too (agent decision A8).
+ * lower corner, so the status is cut out of that too.
  */
 function Ssm2Decorations({ board }: { board: Ssm2Board }) {
   const stage = useElementBox(stageAnchor);

@@ -4,16 +4,15 @@ import { Dialog } from '@mui/material';
 import { readFileSync } from 'node:fs';
 
 /**
- * The Halloween Decorations of groups 2.2-2.3 through the real registry and
+ * The Halloween Decorations through the real registry and
  * resolvers: with NEXT_PUBLIC_SEASONAL_THEME=halloween the home, qf1, qf2,
  * measuring and CHSH Scenes render the Decorations of their boards
- * (docs/design/halloween/Main, QF1, QF2, Measuring, CHSH1, CHSH2 and the
+ * (the Main, QF1, QF2, Measuring, CHSH1, CHSH2 and the
  * CHSH3 boards), and only those Scenes. Every piece is placed against the
- * page element its board ties it to, as the page lays that element out
- * (agent decision A8), so the tests hand each anchor a box (probed from the
- * real pages at the boards' 1440x980) and follow the pieces as the anchors
- * move. The env var is set in vi.hoisted so it is in place before the pages
- * are imported.
+ * page element its board ties it to, as the page lays that element out, so the
+ * tests hand each anchor a box (probed from the real pages at the boards'
+ * 1440x980) and follow the pieces as the anchors move. The env var is set in
+ * vi.hoisted so it is in place before the pages are imported.
  */
 vi.hoisted(() => {
   process.env.NEXT_PUBLIC_SEASONAL_THEME = 'halloween';
@@ -350,8 +349,7 @@ test('the moon, the bats and the peek monster are cut to shape around the game b
   const stage = rectOf(STAGE) as unknown as ElementBox;
 
   // On the board these pieces sit behind the game buttons; the buttons'
-  // boxes are cut out of them here, so they never cover a button's label
-  // (decision 10).
+  // boxes are cut out of them here, so they never cover a button's label.
   const expectClipped = (wrapper: HTMLElement, left: number, top: number) => {
     const clip = wrapper.style.clipPath;
     expect(clip).toMatch(/^path\(evenodd,/);
@@ -640,7 +638,7 @@ test('CHSH1 renders the CHSH1 board’s ambient set, its pumpkin pair and the mu
   const { container } = renderPage(<CHSH1 />);
 
   // The Next button carries the pair's anchor, as Home's buttons carry
-  // theirs (agent decision A8).
+  // theirs.
   expect(screen.getByRole('link', { name: 'Next' })).toHaveAttribute(
     'data-decoration-anchor',
     'chsh1-next'
@@ -789,7 +787,7 @@ test('CHSH2 renders the CHSH2 board’s ambient set and the ooze in its brew pot
   // The D label carries its own anchor, and the board draws the D over the
   // moon, so the moon is cut around the label and around the wheel's own
   // circle, which the board draws over it too: neither covers the label nor
-  // the wheel's edge (agent decision A8).
+  // the wheel's edge.
   expect(screen.getByText('D')).toHaveAttribute(
     'data-decoration-anchor',
     'chsh2-wheel-d'
@@ -943,7 +941,7 @@ test('CHSH3 shows the vampire, and only that monster, under an entangled result'
   // The stage-anchored pieces at the board's own stage placements. The
   // boards draw the results circle over the moon and the bats, so both are
   // cut around the circle the page itself draws (circle.png contained in
-  // the circle's box), never covering its edge (agent decision A8).
+  // the circle's box), never covering its edge.
   expect(container.querySelector('svg[viewBox="0 0 200 200"]')).not.toBeNull();
   expect(container.querySelector('.halloween-bats')).not.toBeNull();
   const disc = {
@@ -1214,7 +1212,7 @@ test('the Measuring popup renders the peeker over its top edge and the bat ridin
   expect(peeker.style.top).toBe(`${dialog.top - 70}px`);
 
   // The bat rides the real bar: its layer sits exactly on the bar, and the
-  // bat itself is at the fill's leading edge (agent decision A7), hanging
+  // bat itself is at the fill's leading edge, hanging
   // from the title's own bottom edge so it never covers the title nor the
   // "% complete" line below the bar.
   const rider = document.querySelector<HTMLElement>('.halloween-bar-rider')!;
@@ -1253,7 +1251,7 @@ test('the Measuring popup’s Decorations follow the popup when it grows', () =>
   );
 
   // The popup grows (its QR image loads), so it stands taller and everything
-  // in it moves; the Decorations are measured again and follow (A8).
+  // in it moves; the Decorations are measured again and follow.
   const grown = {
     dialog: box(270, 112, 900, 755),
     progressbar: box(320, 213, 800, 4),
@@ -1334,7 +1332,7 @@ test('the Measuring popup keeps its text and swaps in the cauldron illustration'
     </Dialog>
   );
 
-  // Decision 11: the popup's text is Fixed copy, unchanged by the theme.
+  // The popup's text is Fixed copy, unchanged by the theme.
   expect(
     screen.getByText('Photons are being measured back at the lab')
   ).toBeInTheDocument();
@@ -1351,17 +1349,17 @@ test('the Measuring popup keeps its text and swaps in the cauldron illustration'
   ).toBeInTheDocument();
   expect(screen.getByText('0% complete')).toBeInTheDocument();
 
-  // The Images slot carries the cauldron (decision 8: the background and the
+  // The Images slot carries the cauldron (the background and the
   // Whobit poses stay today's).
   const illustration = screen.getByAltText(
     'Your photons in action!'
   ) as HTMLImageElement;
   expect(illustration.getAttribute('src')).toBe(
-    '/images/measuring-cauldron.svg'
+    '/images/halloween/measuring-cauldron.svg'
   );
   const images = activeImages(knownThemes.halloween);
   expect(images['measuring-illustration']).toBe(
-    '/images/measuring-cauldron.svg'
+    '/images/halloween/measuring-cauldron.svg'
   );
 });
 
@@ -1372,25 +1370,25 @@ test('CHSH2’s wheel wears the board’s cream face and broom needle', () => {
     '[data-decoration-anchor="chsh2-wheel"]'
   )!;
   expect(getComputedStyle(wheel).backgroundImage).toContain(
-    '/images/polarization-wheel-halloween.svg'
+    '/images/halloween/polarization-wheel.svg'
   );
   // The needle is the wheel's only child box carrying a background image.
   const needle = Array.from(wheel.children).find((child) =>
     getComputedStyle(child).backgroundImage.includes('url(')
   )!;
   expect(getComputedStyle(needle).backgroundImage).toContain(
-    '/images/polarization-broom-halloween.svg'
+    '/images/halloween/polarization-broom.svg'
   );
 
   // Both files are the board's art: the cream face and the broom, its tip in
-  // the pumpkin colour (decision 7).
+  // the pumpkin colour.
   const face = readFileSync(
-    'public/images/polarization-wheel-halloween.svg',
+    'public/images/halloween/polarization-wheel.svg',
     'utf8'
   );
   expect(face).toContain('fill="#fff4dd"');
   const broom = readFileSync(
-    'public/images/polarization-broom-halloween.svg',
+    'public/images/halloween/polarization-broom.svg',
     'utf8'
   );
   expect(broom).toContain('fill="#ff5f05"');
@@ -1398,9 +1396,13 @@ test('CHSH2’s wheel wears the board’s cream face and broom needle', () => {
 });
 
 test('the cauldron is an SVG carrying its own animations and reduced-motion rule', () => {
-  // Decision 11: the Measuring popup's illustration is one .svg file under
-  // public/images/ with its animations and reduced-motion rule inside.
-  const cauldron = readFileSync('public/images/measuring-cauldron.svg', 'utf8');
+  // The Measuring popup's illustration is one .svg file under
+  // public/images/halloween/ with its animations and reduced-motion rule
+  // inside.
+  const cauldron = readFileSync(
+    'public/images/halloween/measuring-cauldron.svg',
+    'utf8'
+  );
   for (const animation of [
     'pqn-orbit',
     'pqn-bubble',
@@ -1413,7 +1415,7 @@ test('the cauldron is an SVG carrying its own animations and reduced-motion rule
 });
 
 test('every class the Decorations animate stops under prefers-reduced-motion', () => {
-  // Decision 12: every animation stops under reduced motion, so the media
+  // Every animation stops under reduced motion, so the media
   // query's selector list must name every class the file animates or
   // transitions — a newly animated class left out fails here.
   const css = readFileSync(

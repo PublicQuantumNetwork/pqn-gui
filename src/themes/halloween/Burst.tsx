@@ -14,7 +14,7 @@ interface BurstItem {
 }
 
 /**
- * The burst of the CHSH3 board (docs/design/halloween/CHSH3.dc.html): three
+ * The burst of the CHSH3 design board: three
  * origins with eight items each, bats and pumpkins alternating, ported as the
  * board computes them.
  */
@@ -109,7 +109,7 @@ function Pumpkin() {
 }
 
 /**
- * The Halloween Celebration (decision 14): the bat-and-pumpkin burst of the
+ * The Halloween Celebration: the bat-and-pumpkin burst of the
  * CHSH3 board, shown when a Game succeeds.
  */
 export default function Burst() {

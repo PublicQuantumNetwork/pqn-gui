@@ -8,12 +8,12 @@ import {
 import { afterAll, beforeAll, expect, test, vi } from 'vitest';
 
 /**
- * The Halloween Decorations of group 2.4 through the real registry and
+ * The Halloween SSM Decorations through the real registry and
  * resolvers: with NEXT_PUBLIC_SEASONAL_THEME=halloween the SSM Scenes render
- * the Decorations of their boards (docs/design/halloween/SSM1, the SSM2
+ * the Decorations of their design boards (SSM1, the SSM2
  * boards, SSM3 and SSM4 with its perfect-match sparks), and only those. Every
  * piece is placed against the page element its board ties it to, as the page
- * lays that element out (agent decision A8), so the tests hand each anchor a
+ * lays that element out, so the tests hand each anchor a
  * box (probed from the real pages at the boards' 1440x980) and follow the
  * pieces as the anchors move. The env var is set in vi.hoisted so it is in
  * place before the pages are imported.
@@ -278,7 +278,7 @@ test('SSM1 renders the board’s ambient set, its ghost by the emoji circle and 
 
   // The boards draw the emoji circle over the moon and the bats, so both
   // are cut around the circle's own disc, which the page draws contained in
-  // its 560px box (~58px inside it), never covering its edge (A8).
+  // its 560px box (~58px inside it), never covering its edge.
   const disc = {
     cx: SSM.circle.left + SSM.circle.width / 2,
     cy: SSM.circle.top + SSM.circle.height / 2,
@@ -389,7 +389,7 @@ test('SSM2 asking renders the flight path, the bat courier and the fuzz ball', (
   // The board's 560px communication box, derived from the status (the
   // board sits it 280px down the box's middle), clamped to the stage's top
   // edge: the dashed flight path with its stars fills it, and the waiting
-  // status the page draws is cut out of its lower corner (A8).
+  // status the page draws is cut out of its lower corner.
   const commBox = {
     left: SSM.status.left + SSM.status.width / 2 - 280,
     top: Math.max(SSM.status.top - 280, STAGE.top),
@@ -441,7 +441,7 @@ test('SSM2 asking renders the flight path, the bat courier and the fuzz ball', (
 
   // The spider at the board's 38%, on its 84px thread: its board spot hangs
   // behind the bubble's right edge, so it keeps that overlap here with the
-  // bubble cut out of it, showing only where the board shows it (A8).
+  // bubble cut out of it, showing only where the board shows it.
   const spider = container.querySelector<HTMLElement>('.halloween-spider')!;
   expect(parseFloat(spider.style.left)).toBe(spiderLeftAt(0.38));
   expect(spider.firstElementChild).toHaveStyle({ height: '84px' });
@@ -504,7 +504,7 @@ test(
     expect(cat.querySelector('.halloween-cat-tail')).not.toBeNull();
 
     // The friend's computer filling the box, its popup light blinking, with
-    // the waiting status cut out of it where the box reaches over it (A8).
+    // the waiting status cut out of it where the box reaches over it.
     const computer = container.querySelector<HTMLElement>(
       'svg[viewBox="0 0 560 330"]'
     )!.parentElement as HTMLElement;
@@ -668,7 +668,7 @@ test(
     // declined face, so it hangs further left instead, behind the bubble's
     // right edge as the asking board's spider does: its box, the 18px bob
     // included, stays clear of the pumpkin's, and the bubble is cut out of
-    // it so it shows only where the board shows it (A8).
+    // it so it shows only where the board shows it.
     const spider = container.querySelector<HTMLElement>('.halloween-spider')!;
     const spiderBox = (left: number) => ({
       left,
@@ -775,10 +775,10 @@ test('SSM3’s wheel wears the board’s cream face and broom needle', async () 
   const needle = await screen.findByAltText('Arrow');
   expect(needle).toHaveAttribute('data-polarization-arrow');
   expect(needle.getAttribute('src')).toBe(
-    '/images/polarization-broom-halloween.svg'
+    '/images/halloween/polarization-broom.svg'
   );
   expect(getComputedStyle(needle.parentElement!).backgroundImage).toContain(
-    '/images/polarization-wheel-halloween.svg'
+    '/images/halloween/polarization-wheel.svg'
   );
 });
 
@@ -898,7 +898,7 @@ test('SSM4 renders the werewolf and the cheering ghost on a partial match, and n
   ).not.toBeNull();
   expect(ghost.querySelector('path[d="M42 62 Q52 76 62 62 Z"]')).not.toBeNull();
 
-  // Not a perfect match: no sparks anywhere (decision 14).
+  // Not a perfect match: no sparks anywhere.
   expect(
     container.querySelectorAll('.halloween-spark, .halloween-spark-late')
   ).toHaveLength(0);
@@ -925,8 +925,8 @@ test(
     expect(screen.getByText('Woo!! Hoo!!')).toBeInTheDocument();
 
     // The board's four sparks on the results circle, in its own circle
-    // coordinates, two of them late — the ssm4-perfect Scene's Decorations
-    // (decision 14), inside the aria-hidden Decorations layer.
+    // coordinates, two of them late — the ssm4-perfect Scene's Decorations,
+    // inside the aria-hidden Decorations layer.
     const sparks = container.querySelectorAll<HTMLElement>(
       '.halloween-spark, .halloween-spark-late'
     );
@@ -939,10 +939,10 @@ test(
     expect(sparkSvg.closest('[aria-hidden="true"]')).not.toBeNull();
 
     // EmojiConfetti stays exactly as today: the perfect match still bursts
-    // the player's own emoji around the result, separate from the sparks
-    // (decision 14) — every particle carries the player's emoji (😂, the one
-    // the page's own params carry), and the particles are the page's own,
-    // outside the Decorations layer.
+    // the player's own emoji around the result, separate from the sparks —
+    // every particle carries the player's emoji (😂, the one the page's own
+    // params carry), and the particles are the page's own, outside the
+    // Decorations layer.
     await waitFor(
       () => {
         expect(
@@ -1084,9 +1084,9 @@ test(
     const { container } = renderPage(<SSM2 />);
 
     // The request to the other computer fails, so the page shows its error
-    // text and its broken-computer image instead of a status (agent decision
-    // A2: still the ssm2-waiting Scene), and the status's anchor goes with
-    // the spinner (the page relays itself out around it).
+    // text and its broken-computer image instead of a status (still the
+    // ssm2-waiting Scene), and the status's anchor goes with the spinner (the
+    // page relays itself out around it).
     await screen.findByText(
       /There was an error connecting to the other computer/,
       {},
@@ -1140,7 +1140,7 @@ test(
     });
     const { container } = renderPage(<SSM1 />);
 
-    // Decision 4: SSM keeps the full emoji picker in every Seasonal Theme —
+    // SSM keeps the full emoji picker in every Seasonal Theme —
     // the board's short Halloween emoji list is not built, and the
     // Decorations layer carries no picker of its own (only the board's
     // pieces, all inert). The picker runs on real timers, so every wait
@@ -1161,7 +1161,7 @@ test(
       },
       { timeout: 5000 }
     );
-    // Nothing the Decorations layer draws is a control (decision 10).
+    // Nothing the Decorations layer draws is a control.
     expect(
       container.querySelectorAll('[aria-hidden="true"] button')
     ).toHaveLength(0);

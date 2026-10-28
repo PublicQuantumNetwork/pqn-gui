@@ -15,7 +15,6 @@
     "format:files": "prettier --write",
     "test": "vitest run",
     "test:screens": "playwright test",
-    "design:render": "node docs/design/halloween/render-design.mjs",
     "post-update": "echo \"codesandbox preview only, need an update\" && pnpm update --latest"
   },
   "dependencies": {
@@ -32,7 +31,6 @@
     "react-dom": "^19.2.3"
   },
   "devDependencies": {
-    "@fontsource/roboto": "^5.3.0",
     "@playwright/test": "^1.64.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.3",

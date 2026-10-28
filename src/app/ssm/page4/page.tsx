@@ -11,7 +11,7 @@ import Whobit from '@/components/Whobit';
 import Decorations from '@/components/Decorations';
 import { activeCelebration, type Scene } from '@/themes';
 
-// The active theme is fixed at build time (decision 5), so its Celebration
+// The active theme is fixed at build time, so its Celebration
 // is computed once here, not on every render.
 const Celebration = activeCelebration();
 
@@ -43,7 +43,7 @@ export default function Home() {
     const emoji = searchParams.get('emoji') ?? '';
     const role = searchParams.get('role') ?? '';
 
-    // The Scene the page's state calls for (decision 10): a perfect match,
+    // The Scene the page's state calls for: a perfect match,
     // or anything else (a partial match or an error).
     const scene: Scene =
       success &&
@@ -172,11 +172,10 @@ export default function Home() {
             sx={{ paddingLeft: '150px' }}
           >
             <Box
-              // The Halloween Decorations' results-circle anchor (agent
-              // decision A8): the SSM4 board floats its cheering ghost
-              // beside this circle, twinkles its gold sparks on it and
-              // draws it over the moon and the bats. Non-visual, so no
-              // theme changes the look.
+              // The Halloween Decorations' results-circle anchor: the SSM4
+              // board floats its cheering ghost beside this circle, twinkles
+              // its gold sparks on it and draws it over the moon and the bats.
+              // Non-visual, so no theme changes the look.
               data-decoration-anchor="ssm4-circle"
               sx={{
                 backgroundImage: 'url(/images/circle.png)',

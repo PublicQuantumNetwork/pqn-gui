@@ -1,8 +1,7 @@
 /**
- * One entry per Seasonal Theme the screenshot harness builds and serves
- * (decision 15, agent decision A1). Adding a theme is one entry here; the
- * Playwright config starts one web server per entry and the specs run against
- * every entry.
+ * One entry per Seasonal Theme the screenshot harness builds and serves. Adding
+ * a theme is one entry here; the Playwright config starts one web server per
+ * entry and the specs run against every entry.
  */
 export interface ThemeServer {
   /** Theme name; also the folder its screenshots go to. */
@@ -32,7 +31,7 @@ export const THEMES: ThemeServer[] = [
 /**
  * Themes whose screenshots are compared with committed baselines. Every other
  * theme is captured without comparison into tests/screens/<name>/ (gitignored)
- * for the design checker to review against the design boards.
+ * for review by eye.
  */
 export const BASELINE_THEMES: ReadonlySet<string> = new Set(['default']);
 

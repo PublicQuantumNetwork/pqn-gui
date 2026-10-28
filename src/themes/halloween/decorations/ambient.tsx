@@ -5,19 +5,18 @@ import type { ElementBox } from './useElementBox';
 import './decorations.css';
 
 /**
- * The ambient pieces every Halloween board is dressed with (the plan's Scenes
- * table), each ported once from its board so every Scene composes the pieces
- * its own board has (groups 2.2-2.4). Every piece is placed against the
- * element its board ties it to, as the page lays that element out (the boxes
- * a Scene measures for them, agent decision A8), inside the Decorations
- * layer (group 1.4) — fixed over the page, aria-hidden, no pointer events.
+ * The ambient pieces every Halloween board is dressed with, each ported once
+ * from its board so every Scene composes the pieces its own board has. Every
+ * piece is placed against the element its board ties it to, as the page lays
+ * that element out (the boxes a Scene measures for them), inside the
+ * Decorations layer — fixed over the page, aria-hidden, no pointer events.
  */
 
 /**
  * The clip-path that cuts the occluders' boxes out of a piece's box: where
  * the page's own content occludes a piece on its board (the game buttons
  * over the moon and the bats), the same boxes are cut out of it here, so the piece never covers
- * that content's text (decision 10). A round occluder (a circle the page
+ * that content's text. A round occluder (a circle the page
  * itself draws, `CircleOccluder`) is cut as the circle it is. The clip's
  * outer edge is generous: it only bounds the piece's own art, which its
  * animations move (the bats drift, the peeking monster drops out of sight).
@@ -47,7 +46,7 @@ function clipPathValue(
 /** A round occluder: a circle the page itself draws (circle.png's disc —
  *  the CHSH2 wheel, the CHSH3 results circle). A piece the board draws
  *  behind that circle is cut around it here, as the rectangular occluders
- *  are (agent decision A8). */
+ *  are. */
 export interface CircleOccluder {
   cx: number;
   cy: number;
@@ -77,7 +76,7 @@ export function pieceStyle(
   return style;
 }
 
-/** The corner web (Main.dc.html and every board): 200x200, hanging from the
+/** The corner web (Main board and every board): 200x200, hanging from the
  *  stage's top-left corner. Every board places it the same way. */
 export function Web({ stage }: { stage: ElementBox }) {
   return (
@@ -106,7 +105,7 @@ export function Web({ stage }: { stage: ElementBox }) {
   );
 }
 
-/** The moon (Main.dc.html and every board): 160x160, at the stage's top
+/** The moon (Main board and every board): 160x160, at the stage's top
  *  right (right 7%, 28px down). Every board places it the same way. Where
  *  the board draws a circle of its own over the moon (the CHSH2 wheel, the
  *  CHSH3 results circle), that circle is cut out of it here. */
@@ -171,7 +170,7 @@ export function Moon({
   );
 }
 
-/** The bats (Main.dc.html and every board): drifting at the stage's top
+/** The bats (Main board and every board): drifting at the stage's top
  *  right (right 7% plus 120px, 40px down). Every board places them the same
  *  way. Where the board draws a circle of its own over the bats (the CHSH3
  *  results circle), that circle is cut out of them here. */
@@ -217,12 +216,12 @@ export function Bats({
   );
 }
 
-/** The spider (Main.dc.html, QF1.dc.html), hanging from the top of the
+/** The spider (Main board, QF1 board), hanging from the top of the
  *  stage on its thread, bobbing. Each board places it and times it its own
  *  way: the Scene passes where the board hangs it. Where the board draws it
- *  behind page content (SSM2.dc.html hangs it behind the speech bubble's
+ *  behind page content (the SSM2 board hangs it behind the speech bubble's
  *  right edge), that content's boxes are cut out of it here, so it shows
- *  only where the board shows it (agent decision A8). */
+ *  only where the board shows it. */
 export function Spider({
   left,
   top,
@@ -279,7 +278,7 @@ export function Spider({
   );
 }
 
-/** The SSM boards' spider's left (agent decision A8): each board hangs it
+/** The SSM boards' spider's left: each board hangs it
  *  at a share of the stage beside the speech bubble (whose right edge the
  *  boards lay at 564px of their 1440px stage; the GUI lays it ~80px right
  *  of that), so it keeps the board's own gap from the bubble's right edge,
@@ -297,8 +296,8 @@ export function spiderLeft(
 }
 
 /** The ghost's mouth, each board its own: Main's and QF2's open mouth, and
- *  the CHSH boards' smile (CHSH1.dc.html, CHSH3-error.dc.html), little o
- *  (CHSH2.dc.html), grin (CHSH3.dc.html) and frown (CHSH3-weak.dc.html),
+ *  the CHSH boards' smile (CHSH1 board, CHSH3-error board), little o
+ *  (CHSH2 board), grin (CHSH3 board) and frown (CHSH3-weak board),
  *  each ported as its board draws it. */
 export type GhostMouth = 'open' | 'smile' | 'o' | 'grin' | 'frown';
 
@@ -412,7 +411,7 @@ export function Ghost({
   );
 }
 
-/** The sad ghost (SSM2-declined.dc.html): the ghost drawn with its arms
+/** The sad ghost (SSM2-declined board): the ghost drawn with its arms
  *  drooping at its sides, its brows down and its mouth a frown, floating
  *  the board's own slower 4.4s bob. The Scene passes its place in the
  *  board's communication box; ported as the board draws it. */
@@ -490,7 +489,7 @@ export function GhostSad({
   );
 }
 
-/** The happy ghost (SSM4.dc.html): the ghost drawn cheering, its arms up
+/** The happy ghost (SSM4 board): the ghost drawn cheering, its arms up
  *  and its eyes closed happy, its mouth an open grin. The Scene passes its
  *  place by the results circle; ported as the board draws it. */
 export function GhostHappy({
@@ -562,12 +561,12 @@ export function GhostHappy({
   );
 }
 
-/** The pumpkin leaning out from under Whobit's pose (Main.dc.html,
- *  QF2.dc.html), 120x104, at the board's own place beside the pose box
+/** The pumpkin leaning out from under Whobit's pose (Main board,
+ *  QF2 board), 120x104, at the board's own place beside the pose box
  *  (258px from its left, 340px down); QF2's face flickers. Pumpkins are
- *  always #ff5f05 (decision 7). `clipBottom` is the stage's bottom edge: the
+ *  always #ff5f05. `clipBottom` is the stage's bottom edge: the
  *  board's stage ends at the content box's bottom, below which the pose's
- *  feet are already cut off (agent decision A6), so when the board's spot
+ *  feet are already cut off, so when the board's spot
  *  falls below that edge the pumpkin is clamped to rest its base on the
  *  edge, beside the visible owl, and never shows below it. */
 export function Pumpkin({
@@ -708,8 +707,8 @@ export function Pumpkin({
 }
 
 /** The small pumpkin beside the ghost under the game buttons
- *  (Main.dc.html), the board's own smaller drawing with its smooth face,
- *  at the place the Scene measures for the ghost's row. CHSH3.dc.html (and
+ *  (Main board), the board's own smaller drawing with its smooth face,
+ *  at the place the Scene measures for the ghost's row. CHSH3 board (and
  *  its weak and error boards) wears the same drawing beside the results
  *  circle at its own bigger size, its face flickering as that board draws
  *  it (Main's is lit steady). */
@@ -816,12 +815,12 @@ export function PumpkinSmall({
   );
 }
 
-/** The pumpkin pair under the buttons column (CHSH1.dc.html): a 132x114
+/** The pumpkin pair under the buttons column (CHSH1 board): a 132x114
  *  pumpkin with droopy eyes and a jagged grin and, 12px right of it with
  *  their bottoms level, an 84x73 round-eyed one, both faces flickering.
  *  The board floats the pair at the bottom of the Next button's column,
  *  180px left of its right edge and 32px above the button, so the Scene
- *  passes that spot as the GUI lays the button out (agent decision A8). */
+ *  passes that spot as the GUI lays the button out. */
 export function PumpkinPair({
   right,
   bottom,
@@ -1105,7 +1104,7 @@ const twinkles = {
 
 /**
  * The mist, the twinkles and QF2's glow halo over the GUI's own ball
- * (QF1.dc.html, QF2.dc.html), ported in the boards' own ball coordinates
+ * (QF1 board, QF2 board), ported in the boards' own ball coordinates
  * (their 560x500 ball svg) and scaled so the boards' ball circle lands on
  * the GUI's: the mist swirls clipped inside the ball as on the boards, the
  * twinkles sparkle on it, and QF2's gold halo pulses around it (the ring the
@@ -1200,10 +1199,10 @@ export interface CommunicationBox {
   top: number;
 }
 
-/** The dashed flight path with its two stars (SSM2.dc.html), ported as the
+/** The dashed flight path with its two stars (SSM2 board), ported as the
  *  board draws it in its communication box. The asking board draws the
  *  waiting status over the path's lower corner, so the status's box is cut
- *  out of it here (agent decision A8). */
+ *  out of it here. */
 export function MessagePath({
   box,
   occluders,
@@ -1253,7 +1252,7 @@ export function MessagePath({
   );
 }
 
-/** The bat courier carrying the envelope (SSM2.dc.html), flying the board's
+/** The bat courier carrying the envelope (SSM2 board), flying the board's
  *  own course across the communication box, its wings flapping. */
 export function CourierBat({ left, top }: { left: number; top: number }) {
   return (
@@ -1353,11 +1352,11 @@ export function CourierBat({ left, top }: { left: number; top: number }) {
   );
 }
 
-/** The friend's computer with its invite popup (SSM2-waiting.dc.html),
+/** The friend's computer with its invite popup (SSM2-waiting board),
  *  ported as the board draws it in its communication box, its popup light
  *  blinking. The waiting status is drawn below the computer on the board;
  *  where the GUI's box reaches over the status the page shows, the
- *  status's box is cut out of it (agent decision A8). */
+ *  status's box is cut out of it. */
 export function FriendComputer({
   box,
   occluders,
@@ -1475,7 +1474,7 @@ export function FriendComputer({
   );
 }
 
-/** The ghost courier delivering the envelope (SSM2-waiting.dc.html),
+/** The ghost courier delivering the envelope (SSM2-waiting board),
  *  flying the board's own course across the communication box. */
 export function CourierGhost({ left, top }: { left: number; top: number }) {
   return (
@@ -1577,7 +1576,7 @@ export function CourierGhost({ left, top }: { left: number; top: number }) {
 }
 
 /** The declined envelope with its seal crossed out
- *  (SSM2-declined.dc.html), ported as the board draws it in its
+ *  (SSM2-declined board), ported as the board draws it in its
  *  communication box. */
 export function DeclinedEnvelope({ left, top }: { left: number; top: number }) {
   return (
@@ -1626,9 +1625,9 @@ export function DeclinedEnvelope({ left, top }: { left: number; top: number }) {
   );
 }
 
-/** The gold sparks of a perfect match (SSM4.dc.html, its perfect-match
+/** The gold sparks of a perfect match (SSM4 board, its perfect-match
  *  variant): the board's four sparks on the results circle, twinkling —
- *  the ssm4-perfect Scene's own Decorations (decision 14), separate from
+ *  the ssm4-perfect Scene's own Decorations, separate from
  *  the Celebration and from EmojiConfetti. Placed on the page's own
  *  results circle, in the board's own circle coordinates. */
 export function Sparks({ circle }: { circle: ElementBox }) {

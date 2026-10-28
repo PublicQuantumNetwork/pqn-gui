@@ -250,10 +250,9 @@ export default function Home() {
             />
           ) : (
             <Stack
-              // The Halloween Decorations' emoji-circle anchor (agent
-              // decision A8): the SSM1 board floats its ghost beside this
-              // circle and draws it over the moon and the bats. Non-visual,
-              // so no theme changes the look.
+              // The Halloween Decorations' emoji-circle anchor: the SSM1 board
+              // floats its ghost beside this circle and draws it over the moon
+              // and the bats. Non-visual, so no theme changes the look.
               data-decoration-anchor="ssm1-circle"
               direction="row"
               alignItems="flex-end"

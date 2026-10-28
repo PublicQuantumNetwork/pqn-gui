@@ -1,11 +1,11 @@
 /*
- * The Halloween Scene Decorations (docs/design/halloween/), the boards' own
- * keyframes and classes under halloween- names, ported as the boards have
- * them, including their prefers-reduced-motion rules (decision 12). Each
- * keyframes comment names the board it is ported from.
+ * The Halloween Scene Decorations (the Halloween design boards), the boards'
+ * own keyframes and classes under halloween- names, ported as the boards have
+ * them, including their prefers-reduced-motion rules. Each keyframes comment
+ * names the board it is ported from.
  */
 
-/* Main.dc.html: the spider bobs on its thread. */
+/* Main board: the spider bobs on its thread. */
 @keyframes halloween-bob {
   0%,
   100% {
@@ -16,7 +16,7 @@
   }
 }
 
-/* Main.dc.html: the bats drift. */
+/* Main board: the bats drift. */
 @keyframes halloween-drift {
   0%,
   100% {
@@ -27,7 +27,7 @@
   }
 }
 
-/* Main.dc.html: the ghost floats. */
+/* Main board: the ghost floats. */
 @keyframes halloween-float {
   0%,
   100% {
@@ -38,7 +38,7 @@
   }
 }
 
-/* Main.dc.html: the peeking monster. */
+/* Main board: the peeking monster. */
 @keyframes halloween-peek {
   0%,
   55% {
@@ -63,7 +63,7 @@
   }
 }
 
-/* Main.dc.html: the popping monster. */
+/* Main board: the popping monster. */
 @keyframes halloween-pop {
   0%,
   60% {
@@ -85,7 +85,7 @@
   }
 }
 
-/* QF1.dc.html: the rising monster. */
+/* QF1 board: the rising monster. */
 @keyframes halloween-rise {
   0%,
   48% {
@@ -110,7 +110,7 @@
   }
 }
 
-/* QF2.dc.html: the sliding monster and its waving arm. */
+/* QF2 board: the sliding monster and its waving arm. */
 @keyframes halloween-slide {
   0%,
   56% {
@@ -149,7 +149,7 @@
   }
 }
 
-/* QF1.dc.html and QF2.dc.html: the mist swirls inside the ball. */
+/* QF1 board and QF2 board: the mist swirls inside the ball. */
 @keyframes halloween-swirl {
   from {
     transform: rotate(0deg);
@@ -159,7 +159,7 @@
   }
 }
 
-/* QF1.dc.html and QF2.dc.html: the twinkles sparkle on the ball. */
+/* QF1 board and QF2 board: the twinkles sparkle on the ball. */
 @keyframes halloween-twinkle {
   0%,
   100% {
@@ -170,7 +170,7 @@
   }
 }
 
-/* QF2.dc.html: the halo around the ball pulses. */
+/* QF2 board: the halo around the ball pulses. */
 @keyframes halloween-glow {
   0%,
   100% {
@@ -181,7 +181,7 @@
   }
 }
 
-/* QF1.dc.html: the lit pumpkin faces flicker. */
+/* QF1 board: the lit pumpkin faces flicker. */
 @keyframes halloween-flicker {
   0%,
   100% {
@@ -198,7 +198,7 @@
   }
 }
 
-/* Measuring.dc.html: the bat riding the bar flaps its wings. */
+/* Measuring board: the bat riding the bar flaps its wings. */
 @keyframes halloween-flap {
   0%,
   100% {
@@ -209,7 +209,7 @@
   }
 }
 
-/* Measuring.dc.html: the monster peeking over the popup's top edge. */
+/* Measuring board: the monster peeking over the popup's top edge. */
 @keyframes halloween-peeker {
   0%,
   58% {
@@ -234,7 +234,7 @@
   }
 }
 
-/* CHSH1.dc.html: the mummy leaning in from the right and its reaching arm. */
+/* CHSH1 board: the mummy leaning in from the right and its reaching arm. */
 @keyframes halloween-lean {
   0%,
   50% {
@@ -274,7 +274,7 @@
   }
 }
 
-/* CHSH2.dc.html: the blob oozing out of the brew pot, its blinking eyes and
+/* CHSH2 board: the blob oozing out of the brew pot, its blinking eyes and
  * the pot's brewing bubbles. */
 @keyframes halloween-ooze {
   0%,
@@ -323,7 +323,7 @@
   }
 }
 
-/* CHSH3.dc.html: the vampire rising and its waving arm. */
+/* CHSH3 board: the vampire rising and its waving arm. */
 @keyframes halloween-vamp {
   0%,
   52% {
@@ -368,7 +368,7 @@
   }
 }
 
-/* CHSH3-weak.dc.html: the sock monster dangling down and its scratching arm. */
+/* CHSH3-weak board: the sock monster dangling down and its scratching arm. */
 @keyframes halloween-dangle {
   0%,
   48% {
@@ -412,7 +412,7 @@
   }
 }
 
-/* CHSH3-error.dc.html: the monster tiptoeing in and its twitching ears. */
+/* CHSH3-error board: the monster tiptoeing in and its twitching ears. */
 @keyframes halloween-tiptoe {
   0%,
   44% {
@@ -523,7 +523,7 @@
   animation: halloween-peeker 12s ease-in-out 2s infinite;
 }
 
-/* CHSH1.dc.html: the mummy. */
+/* CHSH1 board: the mummy. */
 .halloween-monster-lean {
   transform: translateX(100%);
   transform-origin: 100% 100%;
@@ -536,7 +536,7 @@
   animation: halloween-reach 12s ease-in-out 2s infinite;
 }
 
-/* CHSH2.dc.html: the blob in the brew pot. */
+/* CHSH2 board: the blob in the brew pot. */
 .halloween-monster-ooze {
   transform: translateY(100%);
   transform-origin: 50% 100%;
@@ -557,7 +557,7 @@
   animation: halloween-bubble 2.4s ease-out 1.2s infinite;
 }
 
-/* CHSH3.dc.html: the vampire. */
+/* CHSH3 board: the vampire. */
 .halloween-monster-vamp {
   transform: translateY(105%);
   animation: halloween-vamp 10s ease-in-out 1.5s infinite;
@@ -569,7 +569,7 @@
   animation: halloween-vamp-wave 10s ease-in-out 1.5s infinite;
 }
 
-/* CHSH3-weak.dc.html: the sock monster. */
+/* CHSH3-weak board: the sock monster. */
 .halloween-monster-dangle {
   transform: translateY(-105%);
   transform-origin: 50% 0;
@@ -582,7 +582,7 @@
   animation: halloween-scratch 12s ease-in-out 2.5s infinite;
 }
 
-/* CHSH3-error.dc.html: the tiptoeing monster. */
+/* CHSH3-error board: the tiptoeing monster. */
 .halloween-monster-tiptoe {
   transform: translate(110%, 0);
   animation: halloween-tiptoe 13s ease-in-out 2s infinite;
@@ -592,12 +592,12 @@
   animation: halloween-shrug 13s ease-in-out 2s infinite;
 }
 
-/* Measuring.dc.html: the bat rides the bar's fill as it grows. */
+/* Measuring board: the bat rides the bar's fill as it grows. */
 .halloween-bar-rider {
   transition: left 400ms linear;
 }
 
-/* SSM1.dc.html: the skeleton sliding in from the left and its waving arm. */
+/* SSM1 board: the skeleton sliding in from the left and its waving arm. */
 @keyframes halloween-skel {
   0%,
   52% {
@@ -640,7 +640,7 @@
   }
 }
 
-/* SSM2.dc.html: the fuzz ball popping up and its blinking lids. */
+/* SSM2 board: the fuzz ball popping up and its blinking lids. */
 @keyframes halloween-fuzz-rise {
   0%,
   50% {
@@ -673,7 +673,7 @@
   }
 }
 
-/* SSM2.dc.html: the bat courier flying the board's course, its wings
+/* SSM2 board: the bat courier flying the board's course, its wings
  * flapping. */
 @keyframes halloween-courier-fly {
   0%,
@@ -701,7 +701,7 @@
   }
 }
 
-/* SSM2-waiting.dc.html: the cat popping up over the computer, its tail
+/* SSM2-waiting board: the cat popping up over the computer, its tail
  * swishing, the ghost courier delivering and the popup light blinking. */
 @keyframes halloween-cat {
   0%,
@@ -763,7 +763,7 @@
   }
 }
 
-/* SSM2-declined.dc.html: the sad pumpkin sagging, the monster leaning in
+/* SSM2-declined board: the sad pumpkin sagging, the monster leaning in
  * and its tear rolling down. */
 @keyframes halloween-sad-sag {
   0%,
@@ -816,7 +816,7 @@
   }
 }
 
-/* SSM3.dc.html: the tentacle monster rising and its arm swaying. */
+/* SSM3 board: the tentacle monster rising and its arm swaying. */
 @keyframes halloween-tentacle-rise {
   0%,
   48% {
@@ -855,7 +855,7 @@
   }
 }
 
-/* SSM4.dc.html: the werewolf popping up, its arms cheering and the gold
+/* SSM4 board: the werewolf popping up, its arms cheering and the gold
  * sparks twinkling. */
 @keyframes halloween-wolf-pop {
   0%,
@@ -922,7 +922,7 @@
   animation: halloween-skel-wave 12s ease-in-out 2s infinite;
 }
 
-/* SSM2.dc.html: the fuzz ball. */
+/* SSM2 board: the fuzz ball. */
 .halloween-monster-fuzz {
   transform: translateY(102%);
   animation: halloween-fuzz-rise 10s ease-in-out 1s infinite;
@@ -945,7 +945,7 @@
   animation: halloween-courier-flap 360ms ease-in-out infinite;
 }
 
-/* SSM2-waiting.dc.html: the cat and the ghost courier. */
+/* SSM2-waiting board: the cat and the ghost courier. */
 .halloween-monster-cat {
   transform: translateY(64px);
   transform-origin: 50% 100%;
@@ -966,7 +966,7 @@
   animation: halloween-popup-blink 1.2s ease-in-out infinite;
 }
 
-/* SSM2-declined.dc.html: the sad pumpkin and the leaning monster. */
+/* SSM2-declined board: the sad pumpkin and the leaning monster. */
 .halloween-sad-pumpkin {
   transform-box: view-box;
   transform-origin: 140px 250px;
@@ -984,7 +984,7 @@
   opacity: 0;
 }
 
-/* SSM3.dc.html: the tentacle monster. */
+/* SSM3 board: the tentacle monster. */
 .halloween-monster-tentacle {
   transform: translateY(104%);
   animation: halloween-tentacle-rise 11s ease-in-out 1.5s infinite;
@@ -996,7 +996,7 @@
   animation: halloween-tentacle-sway 11s ease-in-out 1.5s infinite;
 }
 
-/* SSM4.dc.html: the werewolf and the sparks. */
+/* SSM4 board: the werewolf and the sparks. */
 .halloween-monster-wolf {
   transform: translateY(105%);
   animation: halloween-wolf-pop 10s ease-in-out 1s infinite;

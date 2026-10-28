@@ -1,6 +1,6 @@
 /*
- * The CHSH3 "spooky" letters (docs/design/halloween/CHSH3.dc.html), ported as
- * the board has them, including the prefers-reduced-motion rule (decision 12).
+ * The CHSH3 "spooky" letters (the CHSH3 design board), ported as
+ * the board has them, including the prefers-reduced-motion rule.
  */
 @keyframes halloween-chsh-slither {
   0%,

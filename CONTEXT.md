@@ -181,15 +181,3 @@ _Avoid_: core copy
 - "Confetti" was used for two things: the theme's **Celebration** and SSM4's burst of the player's own emoji. Resolved: the emoji burst is not part of any theme and is the same everywhere.
 
 - The Halloween design's SSM1 board shows a short Halloween emoji list. Resolved: SSM keeps the full emoji picker in every **Seasonal Theme**; the emoji choice is not **Flavour copy**.
-
-## Plans
-
-Implementation plans for work in progress. Each one uses the terms defined
-above.
-
-- [Attract loop](./docs/plans/attract-loop.md): looping promo video on the
-  home page while no visitor is present, plus remote dismiss for operator peek
-- [Interactive map](./docs/plans/interactive-map.md): `/map` rebuilt in MUI
-  from the Figma design, with 6 steps and the photon pair animation
-- [Seasonal themes](./docs/seasonal-themes-plan.md): the theme system and the
-  Halloween theme, chosen at build time by `NEXT_PUBLIC_SEASONAL_THEME`

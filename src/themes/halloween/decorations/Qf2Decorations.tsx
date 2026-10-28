@@ -12,9 +12,9 @@ import {
 import { MonsterSlide } from './monsters';
 import { useElementBox } from './useElementBox';
 
-/** The anchors the qf2 Scene's Decorations are placed against (agent
- *  decision A8): the stage, the page's own ball (the board's ghost floats
- *  beside it, its mist, twinkles and glow dress it) and Whobit's pose. */
+/** The anchors the qf2 Scene's Decorations are placed against: the stage, the
+ *  page's own ball (the board's ghost floats beside it, its mist, twinkles and
+ *  glow dress it) and Whobit's pose. */
 const stageAnchor = () =>
   document.querySelector<HTMLElement>('[data-decoration-anchor="stage"]');
 const ballAnchor = () =>
@@ -23,7 +23,7 @@ const poseAnchor = () =>
   document.querySelector('[data-decoration-anchor="whobit-pose"]');
 
 /**
- * The qf2 Scene's Decorations (docs/design/halloween/QF2.dc.html): the
+ * The qf2 Scene's Decorations (the QF2 design board): the
  * stage's ambient set — web, moon, bats, the ghost by the ball with its mist,
  * twinkles and pulsing glow, and the flickering pumpkin under Whobit's pose —
  * plus the sliding monster. The stage-anchored pieces keep the board's stage

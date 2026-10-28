@@ -13,12 +13,11 @@ import {
 import { MonsterWolf } from './monsters';
 import { useElementBox } from './useElementBox';
 
-/** The anchors the ssm4 Scenes' Decorations are placed against (agent
- *  decision A8): the stage, Whobit's speech bubble (the spider keeps its
- *  board's own gap from its right edge) and pose (the board leans its
- *  pumpkin out from under it), and the page's own results circle (the
- *  board floats its cheering ghost beside it and, on a perfect match,
- *  twinkles its gold sparks on it). */
+/** The anchors the ssm4 Scenes' Decorations are placed against: the stage,
+ *  Whobit's speech bubble (the spider keeps its board's own gap from its right
+ *  edge) and pose (the board leans its pumpkin out from under it), and the
+ *  page's own results circle (the board floats its cheering ghost beside it
+ *  and, on a perfect match, twinkles its gold sparks on it). */
 const stageAnchor = () =>
   document.querySelector<HTMLElement>('[data-decoration-anchor="stage"]');
 const bubbleAnchor = () =>
@@ -29,15 +28,15 @@ const circleAnchor = () =>
   document.querySelector('[data-decoration-anchor="ssm4-circle"]');
 
 /**
- * The ssm4 Scenes' Decorations (docs/design/halloween/SSM4.dc.html): the
+ * The ssm4 Scenes' Decorations (the SSM4 design board): the
  * stage's ambient set — web, moon, bats, the spider on its 70px thread and
  * the flickering pumpkin under Whobit's pose — plus the werewolf rising
  * from the stage's bottom right and the cheering ghost by the results
  * circle. On a perfect match the board adds its gold sparks on the circle
  * — the ssm4-perfect Scene's own Decorations, separate from the
- * Celebration and from EmojiConfetti (decision 14). The board draws the
+ * Celebration and from EmojiConfetti. The board draws the
  * results circle over the moon and the bats, so both are cut around the
- * circle the page itself draws (agent decision A8).
+ * circle the page itself draws.
  */
 function Ssm4Board({ perfect }: { perfect: boolean }) {
   const stage = useElementBox(stageAnchor);
@@ -90,7 +89,7 @@ export default function Ssm4Decorations() {
 }
 
 /** The ssm4-perfect Scene: the same board with the gold sparks twinkling
- *  on the results circle (decision 14). */
+ *  on the results circle. */
 export function Ssm4PerfectDecorations() {
   return <Ssm4Board perfect />;
 }

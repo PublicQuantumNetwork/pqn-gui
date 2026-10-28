@@ -21,7 +21,7 @@ export default function SSMModalBox(
 
   return (
     <DialogContent sx={{ padding: '50px' }}>
-      {/* The `measuring` Scene's Decorations (decision 11); this popup shows
+      {/* The `measuring` Scene's Decorations; this popup shows
           no progress bar, so the Scene gets no progress. */}
       <Decorations scene="measuring" />
       <Stack flexDirection="column" sx={{}}>

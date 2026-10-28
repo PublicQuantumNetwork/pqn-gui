@@ -3,7 +3,7 @@ import './Chsh3Line.css';
 
 /**
  * "spooky", one letter per span so each bobs on its own delay, exactly the
- * delays of the CHSH3 board (docs/design/halloween/CHSH3.dc.html).
+ * delays of the CHSH3 design board.
  */
 const spooky = [
   { letter: 's', delay: '0s' },
@@ -15,7 +15,7 @@ const spooky = [
 ];
 
 /**
- * The CHSH3 Flavour-copy line under an entangled result (decision 13):
+ * The CHSH3 Flavour-copy line under an entangled result:
  * "spooky action at a distance — Albert Einstein", the "spooky" letters
  * bobbing one after the other, ported from the CHSH3 board. The page's
  * Typography carries the board's placement and size; this node carries the

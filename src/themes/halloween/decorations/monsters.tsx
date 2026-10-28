@@ -3,13 +3,12 @@ import type { ElementBox } from './useElementBox';
 import './decorations.css';
 
 /**
- * The monsters of the Halloween boards (the plan's Scenes table), each ported
+ * The monsters of the Halloween boards, each ported
  * once from its board: each Scene composes its own monster, placed against
- * the element its board ties it to, as the page lays that element out (agent
- * decision A8).
+ * the element its board ties it to, as the page lays that element out.
  */
 
-/** The peeking monster (Main.dc.html): 76x80 at the stage's top right (right
+/** The peeking monster (Main board): 76x80 at the stage's top right (right
  *  7% plus 42px, 4px down), popping in over the edge. Rendered before the
  *  moon, which covers it at rest as on the board; `occluders` (the game
  *  buttons) are cut out of it, as the buttons cover it there on the board. */
@@ -100,7 +99,7 @@ export function MonsterPeek({
   );
 }
 
-/** The popping monster (Main.dc.html): 112x124 at the bottom centre of the
+/** The popping monster (Main board): 112x124 at the bottom centre of the
  *  stage, popping up from below its bottom edge. The window's bottom edge is
  *  the stage's own bottom, so at rest the monster is hidden below it, as on
  *  the board. */
@@ -192,7 +191,7 @@ export function MonsterPop({ stage }: { stage: ElementBox }) {
   );
 }
 
-/** The rising monster (QF1.dc.html): 96x110 behind the page's own ball,
+/** The rising monster (QF1 board): 96x110 behind the page's own ball,
  *  rising above the ball's top edge. On the board the ball itself hides the
  *  monster at rest and everything below its edge; here a window with its
  *  bottom edge at the ball's top edge (at the monster's x, the circle's
@@ -293,7 +292,7 @@ export function MonsterRise({ ball }: { ball: BallCircle }) {
   );
 }
 
-/** The sliding monster (QF2.dc.html): 124x140, sliding in from the right at
+/** The sliding monster (QF2 board): 124x140, sliding in from the right at
  *  the bottom of the stage (20px up), waving. */
 export function MonsterSlide({ stage }: { stage: ElementBox }) {
   return (
@@ -402,7 +401,7 @@ export function MonsterSlide({ stage }: { stage: ElementBox }) {
   );
 }
 
-/** The peeking monster of the Measuring popup (Measuring.dc.html): 96x80 in
+/** The peeking monster of the Measuring popup (Measuring board): 96x80 in
  *  a 96x70 window with its bottom on the popup's top edge, 72px in from the
  *  right, so it pops up over the edge. The Scene passes the popup's own
  *  top-right corner, measured where the popup renders. */
@@ -474,9 +473,9 @@ export function Peeker({ left, top }: { left: number; top: number }) {
   );
 }
 
-/** The bat riding the Measuring popup's progress bar (Measuring.dc.html):
+/** The bat riding the Measuring popup's progress bar (Measuring board):
  *  flapping at the fill's leading edge, its left edge tracking the real
- *  progress along the real bar (agent decision A7: the bar keeps MUI's
+ *  progress along the real bar (the bar keeps MUI's
  *  shape; the bat rides it as it is). The board hangs its bat 30px above a
  *  bar 44px under the title; the GUI's bar sits 16px under the title, so the
  *  bat hangs from the title's own bottom edge down onto the bar, never
@@ -488,7 +487,7 @@ export function BarBat({
 }: {
   bar: ElementBox;
   headingBottom: number;
-  /** The real progress, 0-100 (agent decision A7). */
+  /** The real progress, 0-100. */
   progress: number;
 }) {
   return (
@@ -533,7 +532,7 @@ export function BarBat({
   );
 }
 
-/** The mummy leaning out from the stage's right edge (CHSH1.dc.html):
+/** The mummy leaning out from the stage's right edge (CHSH1 board):
  *  124x140 at the board's own place (right 0, 230px down), leaning in and
  *  reaching with its arm. At rest it leans fully outside the stage, where
  *  the content box's own edge hides it, as on the board. */
@@ -646,13 +645,13 @@ export function MonsterLean({ stage }: { stage: ElementBox }) {
   );
 }
 
-/** The blob oozing out of the witch's brew pot (CHSH2.dc.html): the board's
+/** The blob oozing out of the witch's brew pot (CHSH2 board): the board's
  *  own 150x190 stand — the pot with its brewing bubbles at the bottom, the
  *  monster rising out of it through a window whose bottom edge sits 66px
  *  above — placed on the stage's bottom edge, 250px left of its centre.
  *  The Scene passes the stand's own left edge (clamped past the pose
  *  pumpkin beside it, whose clamped spot the GUI lays right of the board's)
- *  and the stage's bottom edge (agent decision A8). At rest the monster
+ *  and the stage's bottom edge. At rest the monster
  *  sits fully below the window's bottom edge, hidden inside the pot, as on
  *  the board. */
 export function MonsterOoze({
@@ -830,7 +829,7 @@ export function MonsterOoze({
   );
 }
 
-/** The vampire rising from the stage's bottom edge (CHSH3.dc.html):
+/** The vampire rising from the stage's bottom edge (CHSH3 board):
  *  124x150 at the board's own place (right 28px, bottom 0), waving its arm.
  *  At rest it sits fully below the stage's bottom edge: a window with its
  *  bottom edge there hides it, as the board's own stage edge does (the
@@ -1020,7 +1019,7 @@ export function MonsterVamp({ stage }: { stage: ElementBox }) {
   );
 }
 
-/** The sock monster dangling from the stage's top edge (CHSH3-weak.dc.html):
+/** The sock monster dangling from the stage's top edge (CHSH3-weak board):
  *  90x156, 82px left of the board's stage centre (the Scene clamps it past
  *  the speech bubble's right edge, which the GUI lays right of the board's
  *  stage), scratching itself. At rest it hangs fully above its window's top
@@ -1158,7 +1157,7 @@ export function MonsterDangle({ left, top }: { left: number; top: number }) {
 }
 
 /** The monster tiptoeing in from the stage's right edge
- *  (CHSH3-error.dc.html): 140x120 at the board's own place (right 0, 12px
+ *  (CHSH3-error board): 140x120 at the board's own place (right 0, 12px
  *  above the bottom), its ears twitching. At rest it stands fully right of
  *  the stage's right edge, where the content box's own edge hides it, as on
  *  the board. */
@@ -1323,7 +1322,7 @@ export function MonsterTiptoe({ stage }: { stage: ElementBox }) {
   );
 }
 
-/** The skeleton sliding in from the stage's left edge (SSM1.dc.html):
+/** The skeleton sliding in from the stage's left edge (SSM1 board):
  *  120x132 at the board's own place (left 0, 40px above the bottom),
  *  waving its arm. At rest it slides fully outside the stage's left edge,
  *  where the viewport's own edge hides it, as on the board. */
@@ -1448,7 +1447,7 @@ export function MonsterSkel({ stage }: { stage: ElementBox }) {
 }
 
 /** The fuzz ball popping up from the stage's bottom edge
- *  (SSM2.dc.html): 120x112 at the board's own place (33% across, bottom 0),
+ *  (SSM2 board): 120x112 at the board's own place (33% across, bottom 0),
  *  its lids blinking over its eyes. At rest it sits fully below the
  *  stage's bottom edge: a window with its bottom edge there hides it, as
  *  the board's own stage edge does. The Scene passes the stand's own left
@@ -1544,7 +1543,7 @@ export function MonsterFuzz({
   );
 }
 
-/** The black cat on the friend's computer (SSM2-waiting.dc.html): 100x86
+/** The black cat on the friend's computer (SSM2-waiting board): 100x86
  *  at the board's own place (404px in, 30px down the communication box),
  *  its tail swishing. At rest it drops 64px down its own height, as on the
  *  board. */
@@ -1614,7 +1613,7 @@ export function MonsterCat({ left, top }: { left: number; top: number }) {
   );
 }
 
-/** The unlit, frowning jack-o'-lantern (SSM2-declined.dc.html): the
+/** The unlit, frowning jack-o'-lantern (SSM2-declined board): the
  *  board's own 280x270 drawing, sagging, placed by the Scene beside the
  *  declined face the GUI shows in that spot (the face is the page's own
  *  content, which no piece may cover, and the pumpkin stands whole, as on
@@ -1730,7 +1729,7 @@ export function SadPumpkin({ left, top }: { left: number; top: number }) {
 }
 
 /** Frankenstein's monster leaning in from the stage's right edge
- *  (SSM2-declined.dc.html): 130x150 at the board's own place (right 0,
+ *  (SSM2-declined board): 130x150 at the board's own place (right 0,
  *  300px down), a tear rolling down its cheek. At rest it leans fully
  *  outside the stage's right edge, where the viewport's own edge hides it,
  *  as on the board. */
@@ -1843,7 +1842,7 @@ export function MonsterFrank({ stage }: { stage: ElementBox }) {
 }
 
 /** The tentacle monster rising from the stage's bottom edge
- *  (SSM3.dc.html): 110x170 at the board's own place (right 24px, bottom
+ *  (SSM3 board): 110x170 at the board's own place (right 24px, bottom
  *  0), its arm swaying. At rest it sits fully below the stage's bottom
  *  edge: a window with its bottom edge there hides it, as the board's own
  *  stage edge does. */
@@ -1909,7 +1908,7 @@ export function MonsterTentacle({ stage }: { stage: ElementBox }) {
   );
 }
 
-/** The werewolf rising from the stage's bottom edge (SSM4.dc.html):
+/** The werewolf rising from the stage's bottom edge (SSM4 board):
  *  140x150 at the board's own place (right 64px, bottom 0), its arms
  *  cheering. At rest it sits fully below the stage's bottom edge: a window
  *  with its bottom edge there hides it, as the board's own stage edge

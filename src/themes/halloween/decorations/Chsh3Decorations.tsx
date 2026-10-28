@@ -13,14 +13,13 @@ import {
 import { MonsterDangle, MonsterTiptoe, MonsterVamp } from './monsters';
 import { useElementBox } from './useElementBox';
 
-/** The anchors the chsh3 Scenes' Decorations are placed against (agent
- *  decision A8): the stage, Whobit's speech bubble (the ghost hangs on the
- *  results circle's bottom-left, clamped to the bubble's right edge, which
- *  the GUI lays right of the board's stage; the sock monster hangs 74px
- *  right of it, keeping its board gap), Whobit's pose (the board leans its
- *  pumpkin out from under it) and the page's own results circle (the board
- *  hangs its ghost and its small pumpkin on it, and draws it over the moon
- *  and the bats). */
+/** The anchors the chsh3 Scenes' Decorations are placed against: the stage,
+ *  Whobit's speech bubble (the ghost hangs on the results circle's bottom-left,
+ *  clamped to the bubble's right edge, which the GUI lays right of the board's
+ *  stage; the sock monster hangs 74px right of it, keeping its board gap),
+ *  Whobit's pose (the board leans its pumpkin out from under it) and the page's
+ *  own results circle (the board hangs its ghost and its small pumpkin on it,
+ *  and draws it over the moon and the bats). */
 const stageAnchor = () =>
   document.querySelector<HTMLElement>('[data-decoration-anchor="stage"]');
 const bubbleAnchor = () =>
@@ -31,8 +30,7 @@ const circleAnchor = () =>
   document.querySelector('[data-decoration-anchor="chsh3-circle"]');
 
 /** What the three CHSH3 boards each draw their own: the monster, the spider
- *  and the ghost's mouth (CHSH3.dc.html, CHSH3-weak.dc.html and
- *  CHSH3-error.dc.html). */
+ *  and the ghost's mouth (the CHSH3, CHSH3-weak and CHSH3-error boards). */
 type Chsh3Board = 'entangled' | 'weak' | 'error';
 
 const boards: Record<
@@ -45,7 +43,7 @@ const boards: Record<
 };
 
 /**
- * The chsh3 Scenes' Decorations (docs/design/halloween/CHSH3.dc.html and its
+ * The chsh3 Scenes' Decorations (the CHSH3 design board and its
  * weak and error boards): the stage's ambient set — web, moon, bats, the
  * spider, the ghost on the results circle's bottom-left, the flickering
  * pumpkin under Whobit's pose and the small flickering pumpkin on the

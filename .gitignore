@@ -50,5 +50,3 @@ test-results/
 playwright-report/
 /tests/screens/halloween/
 
-# Halloween design: runtime, images, vendored React and board renders (docs/design/halloween/serve-design.mjs)
-docs/design/halloween/runtime/

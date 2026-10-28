@@ -6,7 +6,7 @@ interface WhobitProps {
   children: ReactNode;
   variant?: WhobitPose;
   speechBubbleHeight?: string;
-  /** Whether Whobit wears the theme's accessory (decision 9: never on
+  /** Whether Whobit wears the theme's accessory (never on
    * Maintenance; Survey does not use Whobit). */
   accessory?: boolean;
 }
@@ -35,8 +35,8 @@ export default function Whobit({
     <Stack position="relative" sx={{ minWidth: 'fit-content' }}>
       {/* Speech bubble */}
       <Box
-        // The Halloween Decorations' speech-bubble anchor (agent decision
-        // A8). Non-visual, so no theme changes the look.
+        // The Halloween Decorations' speech-bubble anchor. Non-visual, so no
+        // theme changes the look.
         data-decoration-anchor="whobit-bubble"
         sx={{
           position: 'relative',
@@ -90,7 +90,7 @@ export default function Whobit({
 
       {/* Whobit character, with the active theme's accessory over the pose */}
       <Box
-        // The Halloween Decorations' pose anchor (agent decision A8).
+        // The Halloween Decorations' pose anchor.
         // Non-visual, so no theme changes the look.
         data-decoration-anchor="whobit-pose"
         sx={{
@@ -101,7 +101,7 @@ export default function Whobit({
         }}
         // The boards place the accessory in a 70px gap above the pose
         // (every board's Whobit container has padding-top: 70px). The gap
-        // moves only Whobit's own pose (agent decision A6): the box grows
+        // moves only Whobit's own pose: the box grows
         // to hold it and gives the 70px straight back as a bottom margin,
         // so its layout height contribution stays today's 288px and no
         // other element moves. Inline, so the layout contract is testable;

@@ -10,7 +10,7 @@ import CircleContainer from '@/components/CircleContainer';
 import Decorations from '@/components/Decorations';
 import { activeCelebration, activeFlavourCopy, type Scene } from '@/themes';
 
-// The active theme is fixed at build time (decision 5), so its Celebration
+// The active theme is fixed at build time, so its Celebration
 // is computed once here, not on every render.
 const Celebration = activeCelebration();
 
@@ -31,7 +31,7 @@ export default function Home() {
     const failParam = searchParams.get('fail');
     const fail = failParam ? failParam.replace(/\}/g, '') : true;
 
-    // The Scene the page's state calls for (decision 10).
+    // The Scene the page's state calls for.
     const scene: Scene =
       fail === 'true'
         ? 'chsh3-error'
@@ -134,7 +134,7 @@ export default function Home() {
                 </Typography>
 
                 {/* Flavour copy: nothing under an entangled result in the
-                    Default Theme (decision 13). Placed as the boards place
+                    Default Theme. Placed as the boards place
                     it: top 70%, the full circle's width, centred, 22px. */}
                 {fail !== 'true' &&
                   value >= 2 &&

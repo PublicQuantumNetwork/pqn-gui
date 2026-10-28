@@ -13,9 +13,9 @@ import { MonsterPeek, MonsterPop } from './monsters';
 import { useElementBox } from './useElementBox';
 
 /**
- * The anchors the home Scene's Decorations are placed against (agent
- * decision A8): the stage (the layout's content box), the three game buttons
- * and Whobit's pose, each marked on the page with a data attribute.
+ * The anchors the home Scene's Decorations are placed against: the stage (the
+ * layout's content box), the three game buttons and Whobit's pose, each marked
+ * on the page with a data attribute.
  */
 const stageAnchor = () =>
   document.querySelector<HTMLElement>('[data-decoration-anchor="stage"]');
@@ -28,7 +28,7 @@ const poseAnchor = () =>
   document.querySelector('[data-decoration-anchor="whobit-pose"]');
 
 /**
- * The home Scene's Decorations (docs/design/halloween/Main.dc.html): the
+ * The home Scene's Decorations (the Main design board): the
  * stage's ambient set — web, moon, bats, spider, the ghost with its small
  * pumpkin under the game buttons and the pumpkin under Whobit's pose — plus
  * the peeking and the popping monster. The stage-anchored pieces keep the

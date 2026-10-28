@@ -4,15 +4,14 @@ import { Ghost, Moon, Pumpkin, Spider, Web } from './ambient';
 import { MonsterOoze } from './monsters';
 import { useElementBox } from './useElementBox';
 
-/** The anchors the chsh2 Scene's Decorations are placed against (agent
- *  decision A8): the stage, Whobit's speech bubble (the ghost floats 22px
- *  right of its right edge, in the gap between the bubble and the wheel,
- *  which the GUI lays narrower than the board's), Whobit's pose (the board
- *  leans its pumpkin out from under it, and the brew pot is clamped past
- *  that pumpkin's clamped spot), the page's own wheel (the board hangs its
- *  ghost beside it, and draws its circle over the moon) and the wheel's D
- *  label (the board draws the D over the moon too, so the moon is cut
- *  around it). */
+/** The anchors the chsh2 Scene's Decorations are placed against: the stage,
+ *  Whobit's speech bubble (the ghost floats 22px right of its right edge, in
+ *  the gap between the bubble and the wheel, which the GUI lays narrower than
+ *  the board's), Whobit's pose (the board leans its pumpkin out from under it,
+ *  and the brew pot is clamped past that pumpkin's clamped spot), the page's
+ *  own wheel (the board hangs its ghost beside it, and draws its circle over
+ *  the moon) and the wheel's D label (the board draws the D over the moon too,
+ *  so the moon is cut around it). */
 const stageAnchor = () =>
   document.querySelector<HTMLElement>('[data-decoration-anchor="stage"]');
 const bubbleAnchor = () =>
@@ -25,7 +24,7 @@ const wheelDAnchor = () =>
   document.querySelector('[data-decoration-anchor="chsh2-wheel-d"]');
 
 /**
- * The chsh2 Scene's Decorations (docs/design/halloween/CHSH2.dc.html): the
+ * The chsh2 Scene's Decorations (the CHSH2 design board): the
  * stage's ambient set — web, moon, the spider on the stage's right, the
  * ghost beside the wheel and the flickering pumpkin under Whobit's pose —
  * plus the blob oozing out of the witch's brew pot on the stage's bottom

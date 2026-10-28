@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  The Measuring popup's cauldron illustration (docs/design/halloween/Measuring.dc.html),
-  ported as it is with its animations and its prefers-reduced-motion rule inside
-  (decision 11): the photons orbit, the brew bubbles, the flames flicker and the
-  steam rises, and every animation stops under prefers-reduced-motion.
+  The Measuring popup's cauldron illustration (the Measuring design board),
+  ported as it is with its animations and its prefers-reduced-motion rule
+  inside: the photons orbit, the brew bubbles, the flames flicker and the steam
+  rises, and every animation stops under prefers-reduced-motion.
 -->
 <svg xmlns="http://www.w3.org/2000/svg" width="300" height="400" viewBox="0 0 300 400" role="img" aria-label="Two entangled photons spinning above a bubbling cauldron">
   <style>

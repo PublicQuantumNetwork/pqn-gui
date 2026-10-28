@@ -72,7 +72,7 @@ afterAll(() => {
 /** The witch hat Whobit wears, as Whobit.tsx draws it. */
 function hatImage(container: HTMLElement) {
   return container.querySelector<HTMLImageElement>(
-    'img[src="/images/whobit-witch-hat.svg"]'
+    'img[src="/images/halloween/whobit-witch-hat.svg"]'
   );
 }
 
@@ -223,7 +223,7 @@ test('the hat sits over each pose at that pose’s position', () => {
 test('the accessory gap moves only Whobit’s own pose, not the layout', () => {
   const { container } = render(<Whobit variant="right-wing-up">Hello</Whobit>);
 
-  // Agent decision A6: the pose box grows the boards' 70px gap above the
+  // The pose box grows the boards' 70px gap above the
   // pose and gives the 70px straight back at its bottom, so its layout
   // height contribution stays today's 288px and no other element moves.
   const poseBox = hatImage(container)!.parentElement!;
@@ -386,7 +386,7 @@ test('SSM4 renders the burst only for a perfect match', () => {
 
 test('the Halloween palette gives the Measuring popup’s track the cream colour', () => {
   // The palette's cream becomes a MuiLinearProgress override on the
-  // primary-colour track (agent decision A5), and everything else keeps the
+  // primary-colour track, and everything else keeps the
   // Default Theme's values — including the bar's fill, primary.main.
   const merged = activeMuiTheme(knownThemes.halloween);
 
@@ -403,7 +403,7 @@ test('the Halloween palette gives the Measuring popup’s track the cream colour
 
 test('the rendered Measuring popup track is the cream under Halloween', () => {
   // ModalBox renders its LinearProgress with no color prop, so the
-  // primary-colour track override is the one that shows (agent decision A5).
+  // primary-colour track override is the one that shows.
   const halloween = render(
     <ThemeProvider theme={activeMuiTheme(knownThemes.halloween)}>
       <LinearProgress variant="determinate" value={50} />
@@ -436,9 +436,9 @@ test('the rendered Measuring popup track is the cream under Halloween', () => {
 test('Halloween keeps the Default Theme’s background and Whobit poses', () => {
   const images = activeImages(knownThemes.halloween);
 
-  // Decision 8: the design's background and Whobit images are byte-for-byte
-  // today's; only the measuring illustration is a theme's to change
-  // (group 2.2), so it stays free here.
+  // The design's background and Whobit images are byte-for-byte today's;
+  // only the measuring illustration is a theme's to change, so it stays free
+  // here.
   expect(images.background).toBe(DEFAULT_IMAGES.background);
   expect(images['whobit-right-wing-up']).toBe(
     DEFAULT_IMAGES['whobit-right-wing-up']

@@ -31,7 +31,7 @@ export default function RotatorCircle({
   const images = activeImages();
   return (
     <Box
-      // The Halloween Decorations' wheel anchor (agent decision A8): the
+      // The Halloween Decorations' wheel anchor: the
       // CHSH2 board hangs its ghost beside the wheel. Non-visual, so no
       // theme changes the look.
       data-decoration-anchor="chsh2-wheel"

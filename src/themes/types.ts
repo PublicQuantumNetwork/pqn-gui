@@ -8,7 +8,7 @@ import type { PaletteOptions } from '@mui/material/styles';
  */
 export type SeasonalPalette = PaletteOptions & {
   /**
-   * The Measuring popup's progress track (decision 11, agent decision A5),
+   * The Measuring popup's progress track,
    * under MUI's own name for it: MUI's css-variables mode reads the track
    * from `palette.LinearProgress.primaryBg`, and `activeMuiTheme` maps this
    * value to a MuiLinearProgress track override, because the track MUI
@@ -40,15 +40,15 @@ export interface SeasonalImages {
 }
 
 /**
- * Whobit's three poses (decision 8): the Images slots' `whobit-…` keys
+ * Whobit's three poses: the Images slots' `whobit-…` keys
  * without the prefix.
  */
 export type WhobitPose = 'right-wing-up' | 'arms-up' | 'arms-down';
 
 /**
- * The Whobit accessory part of a Seasonal Theme (decision 8): an SVG drawn
+ * The Whobit accessory part of a Seasonal Theme: an SVG drawn
  * over each of Whobit's three poses by `Whobit.tsx`, wherever Whobit appears.
- * Decision 9: Maintenance and Survey never show it.
+ * Maintenance and Survey never show it.
  */
 export interface WhobitAccessory {
   /** The accessory's SVG file. */
@@ -60,8 +60,8 @@ export interface WhobitAccessory {
 }
 
 /**
- * The Flavour copy part of a Seasonal Theme (decision 13): the named slots of
- * the plan's "User-facing text" table. Each slot defaults to today's text;
+ * The Flavour copy part of a Seasonal Theme: the named slots of user-facing
+ * text a theme may reword. Each slot defaults to today's text;
  * the lead-ins and the CHSH3 line have no text today, so a theme that leaves
  * them unset renders nothing there. Quantum Fortune's fortunes are
  * overridden by number.
@@ -75,16 +75,16 @@ export interface FlavourCopy {
   'qf1-lead-in'?: string;
   /** QF2 lead-in, before "Your fortune is...". */
   'qf2-lead-in'?: string;
-  /** Quantum Fortune's fortunes, overridden by number (decision 13). */
+  /** Quantum Fortune's fortunes, overridden by number. */
   fortunes?: Record<number, string>;
   /** CHSH3 line under an entangled result. A theme may give a ReactNode so
-   * the line can animate letter by letter (agent decision A4); a plain
+   * the line can animate letter by letter; a plain
    * string renders as it is. */
   'chsh3-entangled-line'?: string | ReactNode;
 }
 
 /**
- * The Scenes a page can be in (decision 10): the one fixed list every
+ * The Scenes a page can be in: the one fixed list every
  * Seasonal Theme shares, each Scene named after the design board it comes
  * from. A page picks the Scene from its own state; a theme maps any Scenes
  * it wants to Decorations.
@@ -108,17 +108,17 @@ export type Scene =
   | 'measuring';
 
 /**
- * The Decorations of one Scene (decision 10): the component a theme maps the
+ * The Decorations of one Scene: the component a theme maps the
  * Scene to. The `measuring` Scene's component receives the Measuring popup's
- * read-only progress (decision 11).
+ * read-only progress.
  */
 export type SceneDecorations = ComponentType<{
-  /** The Measuring popup's read-only progress, 0–100 (decision 11). */
+  /** The Measuring popup's read-only progress, 0–100. */
   progress?: number;
 }>;
 
 /**
- * The Celebration of a Seasonal Theme (decision 14): the effect when a Game
+ * The Celebration of a Seasonal Theme: the effect when a Game
  * succeeds, rendered by CHSH3 (entangled) and SSM4 (perfect match). The
  * Default Theme's is today's Fireworks.
  */
@@ -131,13 +131,13 @@ export type Celebration = ComponentType;
 export interface SeasonalTheme {
   palette?: SeasonalPalette;
   images?: SeasonalImages;
-  /** The Whobit accessory, worn over each pose (decision 8). */
+  /** The Whobit accessory, worn over each pose. */
   whobitAccessory?: WhobitAccessory;
-  /** Decorations per Scene (decision 10): a theme maps any Scenes it wants
+  /** Decorations per Scene: a theme maps any Scenes it wants
    * to components; the Default Theme maps none. */
   decorations?: Partial<Record<Scene, SceneDecorations>>;
-  /** The effect when a Game succeeds (decision 14). */
+  /** The effect when a Game succeeds. */
   celebration?: Celebration;
-  /** Flavour copy slots, each defaulting to today's text (decision 13). */
+  /** Flavour copy slots, each defaulting to today's text. */
   flavourCopy?: FlavourCopy;
 }

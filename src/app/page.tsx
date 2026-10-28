@@ -93,10 +93,10 @@ export default function Page() {
 
         {/* Right side: All buttons */}
         <Stack flexDirection="column" flex={1} sx={{ paddingLeft: '150px' }}>
-          {/* The buttons carry the Halloween Decorations' anchors (agent
-              decision A8): the moon, the bats and the peeking monster are
-              cut to shape around them, and the ghost's row sits under them.
-              Non-visual, so no theme changes the look. */}
+          {/* The buttons carry the Halloween Decorations' anchors: the moon,
+              the bats and the peeking monster are cut to shape around them, and
+              the ghost's row sits under them. Non-visual, so no theme changes
+              the look. */}
           <StyledHomeButton
             variant="contained"
             component="a"

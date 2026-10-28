@@ -55,9 +55,9 @@ export default function Page() {
         </Whobit>
 
         <Stack flex={1} justifyContent="flex-end" alignItems="flex-end">
-          {/* The button carries the Halloween Decorations' anchor (agent
-              decision A8): the board's pumpkin pair sits above it.
-              Non-visual, so no theme changes the look. */}
+          {/* The button carries the Halloween Decorations' anchor: the board's
+              pumpkin pair sits above it. Non-visual, so no theme changes the
+              look. */}
           <Button
             variant="contained"
             component="a"

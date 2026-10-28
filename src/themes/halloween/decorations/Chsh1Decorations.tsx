@@ -14,10 +14,11 @@ import { useElementBox } from './useElementBox';
 
 /** The anchors the chsh1 Scene's Decorations are placed against (agent
  *  decision A8): the stage, Whobit's speech bubble (the board floats its
- *  spider and its ghost beside the bubble's right edge, which the GUI lays
- *  right of the board's stage, so both are clamped to never cross it),
- *  Whobit's pose (the board leans its pumpkin out from under it) and the
- *  Next button (the board floats its pumpkin pair above it). */
+ *  spider and its ghost beside the bubble, 32px and 8px right of its right
+ *  edge, which the GUI lays right of the board's stage, so both are clamped
+ *  to keep their board gap from it), Whobit's pose (the board leans its
+ *  pumpkin out from under it) and the Next button (the board floats its
+ *  pumpkin pair above it). */
 const stageAnchor = () =>
   document.querySelector<HTMLElement>('[data-decoration-anchor="stage"]');
 const bubbleAnchor = () =>
@@ -33,9 +34,9 @@ const nextAnchor = () =>
  * speech bubble, the flickering pumpkin under Whobit's pose and the pumpkin
  * pair above the Next button — plus the mummy leaning in from the right. The
  * stage-anchored pieces keep the board's stage placements; the spider and
- * the ghost hang where the board hangs them, clamped to the bubble's right
- * edge; the pumpkin pair keeps the board's offsets from the button (180px
- * left of its right edge, 32px above its top).
+ * the ghost hang where the board hangs them, keeping the board's own gaps
+ * from the bubble's right edge; the pumpkin pair keeps the board's offsets
+ * from the button (180px left of its right edge, 32px above its top).
  */
 export default function Chsh1Decorations() {
   const stage = useElementBox(stageAnchor);
@@ -51,13 +52,13 @@ export default function Chsh1Decorations() {
       <Moon stage={stage} />
       <Bats stage={stage} />
       <Spider
-        left={Math.max(stage.left + stage.width / 2 - 100, bubble.right)}
+        left={Math.max(stage.left + stage.width / 2 - 100, bubble.right + 32)}
         top={stage.top}
         threadHeight={70}
         bobDuration="3.4s"
       />
       <Ghost
-        left={Math.max(stage.left + stage.width / 2 - 124, bubble.right)}
+        left={Math.max(stage.left + stage.width / 2 - 124, bubble.right + 8)}
         top={stage.top + 250}
         width={84}
         height={100}

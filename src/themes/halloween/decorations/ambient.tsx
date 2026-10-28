@@ -18,13 +18,15 @@ import './decorations.css';
  * the page's own content occludes a piece on its board (the game buttons
  * over the moon and the bats, the counter and the fortune over the ball
  * mist), the same boxes are cut out of it here, so the piece never covers
- * that content's text (decision 10). The clip's outer edge is generous: it
- * only bounds the piece's own art, which its animations move (the bats
- * drift, the peeking monster drops out of sight).
+ * that content's text (decision 10). A round occluder (a circle the page
+ * itself draws, `CircleOccluder`) is cut as the circle it is. The clip's
+ * outer edge is generous: it only bounds the piece's own art, which its
+ * animations move (the bats drift, the peeking monster drops out of sight).
  */
 function clipPathValue(
   box: { left: number; top: number; width: number; height: number },
-  occluders: ElementBox[]
+  occluders: ElementBox[],
+  circles: CircleOccluder[] = []
 ): string {
   const holes = occluders
     .map((occluder) => {
@@ -33,17 +35,35 @@ function clipPathValue(
       return ` M${x} ${y} H${x + occluder.width} V${y + occluder.height} H${x} Z`;
     })
     .join('');
-  return `path(evenodd, "M-100 -100 H${box.width + 100} V${box.height + 100} H-100 Z${holes}")`;
+  const roundHoles = circles
+    .map((circle) => {
+      const cx = circle.cx - box.left;
+      const cy = circle.cy - box.top;
+      return ` M${cx - circle.r} ${cy} a${circle.r} ${circle.r} 0 1 0 ${circle.r * 2} 0 a${circle.r} ${circle.r} 0 1 0 ${-circle.r * 2} 0 Z`;
+    })
+    .join('');
+  return `path(evenodd, "M-100 -100 H${box.width + 100} V${box.height + 100} H-100 Z${holes}${roundHoles}")`;
+}
+
+/** A round occluder: a circle the page itself draws (circle.png's disc —
+ *  the CHSH2 wheel, the CHSH3 results circle). A piece the board draws
+ *  behind that circle is cut around it here, as the rectangular occluders
+ *  are (agent decision A8). */
+export interface CircleOccluder {
+  cx: number;
+  cy: number;
+  r: number;
 }
 
 /**
  * The wrapper a piece paints in: placed at its box, and where the page's own
- * content occludes the piece on its board, that content's boxes are cut out
- * of it (see `clipPathValue`).
+ * content occludes the piece on its board, that content's boxes (and the
+ * circles it draws) are cut out of it (see `clipPathValue`).
  */
 export function pieceStyle(
   box: { left: number; top: number; width: number; height: number },
-  occluders?: ElementBox[]
+  occluders?: ElementBox[],
+  circles?: CircleOccluder[]
 ): CSSProperties {
   const style: CSSProperties = {
     position: 'absolute',
@@ -52,8 +72,8 @@ export function pieceStyle(
     width: `${box.width}px`,
     height: `${box.height}px`,
   };
-  if (occluders && occluders.length > 0) {
-    style.clipPath = clipPathValue(box, occluders);
+  if ((occluders && occluders.length > 0) || (circles && circles.length > 0)) {
+    style.clipPath = clipPathValue(box, occluders ?? [], circles ?? []);
   }
   return style;
 }
@@ -88,20 +108,25 @@ export function Web({ stage }: { stage: ElementBox }) {
 }
 
 /** The moon (Main.dc.html and every board): 160x160, at the stage's top
- *  right (right 7%, 28px down). Every board places it the same way. */
+ *  right (right 7%, 28px down). Every board places it the same way. Where
+ *  the board draws a circle of its own over the moon (the CHSH2 wheel, the
+ *  CHSH3 results circle), that circle is cut out of it here. */
 export function Moon({
   stage,
   occluders,
+  circleOccluder,
 }: {
   stage: ElementBox;
   occluders?: ElementBox[];
+  circleOccluder?: CircleOccluder;
 }) {
   const left = stage.right - stage.width * 0.07 - 160;
   return (
     <div
       style={pieceStyle(
         { left, top: stage.top + 28, width: 160, height: 160 },
-        occluders
+        occluders,
+        circleOccluder ? [circleOccluder] : undefined
       )}
     >
       <svg
@@ -149,20 +174,24 @@ export function Moon({
 
 /** The bats (Main.dc.html and every board): drifting at the stage's top
  *  right (right 7% plus 120px, 40px down). Every board places them the same
- *  way. */
+ *  way. Where the board draws a circle of its own over the bats (the CHSH3
+ *  results circle), that circle is cut out of them here. */
 export function Bats({
   stage,
   occluders,
+  circleOccluder,
 }: {
   stage: ElementBox;
   occluders?: ElementBox[];
+  circleOccluder?: CircleOccluder;
 }) {
   const left = stage.right - stage.width * 0.07 - 120 - 220;
   return (
     <div
       style={pieceStyle(
         { left, top: stage.top + 40, width: 220, height: 110 },
-        occluders
+        occluders,
+        circleOccluder ? [circleOccluder] : undefined
       )}
     >
       <svg
@@ -503,17 +532,20 @@ export function Pumpkin({
  *  (Main.dc.html), the board's own smaller drawing with its smooth face,
  *  at the place the Scene measures for the ghost's row. CHSH3.dc.html (and
  *  its weak and error boards) wears the same drawing beside the results
- *  circle at its own bigger size. */
+ *  circle at its own bigger size, its face flickering as that board draws
+ *  it (Main's is lit steady). */
 export function PumpkinSmall({
   left,
   top,
   width = 84,
   height = 73,
+  flicker = false,
 }: {
   left: number;
   top: number;
   width?: number;
   height?: number;
+  flicker?: boolean;
 }) {
   return (
     <svg
@@ -591,6 +623,7 @@ export function PumpkinSmall({
         strokeLinecap="round"
       />
       <g
+        className={flicker ? 'halloween-flicker' : undefined}
         fill="#fcb316"
         stroke="#000000"
         strokeWidth="2.5"

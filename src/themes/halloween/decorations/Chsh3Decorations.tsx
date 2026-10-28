@@ -16,9 +16,11 @@ import { useElementBox } from './useElementBox';
 /** The anchors the chsh3 Scenes' Decorations are placed against (agent
  *  decision A8): the stage, Whobit's speech bubble (the ghost hangs on the
  *  results circle's bottom-left, clamped to the bubble's right edge, which
- *  the GUI lays right of the board's stage), Whobit's pose (the board leans
- *  its pumpkin out from under it) and the page's own results circle (the
- *  board hangs its ghost and its small pumpkin on it). */
+ *  the GUI lays right of the board's stage; the sock monster hangs 50px
+ *  right of it, keeping its board gap), Whobit's pose (the board leans its
+ *  pumpkin out from under it) and the page's own results circle (the board
+ *  hangs its ghost and its small pumpkin on it, and draws it over the moon
+ *  and the bats). */
 const stageAnchor = () =>
   document.querySelector<HTMLElement>('[data-decoration-anchor="stage"]');
 const bubbleAnchor = () =>
@@ -46,12 +48,13 @@ const boards: Record<
  * The chsh3 Scenes' Decorations (docs/design/halloween/CHSH3.dc.html and its
  * weak and error boards): the stage's ambient set — web, moon, bats, the
  * spider, the ghost on the results circle's bottom-left, the flickering
- * pumpkin under Whobit's pose and the small pumpkin on the circle's
- * bottom-right — plus the board's own monster. Each state wears its own
- * monster, its own spider and its own ghost mouth; the ghost keeps the
- * board's offsets from the circle (124px left of it, 470px down), clamped
- * to rest its base on the stage's bottom edge where the circle hangs below
- * it, as the GUI lays the circle out.
+ * pumpkin under Whobit's pose and the small flickering pumpkin on the
+ * circle's bottom-right — plus the board's own monster. Each state wears its
+ * own monster, its own spider and its own ghost mouth; the moon and the bats
+ * are cut around the results circle, which the boards draw over them; the
+ * ghost keeps the board's offsets from the circle (124px left of it, 470px
+ * down), clamped to rest its base on the stage's bottom edge where the
+ * circle hangs below it, as the GUI lays the circle out.
  */
 function Chsh3Decorations({ board }: { board: Chsh3Board }) {
   const stage = useElementBox(stageAnchor);
@@ -62,11 +65,21 @@ function Chsh3Decorations({ board }: { board: Chsh3Board }) {
     return null;
   }
   const { mouth, spider } = boards[board];
+  // The results circle's own circle: CircleContainer draws circle.png
+  // contained in its 560px box, so the image's own circle (57px inside the
+  // 550px image, as the ball's ballCircle measures the same image) scales to
+  // ~58px inside the box, a couple of pixels outside the ball's own 62px
+  // inset.
+  const circleDisc = {
+    cx: circle.left + circle.width / 2,
+    cy: circle.top + circle.height / 2,
+    r: (circle.width - 2 * 58) / 2,
+  };
   return (
     <>
       <Web stage={stage} />
-      <Moon stage={stage} />
-      <Bats stage={stage} />
+      <Moon stage={stage} circleOccluder={circleDisc} />
+      <Bats stage={stage} circleOccluder={circleDisc} />
       {spider === 'right' ? (
         <Spider
           left={stage.right - stage.width * 0.03 - 40}
@@ -85,7 +98,7 @@ function Chsh3Decorations({ board }: { board: Chsh3Board }) {
       {board === 'entangled' && <MonsterVamp stage={stage} />}
       {board === 'weak' && (
         <MonsterDangle
-          left={Math.max(stage.left + stage.width / 2 - 82, bubble.right)}
+          left={Math.max(stage.left + stage.width / 2 - 82, bubble.right + 50)}
           top={stage.top}
         />
       )}
@@ -106,6 +119,7 @@ function Chsh3Decorations({ board }: { board: Chsh3Board }) {
       <PumpkinSmall
         width={96}
         height={83}
+        flicker
         left={circle.right - 52 - 96}
         top={circle.bottom - 30 - 83}
       />

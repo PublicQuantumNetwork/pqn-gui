@@ -141,6 +141,7 @@ const CHSH = {
     bubble: box(144, 205, 500, 250),
     pose: box(144, 465, 288, 358),
     wheel: box(756, 199, 560, 560),
+    wheelD: box(1202.2, 281, 26, 60),
   },
   chsh3: {
     bubble: box(144, 199, 500, 250),
@@ -320,6 +321,9 @@ test('Home renders the Main board’s ambient set and both its monsters', () => 
   expect(parseFloat(small!.style.top)).toBe(
     HOME.ssm.top + HOME.ssm.height + 8 + 120 - 73
   );
+  // Main's board lights the small pumpkin's face steady, so it never
+  // flickers here (CHSH3's board flickers its own).
+  expect(small!.querySelector('.halloween-flicker')).toBeNull();
 
   // The pumpkin under Whobit's pose, at the board's own place beside the
   // pose box — its board spot sits below the stage's bottom edge (where the
@@ -715,23 +719,24 @@ test('CHSH1 renders the CHSH1 board’s ambient set, its pumpkin pair and the mu
   expect(container.querySelector('.halloween-bats')).not.toBeNull();
 
   // The spider 100px left of the stage's centre on the board's own 70px
-  // thread, bobbing its own 3.4s. The board hangs it beside the bubble's
-  // right edge, which the GUI lays right of the board's stage, so it is
-  // clamped to never cross that edge.
+  // thread, bobbing its own 3.4s. The board hangs it beside the bubble,
+  // 32px right of its right edge, which the GUI lays right of the board's
+  // stage, so it is clamped to keep that gap.
   const spider = container.querySelector<HTMLElement>('.halloween-spider')!;
-  expect(spider.style.left).toBe('644px');
+  expect(spider.style.left).toBe('676px');
   expect(
     CHSH.chsh1.bubble.left + CHSH.chsh1.bubble.width,
-    'the board’s spot crosses the bubble’s edge, so the clamp above can fail'
+    'the board’s spot crosses the bubble’s gap, so the clamp above can fail'
   ).toBeGreaterThan(STAGE.left + STAGE.width / 2 - 100);
   expect(spider.style.top).toBe(`${STAGE.top}px`);
   expect(spider.firstElementChild).toHaveStyle({ height: '70px' });
   expect(spider).toHaveStyle({ animationDuration: '3.4s' });
 
   // The ghost at the board's own place (124px left of the stage's centre,
-  // 250px down) with the board's smile, clamped past the bubble's edge too.
+  // 250px down) with the board's smile, keeping the board's own 8px gap
+  // from the bubble's right edge.
   const ghost = container.querySelector<HTMLElement>('.halloween-ghost')!;
-  expect(ghost.style.left).toBe('644px');
+  expect(ghost.style.left).toBe('652px');
   expect(CHSH.chsh1.bubble.left + CHSH.chsh1.bubble.width).toBeGreaterThan(
     STAGE.left + STAGE.width / 2 - 124
   );
@@ -814,7 +819,7 @@ test('the CHSH1 pieces follow the Next button and clamp past the bubble', () => 
   expect(small.style.top).toBe(`${moved.top - 32 - 73}px`);
 
   // The bubble widens past the board's spots; the spider and the ghost
-  // clamp past its right edge.
+  // clamp to keep their board gaps from its right edge.
   const wide = box(144, 199, 600, 250);
   setAnchors({
     stage: STAGE,
@@ -825,10 +830,10 @@ test('the CHSH1 pieces follow the Next button and clamp past the bubble', () => 
   fireEvent(window, new Event('resize'));
   expect(
     container.querySelector<HTMLElement>('.halloween-spider')!.style.left
-  ).toBe(`${wide.left + wide.width}px`);
+  ).toBe(`${wide.left + wide.width + 32}px`);
   expect(
     container.querySelector<HTMLElement>('.halloween-ghost')!.style.left
-  ).toBe(`${wide.left + wide.width}px`);
+  ).toBe(`${wide.left + wide.width + 8}px`);
 });
 
 test('CHSH2 renders the CHSH2 board’s ambient set and the ooze in its brew pot', () => {
@@ -837,6 +842,7 @@ test('CHSH2 renders the CHSH2 board’s ambient set and the ooze in its brew pot
     'whobit-bubble': CHSH.chsh2.bubble,
     'whobit-pose': CHSH.chsh2.pose,
     'chsh2-wheel': CHSH.chsh2.wheel,
+    'chsh2-wheel-d': CHSH.chsh2.wheelD,
   });
   const { container } = renderPage(<CHSH2 />);
 
@@ -846,6 +852,35 @@ test('CHSH2 renders the CHSH2 board’s ambient set and the ooze in its brew pot
     '[data-decoration-anchor="chsh2-wheel"]'
   )!;
   expect(wheel.textContent).toContain('V');
+
+  // The D label carries its own anchor, and the board draws the D over the
+  // moon, so the moon is cut around the label and around the wheel's own
+  // circle, which the board draws over it too: neither covers the label nor
+  // the wheel's edge (agent decision A8).
+  expect(screen.getByText('D')).toHaveAttribute(
+    'data-decoration-anchor',
+    'chsh2-wheel-d'
+  );
+  const moon = container.querySelector('svg[viewBox="0 0 160 160"]')!
+    .parentElement as HTMLElement;
+  expect(moon.style.clipPath).toMatch(/^path\(evenodd,/);
+  const moonLeft = STAGE.left + STAGE.width - STAGE.width * 0.07 - 160;
+  const moonTop = STAGE.top + 28;
+  const d = CHSH.chsh2.wheelD;
+  const dx = d.left - moonLeft;
+  const dy = d.top - moonTop;
+  expect(moon.style.clipPath).toContain(
+    ` M${dx} ${dy} H${dx + d.width} V${dy + d.height} H${dx} Z`
+  );
+  const wheelCircleX = CHSH.chsh2.wheel.left + 275 - moonLeft;
+  const wheelCircleY = CHSH.chsh2.wheel.top + 275 - moonTop;
+  expect(moon.style.clipPath).toContain(
+    ` M${wheelCircleX - 218} ${wheelCircleY} a218 218 0 1 0 436 0 a218 218 0 1 0 -436 0 Z`
+  );
+  // The D label really does sit inside the moon's box and over its drawn
+  // circle, so the holes above can fail.
+  expect(d.left).toBeGreaterThanOrEqual(moonLeft);
+  expect(d.left + d.width).toBeLessThanOrEqual(moonLeft + 160);
 
   // The stage-anchored pieces at the board's own stage placements — and the
   // board carries no bats here.
@@ -862,10 +897,10 @@ test('CHSH2 renders the CHSH2 board’s ambient set and the ooze in its brew pot
   expect(spider).toHaveStyle({ animationDuration: '3.2s' });
 
   // The ghost beside the wheel at the board's own offsets from it (128px
-  // left, 8px down), clamped past the bubble's right edge, with the board's
-  // own little o mouth.
+  // left, 8px down), keeping the board's own 22px gap from the bubble's
+  // right edge, with the board's own little o mouth.
   const ghost = container.querySelector<HTMLElement>('.halloween-ghost')!;
-  expect(ghost.style.left).toBe('644px');
+  expect(ghost.style.left).toBe('666px');
   expect(CHSH.chsh2.bubble.left + CHSH.chsh2.bubble.width).toBeGreaterThan(
     CHSH.chsh2.wheel.left - 128
   );
@@ -928,6 +963,7 @@ test('the CHSH2 pieces follow the wheel and the pose when they move', () => {
     'whobit-bubble': CHSH.chsh2.bubble,
     'whobit-pose': CHSH.chsh2.pose,
     'chsh2-wheel': CHSH.chsh2.wheel,
+    'chsh2-wheel-d': CHSH.chsh2.wheelD,
   });
   const { container } = renderPage(<CHSH2 />);
 
@@ -940,6 +976,7 @@ test('the CHSH2 pieces follow the wheel and the pose when they move', () => {
     'whobit-bubble': CHSH.chsh2.bubble,
     'whobit-pose': movedPose,
     'chsh2-wheel': movedWheel,
+    'chsh2-wheel-d': CHSH.chsh2.wheelD,
   });
   fireEvent(window, new Event('resize'));
 
@@ -970,10 +1007,34 @@ test('CHSH3 shows the vampire, and only that monster, under an entangled result'
   )!;
   expect(circle.querySelector('h1')?.textContent).toContain('Your value was');
 
-  // The stage-anchored pieces at the board's own stage placements.
+  // The stage-anchored pieces at the board's own stage placements. The
+  // boards draw the results circle over the moon and the bats, so both are
+  // cut around the circle the page itself draws (circle.png contained in
+  // the circle's box), never covering its edge (agent decision A8).
   expect(container.querySelector('svg[viewBox="0 0 200 200"]')).not.toBeNull();
-  expect(container.querySelector('svg[viewBox="0 0 160 160"]')).not.toBeNull();
   expect(container.querySelector('.halloween-bats')).not.toBeNull();
+  const disc = {
+    cx: CHSH.chsh3.circle.left + CHSH.chsh3.circle.width / 2,
+    cy: CHSH.chsh3.circle.top + CHSH.chsh3.circle.height / 2,
+    r: (CHSH.chsh3.circle.width - 2 * 58) / 2,
+  };
+  // The disc reaches into both pieces' boxes, so the cuts below can fail.
+  const moonLeft = STAGE.left + STAGE.width - STAGE.width * 0.07 - 160;
+  expect(disc.cx + disc.r).toBeGreaterThan(moonLeft);
+  const batsLeft = STAGE.left + STAGE.width - STAGE.width * 0.07 - 120 - 220;
+  expect(disc.cx + disc.r).toBeGreaterThan(batsLeft);
+  const moon = container.querySelector('svg[viewBox="0 0 160 160"]')!
+    .parentElement as HTMLElement;
+  expect(moon.style.clipPath).toMatch(/^path\(evenodd,/);
+  expect(moon.style.clipPath).toContain(
+    ` M${disc.cx - disc.r - moonLeft} ${disc.cy - (STAGE.top + 28)} a${disc.r} ${disc.r} 0 1 0 ${disc.r * 2} 0 a${disc.r} ${disc.r} 0 1 0 ${-disc.r * 2} 0 Z`
+  );
+  const bats = container.querySelector('.halloween-bats')!
+    .parentElement as HTMLElement;
+  expect(bats.style.clipPath).toMatch(/^path\(evenodd,/);
+  expect(bats.style.clipPath).toContain(
+    ` M${disc.cx - disc.r - batsLeft} ${disc.cy - (STAGE.top + 40)} a${disc.r} ${disc.r} 0 1 0 ${disc.r * 2} 0 a${disc.r} ${disc.r} 0 1 0 ${-disc.r * 2} 0 Z`
+  );
 
   // The spider 3% in from the stage's right, on the board's 210px thread.
   const spider = container.querySelector<HTMLElement>('.halloween-spider')!;
@@ -1005,7 +1066,7 @@ test('CHSH3 shows the vampire, and only that monster, under an entangled result'
   expect(ghost.querySelector(`path[d="${ghostMouths.grin}"]`)).not.toBeNull();
 
   // The small pumpkin on the circle's bottom-right (52px in, 30px up), at
-  // the board's own bigger size.
+  // the board's own bigger size, its face flickering as the board draws it.
   const small = container.querySelector<HTMLElement>('svg[width="96"]')!;
   expect(small.style.left).toBe(
     `${CHSH.chsh3.circle.left + CHSH.chsh3.circle.width - 52 - 96}px`
@@ -1013,6 +1074,7 @@ test('CHSH3 shows the vampire, and only that monster, under an entangled result'
   expect(small.style.top).toBe(
     `${CHSH.chsh3.circle.top + CHSH.chsh3.circle.height - 30 - 83}px`
   );
+  expect(small.querySelector('.halloween-flicker')).not.toBeNull();
 
   // The flickering pumpkin under Whobit's pose, clamped to the stage's
   // bottom edge.
@@ -1053,13 +1115,13 @@ test('CHSH3 shows the sock monster, and only that monster, under a weak result',
 
   // The sock monster dangling over the stage's top edge (82px left of its
   // centre), through a window whose top edge is the stage's own, which
-  // hides it at rest; its board spot crosses the bubble's right edge, so it
-  // is clamped past it.
+  // hides it at rest; its board spot crosses the bubble, so it is clamped
+  // to keep the board's own 50px gap from the bubble's right edge.
   const dangle = container.querySelector<HTMLElement>(
     '.halloween-monster-dangle'
   )!;
   expect(dangle.parentElement).toHaveStyle({
-    left: '644px',
+    left: '694px',
     top: `${STAGE.top}px`,
     overflow: 'hidden',
   });
@@ -1161,6 +1223,43 @@ test('the CHSH3 pieces follow the results circle when it moves', () => {
   ).toBe(`${moved.left + moved.width - 52 - 96}px`);
 
   // Back to the params the other tests render with.
+  searchParams.current = new URLSearchParams();
+});
+
+test('the CHSH3 Scene boundary is a value of 2: entangled at it, weak below', () => {
+  // A value of exactly 2 is an entangled result (value >= 2): the vampire,
+  // and only the vampire.
+  searchParams.current = new URLSearchParams('value=2&error=0.05&fail=false');
+  setAnchors({
+    stage: STAGE,
+    'whobit-bubble': CHSH.chsh3.bubble,
+    'whobit-pose': CHSH.chsh3.pose,
+    'chsh3-circle': CHSH.chsh3.circle,
+  });
+  const entangled = renderPage(<CHSH3 />);
+  expect(
+    entangled.container.querySelector('.halloween-monster-vamp')
+  ).not.toBeNull();
+  expect(
+    entangled.container.querySelector('.halloween-monster-dangle')
+  ).toBeNull();
+  expect(
+    entangled.container.querySelector('.halloween-monster-tiptoe')
+  ).toBeNull();
+  entangled.unmount();
+
+  // Just below it is a weak result: the sock monster, and only it.
+  searchParams.current = new URLSearchParams(
+    'value=1.99&error=0.05&fail=false'
+  );
+  const weak = renderPage(<CHSH3 />);
+  expect(
+    weak.container.querySelector('.halloween-monster-dangle')
+  ).not.toBeNull();
+  expect(weak.container.querySelector('.halloween-monster-vamp')).toBeNull();
+  expect(weak.container.querySelector('.halloween-monster-tiptoe')).toBeNull();
+  weak.unmount();
+
   searchParams.current = new URLSearchParams();
 });
 

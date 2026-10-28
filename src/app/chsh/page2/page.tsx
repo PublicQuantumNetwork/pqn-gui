@@ -169,7 +169,15 @@ export default function Page() {
             <AngleLabel top="6%" left="50%">
               V
             </AngleLabel>
-            <AngleLabel top="20%" left="82%">
+            {/* The label carries the Halloween Decorations' anchor (agent
+                decision A8): the board draws the D over the moon, so the
+                moon is cut around it. Non-visual, so no theme changes the
+                look. */}
+            <AngleLabel
+              top="20%"
+              left="82%"
+              data-decoration-anchor="chsh2-wheel-d"
+            >
               D
             </AngleLabel>
             <AngleLabel top="50%" left="94%">

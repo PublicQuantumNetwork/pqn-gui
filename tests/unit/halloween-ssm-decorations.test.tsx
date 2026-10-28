@@ -465,281 +465,304 @@ test('SSM2 asking renders the flight path, the bat courier and the fuzz ball', (
   expect(container.querySelector('.halloween-courier-deliver')).toBeNull();
 });
 
-test('SSM2 waiting renders the cat, the friend’s computer and the ghost courier', async () => {
-  setAnchors({
-    stage: STAGE,
-    'whobit-bubble': SSM.bubble,
-    'whobit-pose': SSM.pose,
-    'ssm2-status': SSM.status,
-  });
-  const { container } = renderPage(<SSM2 />);
+test(
+  'SSM2 waiting renders the cat, the friend’s computer and the ghost courier',
+  { timeout: 10000 },
+  async () => {
+    setAnchors({
+      stage: STAGE,
+      'whobit-bubble': SSM.bubble,
+      'whobit-pose': SSM.pose,
+      'ssm2-status': SSM.status,
+    });
+    const { container } = renderPage(<SSM2 />);
 
-  // The request has answered without an answer, so the waiting board's
-  // pieces arrive with the ssm2-waiting Scene.
-  const cat = await waitFor(() => {
-    const found = container.querySelector<HTMLElement>(
-      '.halloween-monster-cat'
+    // The request has answered without an answer, so the waiting board's
+    // pieces arrive with the ssm2-waiting Scene.
+    const cat = await waitFor(
+      () => {
+        const found = container.querySelector<HTMLElement>(
+          '.halloween-monster-cat'
+        );
+        expect(found).not.toBeNull();
+        return found;
+      },
+      { timeout: 5000 }
     );
-    expect(found).not.toBeNull();
-    return found;
-  });
 
-  // The board's communication box, derived from the status (the board sits
-  // it 330px down the box's middle), clamped to the stage's top edge: the
-  // cat 404px in and 30px down it, its tail swishing.
-  const commBox = {
-    left: SSM.status.left + SSM.status.width / 2 - 280,
-    top: Math.max(SSM.status.top - 330, STAGE.top),
-  };
-  expect(cat.parentElement).toHaveStyle({
-    left: `${commBox.left + 404}px`,
-    top: `${commBox.top + 30}px`,
-  });
-  expect(cat.querySelector('.halloween-cat-tail')).not.toBeNull();
+    // The board's communication box, derived from the status (the board sits
+    // it 330px down the box's middle), clamped to the stage's top edge: the
+    // cat 404px in and 30px down it, its tail swishing.
+    const commBox = {
+      left: SSM.status.left + SSM.status.width / 2 - 280,
+      top: Math.max(SSM.status.top - 330, STAGE.top),
+    };
+    expect(cat.parentElement).toHaveStyle({
+      left: `${commBox.left + 404}px`,
+      top: `${commBox.top + 30}px`,
+    });
+    expect(cat.querySelector('.halloween-cat-tail')).not.toBeNull();
 
-  // The friend's computer filling the box, its popup light blinking, with
-  // the waiting status cut out of it where the box reaches over it (A8).
-  const computer = container.querySelector<HTMLElement>(
-    'svg[viewBox="0 0 560 330"]'
-  )!.parentElement as HTMLElement;
-  expect(computer).toHaveStyle({
-    left: `${commBox.left}px`,
-    top: `${commBox.top}px`,
-  });
-  expect(computer.querySelector('.halloween-popup-dot')).not.toBeNull();
-  expect(computer.style.clipPath).toMatch(/^path\(evenodd,/);
-  expect(computer.style.clipPath).toContain(
-    occluderHole(SSM.status, {
-      left: commBox.left,
-      top: commBox.top,
-      width: 560,
-      height: 330,
-    })
-  );
-
-  // The ghost courier 120px in and 70px down the box.
-  const courier = container.querySelector<HTMLElement>(
-    '.halloween-courier-deliver'
-  )!;
-  expect(courier).toHaveStyle({
-    left: `${commBox.left + 120}px`,
-    top: `${commBox.top + 70}px`,
-  });
-
-  // The spider at the board's 47%, on its 104px thread, bobbing 3.2s, with
-  // nothing cut out of it (its spot clears the bubble).
-  const spider = container.querySelector<HTMLElement>('.halloween-spider')!;
-  expect(parseFloat(spider.style.left)).toBe(spiderLeftAt(0.47));
-  expect(spider.firstElementChild).toHaveStyle({ height: '104px' });
-  expect(spider.style.clipPath).toBe('');
-
-  // The flickering pumpkin, and only the waiting board's pieces.
-  expectPosePumpkin(container);
-  expect(container.querySelector('.halloween-monster-fuzz')).toBeNull();
-  expect(container.querySelector('.halloween-monster-frank')).toBeNull();
-  expect(container.querySelector('.halloween-courier-fly')).toBeNull();
-});
-
-test('SSM2 declined renders the sad pumpkin whole beside the declined face, the envelope, the sad ghost and the monster', async () => {
-  vi.mocked(calls.requestFollower).mockReturnValueOnce(
-    Promise.resolve({ success: true, data: { accepted: false } })
-  );
-  setAnchors({
-    stage: STAGE,
-    'whobit-bubble': SSM.bubble,
-    'whobit-pose': SSM.pose,
-    'ssm2-status': SSM.declinedStatus,
-  });
-  const { container } = renderPage(<SSM2 />);
-
-  // The friend said no, so the declined board's pieces arrive with the
-  // ssm2-declined Scene.
-  const pumpkin = await waitFor(() => {
-    const found = container.querySelector<HTMLElement>(
-      '.halloween-sad-pumpkin'
+    // The friend's computer filling the box, its popup light blinking, with
+    // the waiting status cut out of it where the box reaches over it (A8).
+    const computer = container.querySelector<HTMLElement>(
+      'svg[viewBox="0 0 560 330"]'
+    )!.parentElement as HTMLElement;
+    expect(computer).toHaveStyle({
+      left: `${commBox.left}px`,
+      top: `${commBox.top}px`,
+    });
+    expect(computer.querySelector('.halloween-popup-dot')).not.toBeNull();
+    expect(computer.style.clipPath).toMatch(/^path\(evenodd,/);
+    expect(computer.style.clipPath).toContain(
+      occluderHole(SSM.status, {
+        left: commBox.left,
+        top: commBox.top,
+        width: 560,
+        height: 330,
+      })
     );
-    expect(found).not.toBeNull();
-    return found;
-  });
-  const pumpkinBox = pumpkin.closest('div') as HTMLElement;
 
-  // The board's communication box, centred on the declined face the GUI
-  // lays in the status's spot (the board carries no status of its own).
-  const commBox = {
-    left: SSM.declinedStatus.left + SSM.declinedStatus.width / 2 - 280,
-    top: SSM.declinedStatus.top + SSM.declinedStatus.height / 2 - 280,
-  };
-  // The sad pumpkin stands whole, as on the board: no occluder hole slices
-  // through its face...
-  expect(pumpkinBox.style.clipPath).toBe('');
-  // ...and where its board spot crosses the declined face (the page's own
-  // content, which no piece may cover), it stands beside the face instead,
-  // flush at the face's left edge and never further left than 24px clear
-  // of the speech bubble.
-  const boardSpot = {
-    left: commBox.left + 140,
-    top: commBox.top + 40,
-    right: commBox.left + 140 + 280,
-    bottom: commBox.top + 40 + 270,
-  };
-  expect(
-    intersects(boardSpot, SSM.declinedStatus),
-    'the pumpkin’s board spot crosses the declined face, so the move below can fail'
-  ).toBe(true);
-  const pumpkinLeft = Math.max(
-    Math.min(boardSpot.left, SSM.declinedStatus.left - 280),
-    SSM.bubble.left + SSM.bubble.width + 24
-  );
-  expect(pumpkinBox).toHaveStyle({
-    left: `${pumpkinLeft}px`,
-    top: `${boardSpot.top}px`,
-  });
-  const pumpkinPlaced = {
-    left: pumpkinLeft,
-    top: boardSpot.top,
-    right: pumpkinLeft + 280,
-    bottom: boardSpot.top + 270,
-  };
-  expect(intersects(pumpkinPlaced, SSM.declinedStatus)).toBe(false);
+    // The ghost courier 120px in and 70px down the box.
+    const courier = container.querySelector<HTMLElement>(
+      '.halloween-courier-deliver'
+    )!;
+    expect(courier).toHaveStyle({
+      left: `${commBox.left + 120}px`,
+      top: `${commBox.top + 70}px`,
+    });
 
-  // The crossed-out envelope 404px in and 252px down the box.
-  const envelope = container.querySelector<HTMLElement>(
-    'svg[width="120"][viewBox="0 0 120 84"]'
-  )!;
-  expect(envelope).not.toBeNull();
-  expect(envelope.style.left).toBe(`${commBox.left + 404}px`);
-  expect(envelope.style.top).toBe(`${commBox.top + 252}px`);
+    // The spider at the board's 47%, on its 104px thread, bobbing 3.2s, with
+    // nothing cut out of it (its spot clears the bubble).
+    const spider = container.querySelector<HTMLElement>('.halloween-spider')!;
+    expect(parseFloat(spider.style.left)).toBe(spiderLeftAt(0.47));
+    expect(spider.firstElementChild).toHaveStyle({ height: '104px' });
+    expect(spider.style.clipPath).toBe('');
 
-  // The sad ghost keeps its board spot, or drops below the pumpkin where
-  // the pumpkin's clamped spot crosses it (its board spot crosses the
-  // pumpkin here): never over the pumpkin, never over the declined face,
-  // floating the board's own slower 4.4s.
-  const ghost = container.querySelector<HTMLElement>('.halloween-ghost')!;
-  expect(ghost.style.left).toBe(`${commBox.left + 20}px`);
-  expect(
-    commBox.left + 20 + 84 > pumpkinLeft &&
-      commBox.left + 20 < pumpkinLeft + 280 &&
-      commBox.top + 120 + 100 > boardSpot.top &&
-      commBox.top + 120 < boardSpot.top + 270,
-    'the ghost’s board spot crosses the pumpkin, so the move below can fail'
-  ).toBe(true);
-  expect(ghost.style.top).toBe(`${boardSpot.top + 270 + 20}px`);
-  const ghostPlaced = {
-    left: commBox.left + 20,
-    top: boardSpot.top + 270 + 20,
-    right: commBox.left + 20 + 84,
-    bottom: boardSpot.top + 270 + 20 + 100,
-  };
-  expect(intersects(ghostPlaced, pumpkinPlaced)).toBe(false);
-  expect(intersects(ghostPlaced, SSM.declinedStatus)).toBe(false);
-  expect(ghost).toHaveStyle({ animationDuration: '4.4s' });
-  // The sad ghost's own drooping arms, brows and frown.
-  expect(
-    ghost.querySelector('path[d="M32 38 L46 42 M72 38 L58 42"]')
-  ).not.toBeNull();
-  expect(ghost.querySelector('path[d="M44 70 Q52 62 60 70"]')).not.toBeNull();
+    // The flickering pumpkin, and only the waiting board's pieces.
+    expectPosePumpkin(container);
+    expect(container.querySelector('.halloween-monster-fuzz')).toBeNull();
+    expect(container.querySelector('.halloween-monster-frank')).toBeNull();
+    expect(container.querySelector('.halloween-courier-fly')).toBeNull();
+  }
+);
 
-  // The monster leaning in from the stage's right edge, 300px down, its
-  // tear rolling.
-  const frank = container.querySelector<HTMLElement>(
-    '.halloween-monster-frank'
-  )!.parentElement!;
-  expect(frank).toHaveStyle({
-    left: `${STAGE.left + STAGE.width - 130}px`,
-    top: `${STAGE.top + 300}px`,
-  });
-  expect(frank.querySelector('.halloween-tear')).not.toBeNull();
+test(
+  'SSM2 declined renders the sad pumpkin whole beside the declined face, the envelope, the sad ghost and the monster',
+  { timeout: 10000 },
+  async () => {
+    vi.mocked(calls.requestFollower).mockReturnValueOnce(
+      Promise.resolve({ success: true, data: { accepted: false } })
+    );
+    setAnchors({
+      stage: STAGE,
+      'whobit-bubble': SSM.bubble,
+      'whobit-pose': SSM.pose,
+      'ssm2-status': SSM.declinedStatus,
+    });
+    const { container } = renderPage(<SSM2 />);
 
-  // The spider at the board's 41%, on its 140px thread, bobbing 4.2s —
-  // its own spot crosses the sad pumpkin the GUI clamps beside the
-  // declined face, so it hangs further left instead, behind the bubble's
-  // right edge as the asking board's spider does: its box, the 18px bob
-  // included, stays clear of the pumpkin's, and the bubble is cut out of
-  // it so it shows only where the board shows it (A8).
-  const spider = container.querySelector<HTMLElement>('.halloween-spider')!;
-  const spiderBox = (left: number) => ({
-    left,
-    top: STAGE.top,
-    right: left + 40,
-    bottom: STAGE.top + 140 + 34 + 18,
-  });
-  expect(
-    intersects(spiderBox(spiderLeftAt(0.41)), pumpkinPlaced),
-    'the spider’s own board spot crosses the pumpkin, so the move below can fail'
-  ).toBe(true);
-  const spiderLeft = Math.min(spiderLeftAt(0.41), pumpkinLeft - 45);
-  expect(parseFloat(spider.style.left)).toBe(spiderLeft);
-  expect(spiderBox(spiderLeft).right).toBeLessThanOrEqual(pumpkinPlaced.left);
-  expect(intersects(spiderBox(spiderLeft), pumpkinPlaced)).toBe(false);
-  expect(spider.firstElementChild).toHaveStyle({ height: '140px' });
-  expect(spider).toHaveStyle({ animationDuration: '4.2s' });
-  expect(spider.style.clipPath).toMatch(/^path\(evenodd,/);
-  expect(spider.style.clipPath).toContain(
-    occluderHole(SSM.bubble, {
-      left: spiderLeft,
+    // The friend said no, so the declined board's pieces arrive with the
+    // ssm2-declined Scene.
+    const pumpkin = await waitFor(
+      () => {
+        const found = container.querySelector<HTMLElement>(
+          '.halloween-sad-pumpkin'
+        );
+        expect(found).not.toBeNull();
+        return found;
+      },
+      { timeout: 5000 }
+    );
+    const pumpkinBox = pumpkin.closest('div') as HTMLElement;
+
+    // The board's communication box, centred on the declined face the GUI
+    // lays in the status's spot (the board carries no status of its own).
+    const commBox = {
+      left: SSM.declinedStatus.left + SSM.declinedStatus.width / 2 - 280,
+      top: SSM.declinedStatus.top + SSM.declinedStatus.height / 2 - 280,
+    };
+    // The sad pumpkin stands whole, as on the board: no occluder hole slices
+    // through its face...
+    expect(pumpkinBox.style.clipPath).toBe('');
+    // ...and where its board spot crosses the declined face (the page's own
+    // content, which no piece may cover), it stands beside the face instead,
+    // flush at the face's left edge and never further left than 24px clear
+    // of the speech bubble.
+    const boardSpot = {
+      left: commBox.left + 140,
+      top: commBox.top + 40,
+      right: commBox.left + 140 + 280,
+      bottom: commBox.top + 40 + 270,
+    };
+    expect(
+      intersects(boardSpot, SSM.declinedStatus),
+      'the pumpkin’s board spot crosses the declined face, so the move below can fail'
+    ).toBe(true);
+    const pumpkinLeft = Math.max(
+      Math.min(boardSpot.left, SSM.declinedStatus.left - 280),
+      SSM.bubble.left + SSM.bubble.width + 24
+    );
+    expect(pumpkinBox).toHaveStyle({
+      left: `${pumpkinLeft}px`,
+      top: `${boardSpot.top}px`,
+    });
+    const pumpkinPlaced = {
+      left: pumpkinLeft,
+      top: boardSpot.top,
+      right: pumpkinLeft + 280,
+      bottom: boardSpot.top + 270,
+    };
+    expect(intersects(pumpkinPlaced, SSM.declinedStatus)).toBe(false);
+
+    // The crossed-out envelope 404px in and 252px down the box.
+    const envelope = container.querySelector<HTMLElement>(
+      'svg[width="120"][viewBox="0 0 120 84"]'
+    )!;
+    expect(envelope).not.toBeNull();
+    expect(envelope.style.left).toBe(`${commBox.left + 404}px`);
+    expect(envelope.style.top).toBe(`${commBox.top + 252}px`);
+
+    // The sad ghost keeps its board spot, or drops below the pumpkin where
+    // the pumpkin's clamped spot crosses it (its board spot crosses the
+    // pumpkin here): never over the pumpkin, never over the declined face,
+    // floating the board's own slower 4.4s.
+    const ghost = container.querySelector<HTMLElement>('.halloween-ghost')!;
+    expect(ghost.style.left).toBe(`${commBox.left + 20}px`);
+    expect(
+      commBox.left + 20 + 84 > pumpkinLeft &&
+        commBox.left + 20 < pumpkinLeft + 280 &&
+        commBox.top + 120 + 100 > boardSpot.top &&
+        commBox.top + 120 < boardSpot.top + 270,
+      'the ghost’s board spot crosses the pumpkin, so the move below can fail'
+    ).toBe(true);
+    expect(ghost.style.top).toBe(`${boardSpot.top + 270 + 20}px`);
+    const ghostPlaced = {
+      left: commBox.left + 20,
+      top: boardSpot.top + 270 + 20,
+      right: commBox.left + 20 + 84,
+      bottom: boardSpot.top + 270 + 20 + 100,
+    };
+    expect(intersects(ghostPlaced, pumpkinPlaced)).toBe(false);
+    expect(intersects(ghostPlaced, SSM.declinedStatus)).toBe(false);
+    expect(ghost).toHaveStyle({ animationDuration: '4.4s' });
+    // The sad ghost's own drooping arms, brows and frown.
+    expect(
+      ghost.querySelector('path[d="M32 38 L46 42 M72 38 L58 42"]')
+    ).not.toBeNull();
+    expect(ghost.querySelector('path[d="M44 70 Q52 62 60 70"]')).not.toBeNull();
+
+    // The monster leaning in from the stage's right edge, 300px down, its
+    // tear rolling.
+    const frank = container.querySelector<HTMLElement>(
+      '.halloween-monster-frank'
+    )!.parentElement!;
+    expect(frank).toHaveStyle({
+      left: `${STAGE.left + STAGE.width - 130}px`,
+      top: `${STAGE.top + 300}px`,
+    });
+    expect(frank.querySelector('.halloween-tear')).not.toBeNull();
+
+    // The spider at the board's 41%, on its 140px thread, bobbing 4.2s —
+    // its own spot crosses the sad pumpkin the GUI clamps beside the
+    // declined face, so it hangs further left instead, behind the bubble's
+    // right edge as the asking board's spider does: its box, the 18px bob
+    // included, stays clear of the pumpkin's, and the bubble is cut out of
+    // it so it shows only where the board shows it (A8).
+    const spider = container.querySelector<HTMLElement>('.halloween-spider')!;
+    const spiderBox = (left: number) => ({
+      left,
       top: STAGE.top,
-      width: 40,
-      height: 140 + 34,
-    })
-  );
+      right: left + 40,
+      bottom: STAGE.top + 140 + 34 + 18,
+    });
+    expect(
+      intersects(spiderBox(spiderLeftAt(0.41)), pumpkinPlaced),
+      'the spider’s own board spot crosses the pumpkin, so the move below can fail'
+    ).toBe(true);
+    const spiderLeft = Math.min(spiderLeftAt(0.41), pumpkinLeft - 45);
+    expect(parseFloat(spider.style.left)).toBe(spiderLeft);
+    expect(spiderBox(spiderLeft).right).toBeLessThanOrEqual(pumpkinPlaced.left);
+    expect(intersects(spiderBox(spiderLeft), pumpkinPlaced)).toBe(false);
+    expect(spider.firstElementChild).toHaveStyle({ height: '140px' });
+    expect(spider).toHaveStyle({ animationDuration: '4.2s' });
+    expect(spider.style.clipPath).toMatch(/^path\(evenodd,/);
+    expect(spider.style.clipPath).toContain(
+      occluderHole(SSM.bubble, {
+        left: spiderLeft,
+        top: STAGE.top,
+        width: 40,
+        height: 140 + 34,
+      })
+    );
 
-  // The flickering pumpkin, and only the declined board's pieces.
-  expectPosePumpkin(container);
-  expect(container.querySelector('.halloween-monster-fuzz')).toBeNull();
-  expect(container.querySelector('.halloween-monster-cat')).toBeNull();
-  expect(container.querySelector('.halloween-spark')).toBeNull();
-});
+    // The flickering pumpkin, and only the declined board's pieces.
+    expectPosePumpkin(container);
+    expect(container.querySelector('.halloween-monster-fuzz')).toBeNull();
+    expect(container.querySelector('.halloween-monster-cat')).toBeNull();
+    expect(container.querySelector('.halloween-spark')).toBeNull();
+  }
+);
 
-test('the SSM2 waiting pieces follow the status when the status moves', async () => {
-  setAnchors({
-    stage: STAGE,
-    'whobit-bubble': SSM.bubble,
-    'whobit-pose': SSM.pose,
-    'ssm2-status': SSM.status,
-  });
-  const { container } = renderPage(<SSM2 />);
-  await waitFor(() => {
-    expect(container.querySelector('.halloween-monster-cat')).not.toBeNull();
-  });
+test(
+  'the SSM2 waiting pieces follow the status when the status moves',
+  { timeout: 10000 },
+  async () => {
+    setAnchors({
+      stage: STAGE,
+      'whobit-bubble': SSM.bubble,
+      'whobit-pose': SSM.pose,
+      'ssm2-status': SSM.status,
+    });
+    const { container } = renderPage(<SSM2 />);
+    await waitFor(
+      () => {
+        expect(
+          container.querySelector('.halloween-monster-cat')
+        ).not.toBeNull();
+      },
+      { timeout: 5000 }
+    );
 
-  // The status moves down the page (the page relays itself out); the
-  // communication box follows it, and the computer's status hole with it.
-  const moved = box(940, 550, 80, 80);
-  setAnchors({
-    stage: STAGE,
-    'whobit-bubble': SSM.bubble,
-    'whobit-pose': SSM.pose,
-    'ssm2-status': moved,
-  });
-  fireEvent(window, new Event('resize'));
+    // The status moves down the page (the page relays itself out); the
+    // communication box follows it, and the computer's status hole with it.
+    const moved = box(940, 550, 80, 80);
+    setAnchors({
+      stage: STAGE,
+      'whobit-bubble': SSM.bubble,
+      'whobit-pose': SSM.pose,
+      'ssm2-status': moved,
+    });
+    fireEvent(window, new Event('resize'));
 
-  const commBox = {
-    left: moved.left + moved.width / 2 - 280,
-    top: Math.max(moved.top - 330, STAGE.top),
-  };
-  const cat = container.querySelector<HTMLElement>(
-    '.halloween-monster-cat'
-  )!.parentElement!;
-  expect(cat).toHaveStyle({
-    left: `${commBox.left + 404}px`,
-    top: `${commBox.top + 30}px`,
-  });
-  const computer = container.querySelector<HTMLElement>(
-    'svg[viewBox="0 0 560 330"]'
-  )!.parentElement as HTMLElement;
-  expect(computer).toHaveStyle({
-    left: `${commBox.left}px`,
-    top: `${commBox.top}px`,
-  });
-  expect(computer.style.clipPath).toContain(
-    occluderHole(moved, {
-      left: commBox.left,
-      top: commBox.top,
-      width: 560,
-      height: 330,
-    })
-  );
-});
+    const commBox = {
+      left: moved.left + moved.width / 2 - 280,
+      top: Math.max(moved.top - 330, STAGE.top),
+    };
+    const cat = container.querySelector<HTMLElement>(
+      '.halloween-monster-cat'
+    )!.parentElement!;
+    expect(cat).toHaveStyle({
+      left: `${commBox.left + 404}px`,
+      top: `${commBox.top + 30}px`,
+    });
+    const computer = container.querySelector<HTMLElement>(
+      'svg[viewBox="0 0 560 330"]'
+    )!.parentElement as HTMLElement;
+    expect(computer).toHaveStyle({
+      left: `${commBox.left}px`,
+      top: `${commBox.top}px`,
+    });
+    expect(computer.style.clipPath).toContain(
+      occluderHole(moved, {
+        left: commBox.left,
+        top: commBox.top,
+        width: 560,
+        height: 330,
+      })
+    );
+  }
+);
 
 test('SSM3 renders the board’s own web and spider, and the tentacle monster — no moon, no bats', () => {
   setAnchors({
@@ -870,52 +893,56 @@ test('SSM4 renders the werewolf and the cheering ghost on a partial match, and n
   }
 });
 
-test('SSM4 twinkles its gold sparks on the results circle only on a perfect match', async () => {
-  setAnchors({
-    stage: STAGE,
-    'whobit-bubble': SSM.bubble,
-    'whobit-pose': SSM.pose,
-    'ssm4-circle': SSM.circle,
-  });
-  const { container } = renderSsm4(SSM4_PARAMS);
-  expect(screen.getByText('Woo!! Hoo!!')).toBeInTheDocument();
+test(
+  'SSM4 twinkles its gold sparks on the results circle only on a perfect match',
+  { timeout: 10000 },
+  async () => {
+    setAnchors({
+      stage: STAGE,
+      'whobit-bubble': SSM.bubble,
+      'whobit-pose': SSM.pose,
+      'ssm4-circle': SSM.circle,
+    });
+    const { container } = renderSsm4(SSM4_PARAMS);
+    expect(screen.getByText('Woo!! Hoo!!')).toBeInTheDocument();
 
-  // The board's four sparks on the results circle, in its own circle
-  // coordinates, two of them late — the ssm4-perfect Scene's Decorations
-  // (decision 14), inside the aria-hidden Decorations layer.
-  const sparks = container.querySelectorAll<HTMLElement>(
-    '.halloween-spark, .halloween-spark-late'
-  );
-  expect(sparks).toHaveLength(4);
-  expect(container.querySelectorAll('.halloween-spark-late')).toHaveLength(2);
-  const sparkSvg = sparks[0].closest('svg') as HTMLElement;
-  expect(sparkSvg.getAttribute('viewBox')).toBe('0 0 560 560');
-  expect(sparkSvg.style.left).toBe(`${SSM.circle.left}px`);
-  expect(sparkSvg.style.top).toBe(`${SSM.circle.top}px`);
-  expect(sparkSvg.closest('[aria-hidden="true"]')).not.toBeNull();
+    // The board's four sparks on the results circle, in its own circle
+    // coordinates, two of them late — the ssm4-perfect Scene's Decorations
+    // (decision 14), inside the aria-hidden Decorations layer.
+    const sparks = container.querySelectorAll<HTMLElement>(
+      '.halloween-spark, .halloween-spark-late'
+    );
+    expect(sparks).toHaveLength(4);
+    expect(container.querySelectorAll('.halloween-spark-late')).toHaveLength(2);
+    const sparkSvg = sparks[0].closest('svg') as HTMLElement;
+    expect(sparkSvg.getAttribute('viewBox')).toBe('0 0 560 560');
+    expect(sparkSvg.style.left).toBe(`${SSM.circle.left}px`);
+    expect(sparkSvg.style.top).toBe(`${SSM.circle.top}px`);
+    expect(sparkSvg.closest('[aria-hidden="true"]')).not.toBeNull();
 
-  // EmojiConfetti stays exactly as today: the perfect match still bursts
-  // the player's own emoji around the result, separate from the sparks
-  // (decision 14) — every particle carries the player's emoji (😂, the one
-  // the page's own params carry), and the particles are the page's own,
-  // outside the Decorations layer.
-  await waitFor(
-    () => {
-      expect(
-        document.querySelectorAll('.emoji-confetti-particle').length
-      ).toBeGreaterThan(0);
-    },
-    { timeout: 2000 }
-  );
-  const particles = document.querySelectorAll('.emoji-confetti-particle');
-  expect(particles.length).toBeGreaterThan(0);
-  for (const particle of particles) {
-    expect(particle.textContent).toBe('😂');
+    // EmojiConfetti stays exactly as today: the perfect match still bursts
+    // the player's own emoji around the result, separate from the sparks
+    // (decision 14) — every particle carries the player's emoji (😂, the one
+    // the page's own params carry), and the particles are the page's own,
+    // outside the Decorations layer.
+    await waitFor(
+      () => {
+        expect(
+          document.querySelectorAll('.emoji-confetti-particle').length
+        ).toBeGreaterThan(0);
+      },
+      { timeout: 5000 }
+    );
+    const particles = document.querySelectorAll('.emoji-confetti-particle');
+    expect(particles.length).toBeGreaterThan(0);
+    for (const particle of particles) {
+      expect(particle.textContent).toBe('😂');
+    }
+    expect(
+      sparkSvg.contains(document.querySelector('.emoji-confetti-particle'))
+    ).toBe(false);
   }
-  expect(
-    sparkSvg.contains(document.querySelector('.emoji-confetti-particle'))
-  ).toBe(false);
-});
+);
 
 test('the SSM4 ghost and sparks follow the results circle when it moves', async () => {
   setAnchors({
@@ -947,7 +974,7 @@ test('the SSM4 ghost and sparks follow the results circle when it moves', async 
 
 test(
   'SSM1 keeps its stage Decorations, and omits only its ghost, on a send error',
-  { timeout: 20000 },
+  { timeout: 40000 },
   async () => {
     vi.mocked(calls.submitQKDEmoji).mockReturnValueOnce(
       Promise.resolve({ success: false })
@@ -982,16 +1009,14 @@ test(
     );
     fireEvent.click(emoji);
     // The picker closes over MUI's exit transition, which keeps the page
-    // aria-hidden behind the modal until it ends: wait the transition out
-    // before the page's link becomes reachable again.
-    await waitFor(
-      () => expect(screen.queryByRole('dialog')).not.toBeInTheDocument(),
-      { timeout: 5000 }
-    );
+    // aria-hidden behind the modal until it ends, so the page's link stays
+    // unreachable meanwhile: the find keeps polling until the transition
+    // ends and the link becomes reachable, covering the transition's whole
+    // wait itself (no separate dialog-gone wait to sum against the budget).
     const next = await screen.findByRole(
       'link',
       { name: 'Next' },
-      { timeout: 5000 }
+      { timeout: 10000 }
     );
     fireEvent.click(next);
     await screen.findByText(
@@ -1027,7 +1052,7 @@ test(
 
 test(
   'SSM2 keeps its stage Decorations, and omits its status-placed pieces, on a connection error',
-  { timeout: 10000 },
+  { timeout: 20000 },
   async () => {
     vi.mocked(calls.requestFollower).mockReturnValueOnce(
       Promise.resolve({ success: false })

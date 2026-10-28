@@ -23,6 +23,7 @@ import TrendingFlatIcon from '@mui/icons-material/TrendingFlat';
 import DoDisturbIcon from '@mui/icons-material/DoDisturb';
 import PolylineIcon from '@mui/icons-material/Polyline';
 import { chshPost } from '@/calls';
+import Decorations from '@/components/Decorations';
 
 const AngleLabel = styled(Box)<{ top: string; left: string }>(
   ({ top, left }) => ({
@@ -90,6 +91,7 @@ export default function Page() {
         my: 4,
       }}
     >
+      <Decorations scene="chsh2" />
       <Dialog maxWidth="md" open={openMeasuringModal} onClose={() => {}}>
         <ModalBox />
       </Dialog>
@@ -167,7 +169,14 @@ export default function Page() {
             <AngleLabel top="6%" left="50%">
               V
             </AngleLabel>
-            <AngleLabel top="20%" left="82%">
+            {/* The label carries the Halloween Decorations' anchor: the board
+                draws the D over the moon, so the moon is cut around it.
+                Non-visual, so no theme changes the look. */}
+            <AngleLabel
+              top="20%"
+              left="82%"
+              data-decoration-anchor="chsh2-wheel-d"
+            >
               D
             </AngleLabel>
             <AngleLabel top="50%" left="94%">

@@ -5,6 +5,8 @@ import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
 import { Typography, LinearProgress } from '@mui/material';
 import { DialogContent, Box, Stack } from '@mui/material';
 import { useSSE } from '@/hooks/useSSE';
+import { activeImages } from '@/themes';
+import Decorations from '@/components/Decorations';
 
 type ModalBoxVariant = 'chsh' | 'qkd' | 'rng';
 
@@ -46,8 +48,15 @@ export default function ModalBox({
 
   return (
     <DialogContent sx={{ padding: '50px' }}>
+      {/* The `measuring` Scene's Decorations, with the read-only progress. */}
+      <Decorations scene="measuring" progress={progress} />
       <Stack flexDirection="column" sx={{}}>
         <Typography
+          // The Halloween Decorations' title anchor:
+          // the bat riding the progress bar hangs from the title's bottom
+          // edge, never covering it. Non-visual, so no theme changes the
+          // look.
+          data-decoration-anchor="measuring-title"
           sx={{
             color: '#FF5F05',
             textAlign: 'center',
@@ -74,7 +83,7 @@ export default function ModalBox({
         <Stack display="flex" flexDirection="row" position="relative" sx={{}}>
           <Box
             component="img"
-            src="/images/gif_pqn.gif"
+            src={activeImages()['measuring-illustration']}
             alt="Your photons in action!"
             sx={{
               width: 'auto',

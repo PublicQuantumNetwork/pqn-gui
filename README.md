@@ -73,6 +73,23 @@ Replace the addresses with your actual Node API endpoints if they differ from th
 > [!NOTE]
 > The follower node address is configured on the backend in `config.toml` (`follower_node_address`), not in the frontend environment. The GUI fetches it from `GET /node/config` when needed.
 
+### Seasonal theme
+
+The GUI can wear a seasonal theme (today: `halloween`). It is chosen at build time with one line in `.env.local`:
+
+```bash
+NEXT_PUBLIC_SEASONAL_THEME=halloween  # Leave unset (or set to default) for the everyday look.
+```
+
+The value is read when the app is built, so rebuild after changing it:
+
+```bash
+npm run build
+npm run start
+```
+
+To go back to the everyday look, remove the line (or set it to `default`) and rebuild. The build fails if the name is not a known theme, and the error lists the known ones, so a typo never reaches the screen.
+
 ## Learn More
 
 - [pqn-stack](https://github.com/PublicQuantumNetwork/pqn-stack) - Backend software stack and complete project documentation

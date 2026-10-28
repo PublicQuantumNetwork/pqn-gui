@@ -1,0 +1,31 @@
+/*
+ * The CHSH3 "spooky" letters (the CHSH3 design board), ported as
+ * the board has them, including the prefers-reduced-motion rule.
+ */
+@keyframes halloween-chsh-slither {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0);
+  }
+  25% {
+    transform: translateY(-7px) rotate(-7deg);
+  }
+  75% {
+    transform: translateY(5px) rotate(7deg);
+  }
+}
+
+.halloween-sp {
+  position: relative;
+  display: inline-block;
+  color: #006230;
+  font-weight: 700;
+  text-shadow: 0 0 8px rgba(51, 134, 89, 0.6);
+  animation: halloween-chsh-slither 1.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .halloween-sp {
+    animation: none;
+  }
+}

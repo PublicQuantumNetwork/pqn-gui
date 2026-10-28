@@ -3,6 +3,7 @@
 import { Box } from '@mui/material';
 import { ReactNode, useEffect, useState } from 'react';
 import { fetchRotatorAngle } from '@/calls';
+import { activeImages } from '@/themes';
 
 interface RotatorCircleProps {
   angleMultiplier?: number;
@@ -27,10 +28,15 @@ export default function RotatorCircle({
 
     return () => clearInterval(interval);
   }, [onRotationChange]);
+  const images = activeImages();
   return (
     <Box
+      // The Halloween Decorations' wheel anchor: the
+      // CHSH2 board hangs its ghost beside the wheel. Non-visual, so no
+      // theme changes the look.
+      data-decoration-anchor="chsh2-wheel"
       sx={{
-        backgroundImage: 'url(/images/circle.png)',
+        backgroundImage: `url(${images['polarization-wheel']})`,
         height: '560px',
         width: '560px',
         position: 'relative',
@@ -41,6 +47,8 @@ export default function RotatorCircle({
       }}
     >
       <Box
+        // The needle, for the screenshot tests. Non-visual.
+        data-polarization-arrow
         sx={{
           position: 'absolute',
           top: 'calc(50% - 4px)',
@@ -48,7 +56,7 @@ export default function RotatorCircle({
           zIndex: 2,
           height: '432px',
           width: '432px',
-          backgroundImage: 'url(/images/arrow.png)',
+          backgroundImage: `url(${images['polarization-arrow']})`,
           backgroundSize: 'contain',
           backgroundRepeat: 'no-repeat',
           backgroundPosition: 'center',

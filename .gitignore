@@ -40,3 +40,13 @@ next-env.d.ts
 .env
 
 .idea
+
+# agent workflow
+orchestration/
+.orca/
+
+# test output
+test-results/
+playwright-report/
+/tests/screens/halloween/
+

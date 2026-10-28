@@ -1,34 +1,43 @@
 import { Box, Stack, Typography } from '@mui/material';
 import { ReactNode } from 'react';
-
-type WhobitVariant = 'right-wing-up' | 'arms-up' | 'arms-down';
+import { activeImages, activeWhobitAccessory, type WhobitPose } from '@/themes';
 
 interface WhobitProps {
   children: ReactNode;
-  variant?: WhobitVariant;
+  variant?: WhobitPose;
   speechBubbleHeight?: string;
+  /** Whether Whobit wears the theme's accessory (never on
+   * Maintenance; Survey does not use Whobit). */
+  accessory?: boolean;
 }
 
 export default function Whobit({
   children,
   variant = 'right-wing-up',
   speechBubbleHeight = '250px',
+  accessory = true,
 }: WhobitProps) {
   const getWhobitImage = () => {
+    const images = activeImages();
     switch (variant) {
       case 'arms-up':
-        return '/images/whobit-arms-up.svg';
+        return images['whobit-arms-up'];
       case 'arms-down':
-        return '/images/whobit-arms-down.svg';
+        return images['whobit-arms-down'];
       case 'right-wing-up':
       default:
-        return '/images/whobit-right-wing-up.svg';
+        return images['whobit-right-wing-up'];
     }
   };
+
+  const whobitAccessory = accessory ? activeWhobitAccessory() : undefined;
   return (
     <Stack position="relative" sx={{ minWidth: 'fit-content' }}>
       {/* Speech bubble */}
       <Box
+        // The Halloween Decorations' speech-bubble anchor. Non-visual, so no
+        // theme changes the look.
+        data-decoration-anchor="whobit-bubble"
         sx={{
           position: 'relative',
           backgroundColor: '#FFFFFF',
@@ -79,17 +88,52 @@ export default function Whobit({
         </Typography>
       </Box>
 
-      {/* Whobit character */}
+      {/* Whobit character, with the active theme's accessory over the pose */}
       <Box
-        component="img"
-        src={getWhobitImage()}
-        alt="Whobit"
+        // The Halloween Decorations' pose anchor.
+        // Non-visual, so no theme changes the look.
+        data-decoration-anchor="whobit-pose"
         sx={{
+          position: 'relative',
+          display: 'flex',
           width: '288px',
           height: '288px',
-          transformOrigin: 'top center',
         }}
-      />
+        // The boards place the accessory in a 70px gap above the pose
+        // (every board's Whobit container has padding-top: 70px). The gap
+        // moves only Whobit's own pose: the box grows
+        // to hold it and gives the 70px straight back as a bottom margin,
+        // so its layout height contribution stays today's 288px and no
+        // other element moves. Inline, so the layout contract is testable;
+        // the Default Theme wears no accessory and keeps today's box.
+        style={
+          whobitAccessory
+            ? { paddingTop: '70px', height: '358px', marginBottom: '-70px' }
+            : undefined
+        }
+      >
+        <Box
+          component="img"
+          src={getWhobitImage()}
+          alt="Whobit"
+          sx={{
+            width: '288px',
+            height: '288px',
+            transformOrigin: 'top center',
+          }}
+        />
+        {whobitAccessory && (
+          <Box
+            component="img"
+            src={whobitAccessory.svg}
+            alt=""
+            style={{
+              position: 'absolute',
+              ...whobitAccessory.positions[variant],
+            }}
+          />
+        )}
+      </Box>
     </Stack>
   );
 }

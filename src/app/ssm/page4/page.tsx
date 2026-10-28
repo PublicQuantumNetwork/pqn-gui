@@ -7,8 +7,13 @@ import { usePageRedirect } from '@/app/contexts/PageRedirectContext';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useEnterKey } from '@/hooks/useEnterKey';
 import EmojiConfetti from '@/components/EmojiConfetti';
-import Fireworks from '@/components/Fireworks';
 import Whobit from '@/components/Whobit';
+import Decorations from '@/components/Decorations';
+import { activeCelebration, type Scene } from '@/themes';
+
+// The active theme is fixed at build time, so its Celebration
+// is computed once here, not on every render.
+const Celebration = activeCelebration();
 
 export default function Home() {
   const { setBackArrowLink, setForwardArrowLink } = usePageRedirect();
@@ -37,6 +42,15 @@ export default function Home() {
     const n_total_bits = searchParams.get('n_total_bits') ?? '0';
     const emoji = searchParams.get('emoji') ?? '';
     const role = searchParams.get('role') ?? '';
+
+    // The Scene the page's state calls for: a perfect match,
+    // or anything else (a partial match or an error).
+    const scene: Scene =
+      success &&
+      Number(n_matching_bits) === Number(n_total_bits) &&
+      Number(n_total_bits) > 0
+        ? 'ssm4-perfect'
+        : 'ssm4';
 
     const [message, setMessage] = useState('');
     const [message2, setMessage2] = useState('');
@@ -111,34 +125,44 @@ export default function Home() {
 
     return (
       <Container maxWidth="lg" sx={{ my: 4 }}>
+        <Decorations scene={scene} />
         <Stack direction="row" alignItems="flex-start" sx={{ width: '100%' }}>
-          <Whobit
-            variant={
-              success &&
+          {/* Left side: Whobit with the message, and the Celebration
+              positioned as a sibling to Whobit, as on CHSH3, so the burst
+              sits around Whobit the same way on both pages. */}
+          <Box sx={{ position: 'relative' }}>
+            <Whobit
+              variant={
+                success &&
+                Number(n_matching_bits) === Number(n_total_bits) &&
+                Number(n_total_bits) > 0
+                  ? 'arms-up'
+                  : 'arms-down'
+              }
+              speechBubbleHeight="250px"
+            >
+              <Box sx={{ fontSize: '0.85em' }}>
+                {!success ? (
+                  <>
+                    <p>{message}</p>
+                    <p>{message2}</p>
+                  </>
+                ) : Number(n_matching_bits) === Number(n_total_bits) &&
+                  Number(n_total_bits) > 0 ? (
+                  <>
+                    <p>{message}</p>
+                    <p>{message2}</p>
+                  </>
+                ) : (
+                  <p>{message}</p>
+                )}
+              </Box>
+            </Whobit>
+            {success &&
+              emoji &&
               Number(n_matching_bits) === Number(n_total_bits) &&
-              Number(n_total_bits) > 0
-                ? 'arms-up'
-                : 'arms-down'
-            }
-            speechBubbleHeight="250px"
-          >
-            <Box sx={{ fontSize: '0.85em' }}>
-              {!success ? (
-                <>
-                  <p>{message}</p>
-                  <p>{message2}</p>
-                </>
-              ) : Number(n_matching_bits) === Number(n_total_bits) &&
-                Number(n_total_bits) > 0 ? (
-                <>
-                  <p>{message}</p>
-                  <p>{message2}</p>
-                </>
-              ) : (
-                <p>{message}</p>
-              )}
-            </Box>
-          </Whobit>
+              Number(n_total_bits) > 0 && <Celebration />}
+          </Box>
 
           <Stack
             flexDirection="column"
@@ -148,6 +172,11 @@ export default function Home() {
             sx={{ paddingLeft: '150px' }}
           >
             <Box
+              // The Halloween Decorations' results-circle anchor: the SSM4
+              // board floats its cheering ghost beside this circle, twinkles
+              // its gold sparks on it and draws it over the moon and the bats.
+              // Non-visual, so no theme changes the look.
+              data-decoration-anchor="ssm4-circle"
               sx={{
                 backgroundImage: 'url(/images/circle.png)',
                 backgroundRepeat: 'no-repeat',
@@ -228,14 +257,11 @@ export default function Home() {
           emoji &&
           Number(n_matching_bits) === Number(n_total_bits) &&
           Number(n_total_bits) > 0 && (
-            <>
-              <EmojiConfetti
-                emoji={emoji}
-                triggerKey={confettiTrigger}
-                emojiRef={emojiRef}
-              />
-              <Fireworks />
-            </>
+            <EmojiConfetti
+              emoji={emoji}
+              triggerKey={confettiTrigger}
+              emojiRef={emojiRef}
+            />
           )}
       </Container>
     );

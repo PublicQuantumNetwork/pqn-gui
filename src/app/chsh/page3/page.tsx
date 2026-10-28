@@ -7,7 +7,12 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { useEnterKey } from '@/hooks/useEnterKey';
 import Whobit from '@/components/Whobit';
 import CircleContainer from '@/components/CircleContainer';
-import Fireworks from '@/components/Fireworks';
+import Decorations from '@/components/Decorations';
+import { activeCelebration, activeFlavourCopy, type Scene } from '@/themes';
+
+// The active theme is fixed at build time, so its Celebration
+// is computed once here, not on every render.
+const Celebration = activeCelebration();
 
 export default function Home() {
   const router = useRouter();
@@ -18,12 +23,21 @@ export default function Home() {
 
   function MyComponent() {
     const searchParams = useSearchParams();
+    const flavourCopy = activeFlavourCopy();
 
     const value = Number(searchParams.get('value')) ?? 0;
     const error = Number(searchParams.get('error')) ?? 0;
 
     const failParam = searchParams.get('fail');
     const fail = failParam ? failParam.replace(/\}/g, '') : true;
+
+    // The Scene the page's state calls for.
+    const scene: Scene =
+      fail === 'true'
+        ? 'chsh3-error'
+        : value >= 2
+          ? 'chsh3-entangled'
+          : 'chsh3-weak';
 
     // Determine Whobit variant based on results
     const getWhobitVariant = () => {
@@ -34,6 +48,7 @@ export default function Home() {
 
     return (
       <Container maxWidth="lg">
+        <Decorations scene={scene} />
         <Box
           sx={{
             my: 4,
@@ -66,8 +81,8 @@ export default function Home() {
                 )}
               </Whobit>
 
-              {/* Fireworks positioned as siblings to Whobit */}
-              {value >= 2 && fail !== 'true' && <Fireworks />}
+              {/* The Celebration positioned as siblings to Whobit */}
+              {value >= 2 && fail !== 'true' && <Celebration />}
             </Box>
 
             {/* Right side: Results circle */}
@@ -117,6 +132,29 @@ export default function Home() {
                     ''
                   )}
                 </Typography>
+
+                {/* Flavour copy: nothing under an entangled result in the
+                    Default Theme. Placed as the boards place
+                    it: top 70%, the full circle's width, centred, 22px. */}
+                {fail !== 'true' &&
+                  value >= 2 &&
+                  flavourCopy['chsh3-entangled-line'] && (
+                    <Typography
+                      variant="h5"
+                      sx={{
+                        position: 'absolute',
+                        top: '70%',
+                        left: 0,
+                        right: 0,
+                        color: '#000000',
+                        fontSize: '22px',
+                        lineHeight: '34px',
+                        textAlign: 'center',
+                      }}
+                    >
+                      {flavourCopy['chsh3-entangled-line']}
+                    </Typography>
+                  )}
               </CircleContainer>
             </Box>
           </Stack>

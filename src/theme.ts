@@ -1,4 +1,8 @@
 'use client';
+/**
+ * The Default Palette: the Illini MUI theme that every Seasonal Theme's
+ * Palette merges over (src/themes/index.ts).
+ */
 import { createTheme } from '@mui/material/styles';
 import { Roboto } from 'next/font/google';
 

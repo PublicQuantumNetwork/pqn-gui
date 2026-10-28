@@ -9,7 +9,9 @@ import Whobit from '@/components/Whobit';
 import PageTimeout from '@/components/PageTimeout';
 import { useRouter } from 'next/navigation';
 import { submitFortune } from '@/calls';
+import { activeFlavourCopy } from '@/themes';
 import { useEnterKey } from '@/hooks/useEnterKey';
+import Decorations from '@/components/Decorations';
 
 // Short values make the activity-reset behavior easy to verify at the kiosk.
 const QUANTUM_FORTUNE_TIMEOUT_MS = 5 * 60 * 1000;
@@ -17,6 +19,7 @@ const QUANTUM_FORTUNE_WARNING_DURATION_MS = 30 * 1000;
 
 export default function MyComponent() {
   const router = useRouter();
+  const flavourCopy = activeFlavourCopy();
 
   const [openModal, setOpenModal] = useState(false);
   const [currentAngle, setCurrentAngle] = useState(1); // Index of angle choice
@@ -48,6 +51,7 @@ export default function MyComponent() {
 
   return (
     <Container maxWidth="lg">
+      <Decorations scene="qf1" />
       <Box sx={{ mt: 9, mb: 4, display: 'flex', alignItems: 'center' }}>
         <Dialog open={openModal} onClose={() => {}}>
           <ModalBox variant="rng" />
@@ -55,6 +59,7 @@ export default function MyComponent() {
 
         <Stack direction="row" alignItems="center" sx={{ width: '100%' }}>
           <Whobit variant="right-wing-up">
+            {flavourCopy['qf1-lead-in'] && <p>{flavourCopy['qf1-lead-in']}</p>}
             <p>Press the red button seven times to generate your fortune.</p>
           </Whobit>
 
@@ -68,6 +73,11 @@ export default function MyComponent() {
             }}
           >
             <Box
+              // The Halloween Decorations' ball anchor:
+              // the mist, the twinkles and the rising monster are placed
+              // against the page's own ball. Non-visual, so no theme changes
+              // the look.
+              data-decoration-anchor="qf-ball"
               sx={{
                 position: 'relative',
                 backgroundImage: 'url(/images/circle.png)',

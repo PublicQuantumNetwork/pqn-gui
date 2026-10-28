@@ -16,6 +16,10 @@ export default function QFTextbox(props: QFTextboxProps): React.ReactElement {
         position: 'absolute',
         top: '20%',
         color: '#000000',
+        // Above the Decorations layer (zIndex 999), so a theme's ball mist
+        // passes behind the counter, as on the boards. No visual change
+        // without Decorations.
+        zIndex: 1000,
       }}
     >
       <p>

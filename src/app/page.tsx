@@ -12,6 +12,8 @@ import {
   fetchGamesAvailability,
   GamesAvailability,
 } from '@/calls';
+import { activeFlavourCopy } from '@/themes';
+import Decorations from '@/components/Decorations';
 
 const StyledHomeButton = styled(Button)<ButtonProps>({
   height: '6em',
@@ -21,6 +23,7 @@ const StyledHomeButton = styled(Button)<ButtonProps>({
 
 export default function Page() {
   const router = useRouter();
+  const flavourCopy = activeFlavourCopy();
   const { lastMessage, sendMessage, connect, disconnect } = useWebSocket();
   const [isFollowRequestModalOpen, setIsFollowRequestModalOpen] =
     useState(false);
@@ -70,6 +73,7 @@ export default function Page() {
 
   return (
     <Container maxWidth="lg" sx={{ my: 4 }}>
+      <Decorations scene="home" />
       <AttractLoop
         suppressed={isFollowRequestModalOpen}
         onDismiss={refreshGamesAvailability}
@@ -82,17 +86,22 @@ export default function Page() {
       />
       <Stack direction="row" alignItems="flex-start" sx={{ width: '100%' }}>
         <Whobit>
-          <p>Hi, Quantum Adventurer!</p>
+          <p>{flavourCopy['home-greeting-first-line']}</p>
           <p>I&apos;m Whobit.</p>
-          <p>What would you like to do?</p>
+          <p>{flavourCopy['home-greeting-last-line']}</p>
         </Whobit>
 
         {/* Right side: All buttons */}
         <Stack flexDirection="column" flex={1} sx={{ paddingLeft: '150px' }}>
+          {/* The buttons carry the Halloween Decorations' anchors: the moon,
+              the bats and the peeking monster are cut to shape around them, and
+              the ghost's row sits under them. Non-visual, so no theme changes
+              the look. */}
           <StyledHomeButton
             variant="contained"
             component="a"
             href="/chsh/page1"
+            data-decoration-anchor="home-button-chsh"
             disabled={!gamesAvailability.chsh}
           >
             Verify Quantum Link (single player)
@@ -102,6 +111,7 @@ export default function Page() {
             variant="contained"
             component="a"
             href="/qf/page1"
+            data-decoration-anchor="home-button-qf"
             disabled={!gamesAvailability.qf}
           >
             Quantum Fortune (single player)
@@ -111,6 +121,7 @@ export default function Page() {
             variant="contained"
             component="a"
             href="/ssm/page1"
+            data-decoration-anchor="home-button-ssm"
             sx={{ marginTop: '40px' }}
             disabled={!gamesAvailability.ssm}
           >

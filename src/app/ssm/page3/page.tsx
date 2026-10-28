@@ -15,6 +15,8 @@ import {
 import questions from './questions';
 import SSMModalBox from '@/components/SSMModalBox';
 import Whobit from '@/components/Whobit';
+import Decorations from '@/components/Decorations';
+import { activeImages } from '@/themes';
 
 // TODO: Remove the rotating arrow and cirle. Make it into a re-usable component that can be used with chsh.
 // TODO: Make the selected option highlighted when the arrow enter its section.
@@ -124,6 +126,7 @@ function SSMPage3Content() {
 
   return (
     <Container maxWidth="lg" sx={{ my: 4 }}>
+      <Decorations scene="ssm3" />
       <Stack direction="row" alignItems="flex-start" sx={{ width: '100%' }}>
         <Whobit variant="right-wing-up" speechBubbleHeight="250px">
           <Box sx={{ fontSize: '1em' }}>
@@ -200,7 +203,7 @@ function SSMPage3Content() {
             <Stack
               direction="row"
               sx={{
-                backgroundImage: 'url(/images/circle.png)',
+                backgroundImage: `url(${activeImages()['polarization-wheel']})`,
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center',
                 width: '560px',
@@ -263,7 +266,9 @@ function SSMPage3Content() {
 
               <Box
                 component="img"
-                src="/images/arrow.png"
+                src={activeImages()['polarization-arrow']}
+                // The needle, for the screenshot tests. Non-visual.
+                data-polarization-arrow
                 alt="Arrow"
                 sx={{
                   position: 'absolute',

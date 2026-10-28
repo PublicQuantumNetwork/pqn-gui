@@ -1,0 +1,1083 @@
+/*
+ * The Halloween Scene Decorations (the Halloween design boards), the boards'
+ * own keyframes and classes under halloween- names, ported as the boards have
+ * them, including their prefers-reduced-motion rules. Each keyframes comment
+ * names the board it is ported from.
+ */
+
+/* Main board: the spider bobs on its thread. */
+@keyframes halloween-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(18px);
+  }
+}
+
+/* Main board: the bats drift. */
+@keyframes halloween-drift {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(-10px, -6px);
+  }
+}
+
+/* Main board: the ghost floats. */
+@keyframes halloween-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+/* Main board: the peeking monster. */
+@keyframes halloween-peek {
+  0%,
+  55% {
+    transform: translateY(72px);
+  }
+  62%,
+  80% {
+    transform: translateY(0);
+  }
+  64% {
+    transform: translateY(0) rotate(-6deg);
+  }
+  68% {
+    transform: translateY(0) rotate(6deg);
+  }
+  72% {
+    transform: translateY(0) rotate(0);
+  }
+  86%,
+  100% {
+    transform: translateY(72px);
+  }
+}
+
+/* Main board: the popping monster. */
+@keyframes halloween-pop {
+  0%,
+  60% {
+    transform: translateY(105%);
+  }
+  66% {
+    transform: translateY(0);
+  }
+  69% {
+    transform: translateY(5%);
+  }
+  72%,
+  84% {
+    transform: translateY(0);
+  }
+  90%,
+  100% {
+    transform: translateY(105%);
+  }
+}
+
+/* QF1 board: the rising monster. */
+@keyframes halloween-rise {
+  0%,
+  48% {
+    transform: translateY(0);
+  }
+  55% {
+    transform: translateY(-74px);
+  }
+  58% {
+    transform: translateY(-74px) rotate(-5deg);
+  }
+  62% {
+    transform: translateY(-74px) rotate(5deg);
+  }
+  66%,
+  76% {
+    transform: translateY(-74px) rotate(0);
+  }
+  82%,
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* QF2 board: the sliding monster and its waving arm. */
+@keyframes halloween-slide {
+  0%,
+  56% {
+    transform: translateX(115%);
+  }
+  62%,
+  82% {
+    transform: translateX(0);
+  }
+  88%,
+  100% {
+    transform: translateX(115%);
+  }
+}
+
+@keyframes halloween-wave {
+  0%,
+  62% {
+    transform: rotate(0);
+  }
+  66% {
+    transform: rotate(-24deg);
+  }
+  70% {
+    transform: rotate(8deg);
+  }
+  74% {
+    transform: rotate(-24deg);
+  }
+  78% {
+    transform: rotate(8deg);
+  }
+  82%,
+  100% {
+    transform: rotate(0);
+  }
+}
+
+/* QF1 board and QF2 board: the mist swirls inside the ball. */
+@keyframes halloween-swirl {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* QF1 board and QF2 board: the twinkles sparkle on the ball. */
+@keyframes halloween-twinkle {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+
+/* QF2 board: the halo around the ball pulses. */
+@keyframes halloween-glow {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+
+/* QF1 board: the lit pumpkin faces flicker. */
+@keyframes halloween-flicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  45% {
+    opacity: 0.82;
+  }
+  50% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 0.9;
+  }
+}
+
+/* Measuring board: the bat riding the bar flaps its wings. */
+@keyframes halloween-flap {
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(0.55);
+  }
+}
+
+/* Measuring board: the monster peeking over the popup's top edge. */
+@keyframes halloween-peeker {
+  0%,
+  58% {
+    transform: translateY(100%);
+  }
+  64%,
+  82% {
+    transform: translateY(0);
+  }
+  67% {
+    transform: translateY(0) rotate(-5deg);
+  }
+  71% {
+    transform: translateY(0) rotate(5deg);
+  }
+  75% {
+    transform: translateY(0) rotate(0);
+  }
+  88%,
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+/* CHSH1 board: the mummy leaning in from the right and its reaching arm. */
+@keyframes halloween-lean {
+  0%,
+  50% {
+    transform: translateX(100%) rotate(0);
+  }
+  58% {
+    transform: translateX(18%) rotate(-6deg);
+  }
+  62% {
+    transform: translateX(22%) rotate(2deg);
+  }
+  66%,
+  76% {
+    transform: translateX(18%) rotate(-3deg);
+  }
+  84%,
+  100% {
+    transform: translateX(100%) rotate(0);
+  }
+}
+
+@keyframes halloween-reach {
+  0%,
+  58%,
+  82%,
+  100% {
+    transform: rotate(0);
+  }
+  64% {
+    transform: rotate(-10deg);
+  }
+  70% {
+    transform: rotate(6deg);
+  }
+  76% {
+    transform: rotate(-8deg);
+  }
+}
+
+/* CHSH2 board: the blob oozing out of the brew pot, its blinking eyes and
+ * the pot's brewing bubbles. */
+@keyframes halloween-ooze {
+  0%,
+  46% {
+    transform: translateY(100%) scale(1);
+  }
+  54% {
+    transform: translateY(0) scale(1.06, 0.94);
+  }
+  58% {
+    transform: translateY(0) scale(0.96, 1.05);
+  }
+  62%,
+  76% {
+    transform: translateY(0) scale(1);
+  }
+  86%,
+  100% {
+    transform: translateY(100%) scale(1);
+  }
+}
+
+@keyframes halloween-blink {
+  0%,
+  64%,
+  68%,
+  100% {
+    transform: scaleY(1);
+  }
+  66% {
+    transform: scaleY(0.1);
+  }
+}
+
+@keyframes halloween-bubble {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-34px);
+    opacity: 0;
+  }
+}
+
+/* CHSH3 board: the vampire rising and its waving arm. */
+@keyframes halloween-vamp {
+  0%,
+  52% {
+    transform: translateY(105%);
+  }
+  58% {
+    transform: translateY(0);
+  }
+  61% {
+    transform: translateY(4%);
+  }
+  64%,
+  82% {
+    transform: translateY(0);
+  }
+  90%,
+  100% {
+    transform: translateY(105%);
+  }
+}
+
+@keyframes halloween-vamp-wave {
+  0%,
+  62% {
+    transform: rotate(0);
+  }
+  66% {
+    transform: rotate(-22deg);
+  }
+  70% {
+    transform: rotate(10deg);
+  }
+  74% {
+    transform: rotate(-22deg);
+  }
+  78% {
+    transform: rotate(10deg);
+  }
+  82%,
+  100% {
+    transform: rotate(0);
+  }
+}
+
+/* CHSH3-weak board: the sock monster dangling down and its scratching arm. */
+@keyframes halloween-dangle {
+  0%,
+  48% {
+    transform: translateY(-105%) rotate(0);
+  }
+  56% {
+    transform: translateY(0) rotate(0);
+  }
+  60% {
+    transform: translateY(0) rotate(8deg);
+  }
+  66% {
+    transform: translateY(0) rotate(-7deg);
+  }
+  72% {
+    transform: translateY(0) rotate(4deg);
+  }
+  78% {
+    transform: translateY(0) rotate(0);
+  }
+  86%,
+  100% {
+    transform: translateY(-105%) rotate(0);
+  }
+}
+
+@keyframes halloween-scratch {
+  0%,
+  60%,
+  80%,
+  100% {
+    transform: rotate(0);
+  }
+  64%,
+  72% {
+    transform: rotate(-14deg);
+  }
+  68%,
+  76% {
+    transform: rotate(6deg);
+  }
+}
+
+/* CHSH3-error board: the monster tiptoeing in and its twitching ears. */
+@keyframes halloween-tiptoe {
+  0%,
+  44% {
+    transform: translate(110%, 0);
+  }
+  48% {
+    transform: translate(80%, -6px);
+  }
+  52% {
+    transform: translate(55%, 0);
+  }
+  56% {
+    transform: translate(30%, -6px);
+  }
+  60%,
+  80% {
+    transform: translate(0, 0);
+  }
+  86% {
+    transform: translate(50%, -6px);
+  }
+  92%,
+  100% {
+    transform: translate(110%, 0);
+  }
+}
+
+@keyframes halloween-shrug {
+  0%,
+  62%,
+  78%,
+  100% {
+    transform: translateY(0);
+  }
+  66%,
+  72% {
+    transform: translateY(-5px);
+  }
+}
+
+.halloween-spider {
+  animation: halloween-bob 3.2s ease-in-out infinite;
+}
+
+.halloween-bats {
+  animation: halloween-drift 4s ease-in-out infinite;
+}
+
+.halloween-ghost {
+  animation: halloween-float 3.6s ease-in-out infinite;
+}
+
+.halloween-monster-peek {
+  transform: translateY(72px);
+  animation: halloween-peek 13s ease-in-out 4s infinite;
+}
+
+.halloween-monster-pop {
+  transform: translateY(105%);
+  animation: halloween-pop 11s ease-in-out infinite;
+}
+
+.halloween-monster-rise {
+  animation: halloween-rise 10s ease-in-out 2s infinite;
+}
+
+.halloween-monster-slide {
+  transform: translateX(115%);
+  animation: halloween-slide 12s ease-in-out 3s infinite;
+}
+
+.halloween-monster-arm {
+  transform-box: fill-box;
+  transform-origin: 100% 100%;
+  animation: halloween-wave 12s ease-in-out 3s infinite;
+}
+
+.halloween-mist {
+  transform-box: view-box;
+  transform-origin: 280px 230px;
+  animation: halloween-swirl 28s linear infinite;
+}
+
+.halloween-twinkle {
+  animation: halloween-twinkle 2.4s ease-in-out infinite;
+}
+
+.halloween-twinkle-late {
+  animation: halloween-twinkle 2.4s ease-in-out 1.2s infinite;
+}
+
+.halloween-glow-pulse {
+  animation: halloween-glow 3s ease-in-out infinite;
+}
+
+.halloween-flicker {
+  animation: halloween-flicker 1.8s ease-in-out infinite;
+}
+
+.halloween-wing {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation: halloween-flap 0.45s ease-in-out infinite;
+}
+
+.halloween-peeker {
+  transform: translateY(100%);
+  animation: halloween-peeker 12s ease-in-out 2s infinite;
+}
+
+/* CHSH1 board: the mummy. */
+.halloween-monster-lean {
+  transform: translateX(100%);
+  transform-origin: 100% 100%;
+  animation: halloween-lean 12s ease-in-out 2s infinite;
+}
+
+.halloween-monster-reach {
+  transform-box: fill-box;
+  transform-origin: 100% 50%;
+  animation: halloween-reach 12s ease-in-out 2s infinite;
+}
+
+/* CHSH2 board: the blob in the brew pot. */
+.halloween-monster-ooze {
+  transform: translateY(100%);
+  transform-origin: 50% 100%;
+  animation: halloween-ooze 11s ease-in-out 3s infinite;
+}
+
+.halloween-ooze-eye {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation: halloween-blink 11s linear 3s infinite;
+}
+
+.halloween-brew {
+  animation: halloween-bubble 2.4s ease-out infinite;
+}
+
+.halloween-brew-late {
+  animation: halloween-bubble 2.4s ease-out 1.2s infinite;
+}
+
+/* CHSH3 board: the vampire. */
+.halloween-monster-vamp {
+  transform: translateY(105%);
+  animation: halloween-vamp 10s ease-in-out 1.5s infinite;
+}
+
+.halloween-vamp-arm {
+  transform-box: fill-box;
+  transform-origin: 0% 100%;
+  animation: halloween-vamp-wave 10s ease-in-out 1.5s infinite;
+}
+
+/* CHSH3-weak board: the sock monster. */
+.halloween-monster-dangle {
+  transform: translateY(-105%);
+  transform-origin: 50% 0;
+  animation: halloween-dangle 12s ease-in-out 2.5s infinite;
+}
+
+.halloween-dangle-arm {
+  transform-box: fill-box;
+  transform-origin: 0% 100%;
+  animation: halloween-scratch 12s ease-in-out 2.5s infinite;
+}
+
+/* CHSH3-error board: the tiptoeing monster. */
+.halloween-monster-tiptoe {
+  transform: translate(110%, 0);
+  animation: halloween-tiptoe 13s ease-in-out 2s infinite;
+}
+
+.halloween-tiptoe-ears {
+  animation: halloween-shrug 13s ease-in-out 2s infinite;
+}
+
+/* Measuring board: the bat rides the bar's fill as it grows. */
+.halloween-bar-rider {
+  transition: left 400ms linear;
+}
+
+/* SSM1 board: the skeleton sliding in from the left and its waving arm. */
+@keyframes halloween-skel {
+  0%,
+  52% {
+    transform: translateX(-110%);
+  }
+  58% {
+    transform: translateX(0);
+  }
+  61% {
+    transform: translateX(0) rotate(5deg);
+  }
+  64% {
+    transform: translateX(0) rotate(-3deg);
+  }
+  67%,
+  80% {
+    transform: translateX(0) rotate(0);
+  }
+  86%,
+  100% {
+    transform: translateX(-110%);
+  }
+}
+
+@keyframes halloween-skel-wave {
+  0%,
+  60%,
+  82%,
+  100% {
+    transform: rotate(0);
+  }
+  65% {
+    transform: rotate(-14deg);
+  }
+  70% {
+    transform: rotate(8deg);
+  }
+  75% {
+    transform: rotate(-14deg);
+  }
+}
+
+/* SSM2 board: the fuzz ball popping up and its blinking lids. */
+@keyframes halloween-fuzz-rise {
+  0%,
+  50% {
+    transform: translateY(102%);
+  }
+  56% {
+    transform: translateY(0);
+  }
+  59% {
+    transform: translateY(6%);
+  }
+  62%,
+  82% {
+    transform: translateY(0);
+  }
+  88%,
+  100% {
+    transform: translateY(102%);
+  }
+}
+
+@keyframes halloween-lid-blink {
+  0%,
+  90%,
+  100% {
+    transform: scaleY(0);
+  }
+  94% {
+    transform: scaleY(1);
+  }
+}
+
+/* SSM2 board: the bat courier flying the board's course, its wings
+ * flapping. */
+@keyframes halloween-courier-fly {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(-4deg);
+  }
+  25% {
+    transform: translate(36px, -22px) rotate(3deg);
+  }
+  50% {
+    transform: translate(70px, -6px) rotate(-2deg);
+  }
+  75% {
+    transform: translate(32px, 12px) rotate(4deg);
+  }
+}
+
+@keyframes halloween-courier-flap {
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(0.35);
+  }
+}
+
+/* SSM2-waiting board: the cat popping up over the computer, its tail
+ * swishing, the ghost courier delivering and the popup light blinking. */
+@keyframes halloween-cat {
+  0%,
+  48% {
+    transform: translateY(64px);
+  }
+  54% {
+    transform: translateY(0);
+  }
+  57% {
+    transform: translateY(0) rotate(-6deg);
+  }
+  61% {
+    transform: translateY(0) rotate(5deg);
+  }
+  64%,
+  80% {
+    transform: translateY(0) rotate(0);
+  }
+  86%,
+  100% {
+    transform: translateY(64px);
+  }
+}
+
+@keyframes halloween-cat-tail {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  50% {
+    transform: rotate(14deg);
+  }
+}
+
+@keyframes halloween-courier-deliver {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(-3deg);
+  }
+  40% {
+    transform: translate(118px, -14px) rotate(4deg);
+  }
+  55% {
+    transform: translate(126px, -4px) rotate(0);
+  }
+  70% {
+    transform: translate(118px, -12px) rotate(3deg);
+  }
+}
+
+@keyframes halloween-popup-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/* SSM2-declined board: the sad pumpkin sagging, the monster leaning in
+ * and its tear rolling down. */
+@keyframes halloween-sad-sag {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  50% {
+    transform: rotate(-3deg);
+  }
+}
+
+@keyframes halloween-frank {
+  0%,
+  50% {
+    transform: translateX(100%);
+  }
+  57% {
+    transform: translateX(26%) rotate(-4deg);
+  }
+  61% {
+    transform: translateX(30%) rotate(2deg);
+  }
+  64%,
+  80% {
+    transform: translateX(28%) rotate(0);
+  }
+  87%,
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes halloween-tear {
+  0%,
+  62% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  64% {
+    opacity: 1;
+  }
+  76% {
+    transform: translateY(26px);
+    opacity: 1;
+  }
+  80%,
+  100% {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+}
+
+/* SSM3 board: the tentacle monster rising and its arm swaying. */
+@keyframes halloween-tentacle-rise {
+  0%,
+  48% {
+    transform: translateY(104%);
+  }
+  56% {
+    transform: translateY(0);
+  }
+  84% {
+    transform: translateY(0);
+  }
+  92%,
+  100% {
+    transform: translateY(104%);
+  }
+}
+
+@keyframes halloween-tentacle-sway {
+  0%,
+  56%,
+  84%,
+  100% {
+    transform: rotate(0);
+  }
+  62% {
+    transform: rotate(-12deg);
+  }
+  68% {
+    transform: rotate(10deg);
+  }
+  74% {
+    transform: rotate(-10deg);
+  }
+  80% {
+    transform: rotate(6deg);
+  }
+}
+
+/* SSM4 board: the werewolf popping up, its arms cheering and the gold
+ * sparks twinkling. */
+@keyframes halloween-wolf-pop {
+  0%,
+  55% {
+    transform: translateY(105%);
+  }
+  61% {
+    transform: translateY(0);
+  }
+  64% {
+    transform: translateY(4%);
+  }
+  67%,
+  84% {
+    transform: translateY(0);
+  }
+  90%,
+  100% {
+    transform: translateY(105%);
+  }
+}
+
+@keyframes halloween-wolf-cheer {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  50% {
+    transform: rotate(-10deg);
+  }
+}
+
+@keyframes halloween-wolf-cheer-r {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  50% {
+    transform: rotate(10deg);
+  }
+}
+
+@keyframes halloween-spark-twinkle {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.2;
+    transform: scale(0.6);
+  }
+}
+
+.halloween-monster-skel {
+  transform: translateX(-110%);
+  transform-origin: 0 100%;
+  animation: halloween-skel 12s ease-in-out 2s infinite;
+}
+
+.halloween-skel-wave {
+  transform-box: view-box;
+  transform-origin: 42px 104px;
+  animation: halloween-skel-wave 12s ease-in-out 2s infinite;
+}
+
+/* SSM2 board: the fuzz ball. */
+.halloween-monster-fuzz {
+  transform: translateY(102%);
+  animation: halloween-fuzz-rise 10s ease-in-out 1s infinite;
+}
+
+.halloween-lid {
+  transform-box: fill-box;
+  transform-origin: 50% 0;
+  transform: scaleY(0);
+  animation: halloween-lid-blink 3.2s ease-in-out infinite;
+}
+
+.halloween-courier-fly {
+  animation: halloween-courier-fly 6s ease-in-out infinite;
+}
+
+.halloween-courier-wing {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: halloween-courier-flap 360ms ease-in-out infinite;
+}
+
+/* SSM2-waiting board: the cat and the ghost courier. */
+.halloween-monster-cat {
+  transform: translateY(64px);
+  transform-origin: 50% 100%;
+  animation: halloween-cat 11s ease-in-out 2.5s infinite;
+}
+
+.halloween-cat-tail {
+  transform-box: fill-box;
+  transform-origin: 0 100%;
+  animation: halloween-cat-tail 1.6s ease-in-out infinite;
+}
+
+.halloween-courier-deliver {
+  animation: halloween-courier-deliver 7s ease-in-out infinite;
+}
+
+.halloween-popup-dot {
+  animation: halloween-popup-blink 1.2s ease-in-out infinite;
+}
+
+/* SSM2-declined board: the sad pumpkin and the leaning monster. */
+.halloween-sad-pumpkin {
+  transform-box: view-box;
+  transform-origin: 140px 250px;
+  animation: halloween-sad-sag 5s ease-in-out infinite;
+}
+
+.halloween-monster-frank {
+  transform: translateX(100%);
+  transform-origin: 100% 100%;
+  animation: halloween-frank 12s ease-in-out 2s infinite;
+}
+
+.halloween-tear {
+  animation: halloween-tear 12s ease-in 2s infinite;
+  opacity: 0;
+}
+
+/* SSM3 board: the tentacle monster. */
+.halloween-monster-tentacle {
+  transform: translateY(104%);
+  animation: halloween-tentacle-rise 11s ease-in-out 1.5s infinite;
+}
+
+.halloween-tentacle-sway {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: halloween-tentacle-sway 11s ease-in-out 1.5s infinite;
+}
+
+/* SSM4 board: the werewolf and the sparks. */
+.halloween-monster-wolf {
+  transform: translateY(105%);
+  animation: halloween-wolf-pop 10s ease-in-out 1s infinite;
+}
+
+.halloween-wolf-arm-l {
+  transform-box: view-box;
+  transform-origin: 28px 96px;
+  animation: halloween-wolf-cheer 0.5s ease-in-out infinite;
+}
+
+.halloween-wolf-arm-r {
+  transform-box: view-box;
+  transform-origin: 112px 96px;
+  animation: halloween-wolf-cheer-r 0.5s ease-in-out infinite;
+}
+
+.halloween-spark {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation: halloween-spark-twinkle 1.6s ease-in-out infinite;
+}
+
+.halloween-spark-late {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation: halloween-spark-twinkle 1.6s ease-in-out 0.8s infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .halloween-spider,
+  .halloween-bats,
+  .halloween-ghost,
+  .halloween-monster-peek,
+  .halloween-monster-pop,
+  .halloween-monster-rise,
+  .halloween-monster-slide,
+  .halloween-monster-arm,
+  .halloween-mist,
+  .halloween-twinkle,
+  .halloween-twinkle-late,
+  .halloween-glow-pulse,
+  .halloween-flicker,
+  .halloween-wing,
+  .halloween-peeker,
+  .halloween-monster-lean,
+  .halloween-monster-reach,
+  .halloween-monster-ooze,
+  .halloween-ooze-eye,
+  .halloween-brew,
+  .halloween-brew-late,
+  .halloween-monster-vamp,
+  .halloween-vamp-arm,
+  .halloween-monster-dangle,
+  .halloween-dangle-arm,
+  .halloween-monster-tiptoe,
+  .halloween-tiptoe-ears,
+  .halloween-monster-skel,
+  .halloween-skel-wave,
+  .halloween-monster-fuzz,
+  .halloween-lid,
+  .halloween-courier-fly,
+  .halloween-courier-wing,
+  .halloween-monster-cat,
+  .halloween-cat-tail,
+  .halloween-courier-deliver,
+  .halloween-popup-dot,
+  .halloween-sad-pumpkin,
+  .halloween-monster-frank,
+  .halloween-tear,
+  .halloween-monster-tentacle,
+  .halloween-tentacle-sway,
+  .halloween-monster-wolf,
+  .halloween-wolf-arm-l,
+  .halloween-wolf-arm-r,
+  .halloween-spark,
+  .halloween-spark-late {
+    animation: none;
+  }
+
+  .halloween-bar-rider {
+    transition: none;
+  }
+}

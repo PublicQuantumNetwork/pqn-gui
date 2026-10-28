@@ -5,8 +5,9 @@ import { Box, Stack, Typography } from '@mui/material';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Whobit from '@/components/Whobit';
 import PageTimeout from '@/components/PageTimeout';
-import fortune from '@/app/qf/page2/fortunes';
+import { activeFlavourCopy, activeFortune } from '@/themes';
 import { useEnterKey } from '@/hooks/useEnterKey';
+import Decorations from '@/components/Decorations';
 
 // Short values make the activity-reset behavior easy to verify at the kiosk.
 const QUANTUM_FORTUNE_TIMEOUT_MS = 5 * 60 * 1000;
@@ -15,6 +16,7 @@ const QUANTUM_FORTUNE_WARNING_DURATION_MS = 30 * 1000;
 function FortuneContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const flavourCopy = activeFlavourCopy();
 
   const value = Number(searchParams.get('value')).toFixed(0) ?? 42;
 
@@ -25,12 +27,11 @@ function FortuneContent() {
     router.push('/survey/');
   });
 
-  const fortuneText = fortune.find(
-    (item) => Number(item.number) === Number(value)
-  )?.description;
+  const fortuneText = activeFortune(Number(value));
 
   return (
     <Container maxWidth="lg">
+      <Decorations scene="qf2" />
       <Box sx={{ mt: 9, mb: 4 }}>
         <Stack direction="row" alignItems="center" sx={{ width: '100%' }}>
           <Whobit variant="arms-down">
@@ -42,7 +43,12 @@ function FortuneContent() {
                 Please try a different game.
               </p>
             ) : (
-              <p>Your fortune is...</p>
+              <>
+                {flavourCopy['qf2-lead-in'] && (
+                  <p>{flavourCopy['qf2-lead-in']}</p>
+                )}
+                <p>Your fortune is...</p>
+              </>
             )}
           </Whobit>
 
@@ -56,6 +62,11 @@ function FortuneContent() {
             }}
           >
             <Box
+              // The Halloween Decorations' ball anchor:
+              // the ghost, the mist, the twinkles and the glow are placed
+              // against the page's own ball. Non-visual, so no theme changes
+              // the look.
+              data-decoration-anchor="qf-ball"
               sx={{
                 position: 'relative',
                 backgroundImage: 'url(/images/circle.png)',
@@ -78,6 +89,10 @@ function FortuneContent() {
                   transform: 'translate(-50%, -50%)',
                   color: '#000000',
                   fontSize: '5em',
+                  // Above the Decorations layer (zIndex 999), so a theme's
+                  // ball mist passes behind the fortune, as on the boards.
+                  // No visual change without Decorations.
+                  zIndex: 1000,
                 }}
               >
                 #{value}
@@ -95,6 +110,7 @@ function FortuneContent() {
                   width: '60%',
                   fontSize: '1.2em',
                   textAlign: 'center',
+                  zIndex: 1000,
                 }}
               >
                 {fortuneText}

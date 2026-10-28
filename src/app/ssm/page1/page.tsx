@@ -15,6 +15,7 @@ import { useRouter } from 'next/navigation';
 import EmojiPicker, { EmojiClickData, EmojiStyle } from 'emoji-picker-react';
 import { submitQKDEmoji } from '@/calls';
 import Whobit from '@/components/Whobit';
+import Decorations from '@/components/Decorations';
 
 export default function Home() {
   const router = useRouter();
@@ -204,6 +205,7 @@ export default function Home() {
 
   return (
     <Container maxWidth="lg" sx={{ my: 4 }}>
+      <Decorations scene="ssm1" />
       <Stack direction="row" alignItems="flex-start" sx={{ width: '100%' }}>
         <Whobit variant="arms-down" speechBubbleHeight="250px">
           <Box sx={{ fontSize: '0.85em' }}>
@@ -248,6 +250,10 @@ export default function Home() {
             />
           ) : (
             <Stack
+              // The Halloween Decorations' emoji-circle anchor: the SSM1 board
+              // floats its ghost beside this circle and draws it over the moon
+              // and the bats. Non-visual, so no theme changes the look.
+              data-decoration-anchor="ssm1-circle"
               direction="row"
               alignItems="flex-end"
               spacing={4}

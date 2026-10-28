@@ -7,7 +7,11 @@ export default function MaintenancePage() {
   return (
     <Container maxWidth="lg" sx={{ my: 4 }}>
       <Stack direction="row" alignItems="flex-start" sx={{ width: '100%' }}>
-        <Whobit variant="arms-down" speechBubbleHeight="250px">
+        <Whobit
+          variant="arms-down"
+          speechBubbleHeight="250px"
+          accessory={false}
+        >
           <p>Quantum networking is hard...</p>
           <p>But we&apos;re on it!</p>
         </Whobit>

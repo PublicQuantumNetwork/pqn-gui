@@ -118,9 +118,6 @@ const QF = {
   bubble: box(144, 245, 500, 250),
   ball: box(794, 239, 560, 560),
   pose: box(144, 505, 288, 358),
-  counter: box(1040, 440, 70, 90),
-  number: box(1015, 380, 120, 115),
-  text: box(880, 540, 390, 110),
 };
 const MEASURING = {
   dialog: box(270, 190, 900, 600),
@@ -201,37 +198,20 @@ function setAnchors(next: Record<string, Box>) {
 }
 
 /**
- * The d of the SVG clipPath that cuts the occluders' boxes out of the mist
- * (the wrapper around the mist group carries it), or null when the mist has
- * no occluders.
+ * The ball's mist is drawn whole, with no box cut out of it: the page's own
+ * text on the ball (QF1's counter, QF2's fortune) sits above the Decorations
+ * layer instead, so the mist passes behind it as on the boards. Returns the
+ * mist's svg.
  */
-function mistHolesClip(container: HTMLElement): string | null {
-  const wrapper = container.querySelector('.halloween-mist')!.parentElement!;
-  const reference = wrapper.getAttribute('clip-path');
-  if (!reference) {
-    return null;
-  }
-  const path = document
-    .getElementById(reference.slice(5, -1))
-    ?.querySelector('path');
-  // The holes only stay holes under the path's own even-odd rule: without
-  // clip-rule="evenodd" the holes' outlines fill back in and the mist covers
-  // the counter and the fortune again.
-  expect(path?.getAttribute('clip-rule')).toBe('evenodd');
-  return path?.getAttribute('d') ?? null;
+function expectWholeMist(container: HTMLElement): Element {
+  const mistSvg = container.querySelector('.halloween-mist')!.closest('svg')!;
+  expect(mistSvg.querySelector('path[clip-rule="evenodd"]')).toBeNull();
+  return mistSvg;
 }
 
-/** An occluder's hole in the mist layer's own ball coordinates. */
-function mistHole(
-  occluder: Box,
-  layer: { left: number; top: number },
-  scale: number
-): string {
-  const x = (occluder.left - layer.left) / scale;
-  const y = (occluder.top - layer.top) / scale;
-  return ` M${x} ${y} H${x + occluder.width / scale} V${
-    y + occluder.height / scale
-  } H${x} Z`;
+/** The page's own text sits above the Decorations layer (its zIndex 999). */
+function expectAboveDecorations(element: Element) {
+  expect(Number(getComputedStyle(element).zIndex)).toBeGreaterThan(999);
 }
 
 /**
@@ -463,7 +443,6 @@ test('QF1 renders the QF1 board’s spider, ball pieces and rising monster', () 
     stage: STAGE,
     'whobit-bubble': QF.bubble,
     'qf-ball': QF.ball,
-    'qf-counter': QF.counter,
   });
   const { container } = renderPage(<QF1 />);
 
@@ -486,26 +465,10 @@ test('QF1 renders the QF1 board’s spider, ball pieces and rising monster', () 
   expect(twinkles).toHaveLength(3);
   expect(container.querySelector('.halloween-glow-pulse')).toBeNull();
 
-  // The counter is drawn over the ball on the board, so its box is cut out
-  // of the mist alone: the digit stays fully readable while the twinkles
-  // sparkle untouched.
-  const ball = ballOf(QF.ball);
-  const scale = ball.r / 190;
-  const layer = { left: ball.cx - 280 * scale, top: ball.cy - 230 * scale };
-  const holesClip = mistHolesClip(container);
-  expect(holesClip).toMatch(/^M-100 -100 H660 V600 H-100 Z/);
-  expect(holesClip).toContain(mistHole(QF.counter, layer, scale));
-  for (const twinkle of twinkles) {
-    expect(twinkle.getAttribute('clip-path')).toBeNull();
-    expect((twinkle as HTMLElement).style.clipPath).toBe('');
-  }
-
-  // And none of them lives inside the hole-clipped wrapper around the mist:
-  // only the mist (and the veil with it) may be cut by the occluder holes.
-  const holesWrapper = mist.parentElement!;
-  expect(
-    holesWrapper.querySelector('.halloween-twinkle, .halloween-twinkle-late')
-  ).toBeNull();
+  // The counter is drawn over the ball's mist on the board: the mist stays
+  // whole and the counter sits above the Decorations layer.
+  expectWholeMist(container);
+  expectAboveDecorations(container.querySelector('h1 strong')!.closest('h1')!);
 
   // The QF1 board carries no ghost.
   expect(container.querySelector('.halloween-ghost')).toBeNull();
@@ -580,8 +543,6 @@ test('QF2 renders the QF2 board’s ghost, glow, flickering pumpkin and sliding 
   setAnchors({
     stage: STAGE,
     'qf-ball': QF.ball,
-    'qf-fortune-number': QF.number,
-    'qf-fortune-text': QF.text,
     'whobit-pose': QF.pose,
   });
   const { container } = renderPage(<QF2 />);
@@ -609,36 +570,14 @@ test('QF2 renders the QF2 board’s ghost, glow, flickering pumpkin and sliding 
   expect(veil!.getAttribute('fill')).toBe('#ffffff');
   expect(veil!.getAttribute('opacity')).toBe('0.55');
 
-  // The fortune's number and text are drawn over the ball on the board, so
-  // their boxes are cut out of the mist alone: the fortune stays fully
-  // readable while the twinkles sparkle and the halo pulses untouched — even
-  // where the fortune paragraph's box reaches out over the halo's ring.
-  const scale = ball.r / 190;
-  const layer = { left: ball.cx - 280 * scale, top: ball.cy - 230 * scale };
-  const holesClip = mistHolesClip(container);
-  expect(holesClip).toMatch(/^M-100 -100 H660 V600 H-100 Z/);
-  for (const fortune of [QF.number, QF.text]) {
-    expect(holesClip).toContain(mistHole(fortune, layer, scale));
-  }
-  const unclipped = [
-    ...Array.from(
-      container.querySelectorAll('.halloween-twinkle, .halloween-twinkle-late')
-    ),
-    container.querySelector('.halloween-glow-pulse')!,
-  ];
-  for (const piece of unclipped) {
-    expect(piece.getAttribute('clip-path')).toBeNull();
-    expect((piece as HTMLElement).style.clipPath).toBe('');
-  }
-
-  // And none of them lives inside the hole-clipped wrapper around the mist:
-  // only the mist (and the veil with it) may be cut by the occluder holes —
-  // the halo's ring stays whole even where the fortune's box reaches over it.
-  const holesWrapper = mist.parentElement!;
-  expect(
-    holesWrapper.querySelector('.halloween-twinkle, .halloween-twinkle-late')
-  ).toBeNull();
-  expect(holesWrapper.querySelector('.halloween-glow-pulse')).toBeNull();
+  // The fortune's number and text are drawn over the ball's mist on the
+  // board: the mist stays whole and both sit above the Decorations layer.
+  expectWholeMist(container);
+  const fortune = Array.from(container.querySelectorAll('h1')).filter((h1) =>
+    h1.closest('[data-decoration-anchor="qf-ball"]')
+  );
+  expect(fortune).toHaveLength(2);
+  fortune.forEach(expectAboveDecorations);
 
   // The pumpkin under the pose keeps its place beside the pose box, clamped
   // to rest its base on the stage's bottom edge (its board spot on this page
@@ -1412,8 +1351,8 @@ test('the Measuring popup keeps its text and swaps in the cauldron illustration'
   ).toBeInTheDocument();
   expect(screen.getByText('0% complete')).toBeInTheDocument();
 
-  // The Images slot carries the cauldron, and it is the only image Halloween
-  // sets (decision 8: the background and the Whobit poses stay today's).
+  // The Images slot carries the cauldron (decision 8: the background and the
+  // Whobit poses stay today's).
   const illustration = screen.getByAltText(
     'Your photons in action!'
   ) as HTMLImageElement;
@@ -1424,6 +1363,38 @@ test('the Measuring popup keeps its text and swaps in the cauldron illustration'
   expect(images['measuring-illustration']).toBe(
     '/images/measuring-cauldron.svg'
   );
+});
+
+test('CHSH2’s wheel wears the board’s cream face and broom needle', () => {
+  setAnchors({ stage: STAGE });
+  const { container } = renderPage(<CHSH2 />);
+  const wheel = container.querySelector(
+    '[data-decoration-anchor="chsh2-wheel"]'
+  )!;
+  expect(getComputedStyle(wheel).backgroundImage).toContain(
+    '/images/polarization-wheel-halloween.svg'
+  );
+  // The needle is the wheel's only child box carrying a background image.
+  const needle = Array.from(wheel.children).find((child) =>
+    getComputedStyle(child).backgroundImage.includes('url(')
+  )!;
+  expect(getComputedStyle(needle).backgroundImage).toContain(
+    '/images/polarization-broom-halloween.svg'
+  );
+
+  // Both files are the board's art: the cream face and the broom, its tip in
+  // the pumpkin colour (decision 7).
+  const face = readFileSync(
+    'public/images/polarization-wheel-halloween.svg',
+    'utf8'
+  );
+  expect(face).toContain('fill="#fff4dd"');
+  const broom = readFileSync(
+    'public/images/polarization-broom-halloween.svg',
+    'utf8'
+  );
+  expect(broom).toContain('fill="#ff5f05"');
+  expect(broom).toContain('fill="#fcb316"');
 });
 
 test('the cauldron is an SVG carrying its own animations and reduced-motion rule', () => {

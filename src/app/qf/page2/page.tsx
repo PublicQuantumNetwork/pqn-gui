@@ -80,10 +80,6 @@ function FortuneContent() {
               }}
             >
               <Typography
-                // The Halloween Decorations' fortune-number anchor (agent
-                // decision A8): the ball's mist is cut to shape around it.
-                // Non-visual, so no theme changes the look.
-                data-decoration-anchor="qf-fortune-number"
                 variant="h5"
                 component="h1"
                 sx={{
@@ -93,16 +89,16 @@ function FortuneContent() {
                   transform: 'translate(-50%, -50%)',
                   color: '#000000',
                   fontSize: '5em',
+                  // Above the Decorations layer (zIndex 999), so a theme's
+                  // ball mist passes behind the fortune, as on the boards.
+                  // No visual change without Decorations.
+                  zIndex: 1000,
                 }}
               >
                 #{value}
               </Typography>
 
               <Typography
-                // The Halloween Decorations' fortune-text anchor (agent
-                // decision A8): the ball's mist is cut to shape around it.
-                // Non-visual, so no theme changes the look.
-                data-decoration-anchor="qf-fortune-text"
                 variant="h5"
                 component="h1"
                 sx={{
@@ -114,6 +110,7 @@ function FortuneContent() {
                   width: '60%',
                   fontSize: '1.2em',
                   textAlign: 'center',
+                  zIndex: 1000,
                 }}
               >
                 {fortuneText}

@@ -16,8 +16,7 @@ import './decorations.css';
 /**
  * The clip-path that cuts the occluders' boxes out of a piece's box: where
  * the page's own content occludes a piece on its board (the game buttons
- * over the moon and the bats, the counter and the fortune over the ball
- * mist), the same boxes are cut out of it here, so the piece never covers
+ * over the moon and the bats), the same boxes are cut out of it here, so the piece never covers
  * that content's text (decision 10). A round occluder (a circle the page
  * itself draws, `CircleOccluder`) is cut as the circle it is. The clip's
  * outer edge is generous: it only bounds the piece's own art, which its
@@ -1112,19 +1111,15 @@ const twinkles = {
  * twinkles sparkle on it, and QF2's gold halo pulses around it (the ring the
  * boards show, the ball itself covering the disc's middle) and its white
  * veil softens the mist over the ball's middle. The ball, the counter and
- * the fortune text stay the page's own content: on the boards they are drawn
- * after the ball svg, so they sit above its mist — their boxes are cut out
- * of the mist alone (agent decision A8), leaving the twinkles and the halo
- * as whole as they are on the boards.
+ * the fortune text stay the page's own content, drawn above the Decorations
+ * layer, so the mist passes behind them as on the boards.
  */
 export function BallMist({
   ball,
   board,
-  occluders,
 }: {
   ball: BallCircle;
   board: keyof typeof twinkles;
-  occluders?: ElementBox[];
 }) {
   const clipId = `halloween-ball-${useId().replace(/[^a-zA-Z0-9]/g, '')}`;
   // The boards' ball circle: centre (280, 230), radius 190, in a 560x500 svg.
@@ -1135,31 +1130,6 @@ export function BallMist({
     width: 560 * scale,
     height: 500 * scale,
   };
-  // The occluders' boxes, page pixels, moved into the boards' own ball
-  // coordinates the mist is drawn in. On the boards the counter and the
-  // fortune are drawn after the ball svg, so they sit above its mist: their
-  // boxes are cut out of the mist (and the veil with it) alone — the
-  // twinkles sparkle and the glow halo pulses over the whole ball, on the
-  // board as here, so no hole touches them.
-  const holes = (occluders ?? []).map((occluder) => {
-    const x = (occluder.left - box.left) / scale;
-    const y = (occluder.top - box.top) / scale;
-    return {
-      x,
-      y,
-      width: occluder.width / scale,
-      height: occluder.height / scale,
-    };
-  });
-  const holesClip =
-    holes.length > 0
-      ? `M-100 -100 H660 V600 H-100 Z${holes
-          .map(
-            (hole) =>
-              ` M${hole.x} ${hole.y} H${hole.x + hole.width} V${hole.y + hole.height} H${hole.x} Z`
-          )
-          .join('')}`
-      : null;
   return (
     <svg
       width={box.width}
@@ -1176,11 +1146,6 @@ export function BallMist({
         <clipPath id={`${clipId}-ball`}>
           <circle cx="280" cy="230" r="188" />
         </clipPath>
-        {holesClip && (
-          <clipPath id={`${clipId}-holes`}>
-            <path clipRule="evenodd" d={holesClip} />
-          </clipPath>
-        )}
       </defs>
       {board === 'qf2' && (
         <path
@@ -1190,25 +1155,23 @@ export function BallMist({
           fill="#fdca5c"
         />
       )}
-      <g clipPath={holesClip ? `url(#${clipId}-holes)` : undefined}>
-        <g
-          className="halloween-mist"
-          fill="none"
-          strokeLinecap="round"
-          clipPath={`url(#${clipId}-ball)`}
-        >
-          {mistStrokes.map((stroke) => (
-            <path
-              key={stroke.d}
-              d={stroke.d}
-              stroke={stroke.stroke}
-              strokeWidth={stroke.width}
-            />
-          ))}
-          {board === 'qf2' && (
-            <circle cx="280" cy="230" r="150" fill="#ffffff" opacity="0.55" />
-          )}
-        </g>
+      <g
+        className="halloween-mist"
+        fill="none"
+        strokeLinecap="round"
+        clipPath={`url(#${clipId}-ball)`}
+      >
+        {mistStrokes.map((stroke) => (
+          <path
+            key={stroke.d}
+            d={stroke.d}
+            stroke={stroke.stroke}
+            strokeWidth={stroke.width}
+          />
+        ))}
+        {board === 'qf2' && (
+          <circle cx="280" cy="230" r="150" fill="#ffffff" opacity="0.55" />
+        )}
       </g>
       {twinkles[board].map((twinkle) => (
         <path

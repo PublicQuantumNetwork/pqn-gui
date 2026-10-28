@@ -10,21 +10,15 @@ import {
   ballCircle,
 } from './ambient';
 import { MonsterSlide } from './monsters';
-import { useElementBox, type ElementBox } from './useElementBox';
+import { useElementBox } from './useElementBox';
 
 /** The anchors the qf2 Scene's Decorations are placed against (agent
  *  decision A8): the stage, the page's own ball (the board's ghost floats
- *  beside it, its mist, twinkles and glow dress it) with its fortune number
- *  and text (drawn over the ball's mist on the board, so cut out of it
- *  here), and Whobit's pose. */
+ *  beside it, its mist, twinkles and glow dress it) and Whobit's pose. */
 const stageAnchor = () =>
   document.querySelector<HTMLElement>('[data-decoration-anchor="stage"]');
 const ballAnchor = () =>
   document.querySelector('[data-decoration-anchor="qf-ball"]');
-const numberAnchor = () =>
-  document.querySelector('[data-decoration-anchor="qf-fortune-number"]');
-const textAnchor = () =>
-  document.querySelector('[data-decoration-anchor="qf-fortune-text"]');
 const poseAnchor = () =>
   document.querySelector('[data-decoration-anchor="whobit-pose"]');
 
@@ -40,8 +34,6 @@ const poseAnchor = () =>
 export default function Qf2Decorations() {
   const stage = useElementBox(stageAnchor);
   const ballBox = useElementBox(ballAnchor);
-  const number = useElementBox(numberAnchor);
-  const text = useElementBox(textAnchor);
   const pose = useElementBox(poseAnchor);
   if (!stage || !ballBox || !pose) {
     return null;
@@ -52,13 +44,7 @@ export default function Qf2Decorations() {
       <Web stage={stage} />
       <Moon stage={stage} />
       <Bats stage={stage} />
-      <BallMist
-        ball={ball}
-        board="qf2"
-        occluders={[number, text].filter(
-          (occluder): occluder is ElementBox => occluder !== null
-        )}
-      />
+      <BallMist ball={ball} board="qf2" />
       <Ghost
         left={ball.left - 202}
         top={ball.top - 16}

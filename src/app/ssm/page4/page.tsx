@@ -172,6 +172,12 @@ export default function Home() {
             sx={{ paddingLeft: '150px' }}
           >
             <Box
+              // The Halloween Decorations' results-circle anchor (agent
+              // decision A8): the SSM4 board floats its cheering ghost
+              // beside this circle, twinkles its gold sparks on it and
+              // draws it over the moon and the bats. Non-visual, so no
+              // theme changes the look.
+              data-decoration-anchor="ssm4-circle"
               sx={{
                 backgroundImage: 'url(/images/circle.png)',
                 backgroundRepeat: 'no-repeat',

@@ -69,7 +69,7 @@ import {
 } from '@/themes/halloween/decorations/ambient';
 import { MonsterRise } from '@/themes/halloween/decorations/monsters';
 import { type ElementBox } from '@/themes/halloween/decorations/useElementBox';
-import { activeImages, knownThemes, type Scene } from '@/themes';
+import { activeImages, knownThemes } from '@/themes';
 
 afterAll(() => {
   delete process.env.NEXT_PUBLIC_SEASONAL_THEME;
@@ -259,7 +259,7 @@ function ballOf(ball: Box): BallCircle {
   return ballCircle(rectOf(ball));
 }
 
-test('Halloween decorates the home, qf1, qf2, measuring and CHSH Scenes, and only those', () => {
+test('Halloween decorates the home, qf, measuring, CHSH and SSM Scenes, and only those', () => {
   const decorated = [
     'home',
     'qf1',
@@ -270,16 +270,6 @@ test('Halloween decorates the home, qf1, qf2, measuring and CHSH Scenes, and onl
     'chsh3-entangled',
     'chsh3-weak',
     'chsh3-error',
-  ] as const;
-  const theme = knownThemes.halloween;
-  for (const scene of decorated) {
-    expect(
-      theme.decorations?.[scene],
-      `${scene} has Decorations`
-    ).toBeDefined();
-  }
-  // The SSM Scenes' Decorations come with group 2.4.
-  const later: Scene[] = [
     'ssm1',
     'ssm2-asking',
     'ssm2-waiting',
@@ -287,9 +277,13 @@ test('Halloween decorates the home, qf1, qf2, measuring and CHSH Scenes, and onl
     'ssm3',
     'ssm4',
     'ssm4-perfect',
-  ];
-  for (const scene of later) {
-    expect(theme.decorations?.[scene]).toBeUndefined();
+  ] as const;
+  const theme = knownThemes.halloween;
+  for (const scene of decorated) {
+    expect(
+      theme.decorations?.[scene],
+      `${scene} has Decorations`
+    ).toBeDefined();
   }
 });
 

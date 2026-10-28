@@ -220,12 +220,16 @@ export function Bats({
 
 /** The spider (Main.dc.html, QF1.dc.html), hanging from the top of the
  *  stage on its thread, bobbing. Each board places it and times it its own
- *  way: the Scene passes where the board hangs it. */
+ *  way: the Scene passes where the board hangs it. Where the board draws it
+ *  behind page content (SSM2.dc.html hangs it behind the speech bubble's
+ *  right edge), that content's boxes are cut out of it here, so it shows
+ *  only where the board shows it (agent decision A8). */
 export function Spider({
   left,
   top,
   threadHeight,
   bobDuration,
+  occluders,
 }: {
   left: number;
   top: number;
@@ -233,6 +237,7 @@ export function Spider({
   threadHeight: number;
   /** The board's own bobbing duration (Main's 3.2s, QF1's 3.6s). */
   bobDuration: string;
+  occluders?: ElementBox[];
 }) {
   return (
     <div
@@ -246,6 +251,14 @@ export function Spider({
         flexDirection: 'column',
         alignItems: 'center',
         animationDuration: bobDuration,
+        ...(occluders && occluders.length > 0
+          ? {
+              clipPath: clipPathValue(
+                { left, top, width: 40, height: threadHeight + 34 },
+                occluders
+              ),
+            }
+          : {}),
       }}
     >
       <div
@@ -265,6 +278,23 @@ export function Spider({
       </svg>
     </div>
   );
+}
+
+/** The SSM boards' spider's left (agent decision A8): each board hangs it
+ *  at a share of the stage beside the speech bubble (whose right edge the
+ *  boards lay at 564px of their 1440px stage; the GUI lays it ~80px right
+ *  of that), so it keeps the board's own gap from the bubble's right edge,
+ *  clamped past it where the GUI's bubble crosses the board's spot (as the
+ *  CHSH boards' pieces keep their gaps). `at` is the board's share (SSM1's
+ *  0.44, SSM2's 0.38-0.47, SSM4's 0.40; SSM3's 0.03 hangs it left of the
+ *  bubble, where no clamp is needed). */
+export function spiderLeft(
+  stage: ElementBox,
+  bubble: ElementBox,
+  at: number
+): number {
+  const spot = stage.left + stage.width * at;
+  return Math.max(spot, bubble.right + spot - 564);
 }
 
 /** The ghost's mouth, each board its own: Main's and QF2's open mouth, and
@@ -379,6 +409,156 @@ export function Ghost({
       <ellipse cx="31" cy="58" rx="6" ry="3.5" fill="rgba(240,128,170,0.55)" />
       <ellipse cx="73" cy="58" rx="6" ry="3.5" fill="rgba(240,128,170,0.55)" />
       {ghostMouth(mouth)}
+    </svg>
+  );
+}
+
+/** The sad ghost (SSM2-declined.dc.html): the ghost drawn with its arms
+ *  drooping at its sides, its brows down and its mouth a frown, floating
+ *  the board's own slower 4.4s bob. The Scene passes its place in the
+ *  board's communication box; ported as the board draws it. */
+export function GhostSad({
+  left,
+  top,
+  width,
+  height,
+}: {
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+}) {
+  return (
+    <svg
+      className="halloween-ghost"
+      width={width}
+      height={height}
+      viewBox="0 0 100 120"
+      style={{
+        position: 'absolute',
+        left: `${left}px`,
+        top: `${top}px`,
+        animationDuration: '4.4s',
+      }}
+    >
+      <path
+        d="M20 64 Q8 72 10 84 Q18 82 22 74"
+        fill="#ffffff"
+        stroke="#000000"
+        strokeWidth="2.5"
+        strokeLinejoin="round"
+        strokeLinecap="round"
+      />
+      <path
+        d="M84 64 Q96 72 94 84 Q86 82 82 74"
+        fill="#ffffff"
+        stroke="#000000"
+        strokeWidth="2.5"
+        strokeLinejoin="round"
+        strokeLinecap="round"
+      />
+      <path
+        d="M18 104 L18 50 Q18 8 52 8 Q86 8 86 50 L86 104 Q79 116 72 104 Q65 92 58 104 Q52 116 45 104 Q38 92 31 104 Q24 116 18 104 Z"
+        fill="#ffffff"
+        stroke="#000000"
+        strokeWidth="3"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M28 30 Q34 18 46 16"
+        fill="none"
+        stroke="#e0e0e0"
+        strokeWidth="4"
+        strokeLinecap="round"
+      />
+      <path
+        d="M32 38 L46 42 M72 38 L58 42"
+        fill="none"
+        stroke="#000000"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
+      <ellipse cx="40" cy="50" rx="5" ry="6" fill="#000000" />
+      <ellipse cx="64" cy="50" rx="5" ry="6" fill="#000000" />
+      <path
+        d="M44 70 Q52 62 60 70"
+        fill="none"
+        stroke="#000000"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+/** The happy ghost (SSM4.dc.html): the ghost drawn cheering, its arms up
+ *  and its eyes closed happy, its mouth an open grin. The Scene passes its
+ *  place by the results circle; ported as the board draws it. */
+export function GhostHappy({
+  left,
+  top,
+  width,
+  height,
+}: {
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+}) {
+  return (
+    <svg
+      className="halloween-ghost"
+      width={width}
+      height={height}
+      viewBox="0 0 100 120"
+      style={{ position: 'absolute', left: `${left}px`, top: `${top}px` }}
+    >
+      <path
+        d="M20 54 Q6 40 8 26 Q16 30 22 42"
+        fill="#ffffff"
+        stroke="#000000"
+        strokeWidth="2.5"
+        strokeLinejoin="round"
+        strokeLinecap="round"
+      />
+      <path
+        d="M84 54 Q98 40 96 26 Q88 30 82 42"
+        fill="#ffffff"
+        stroke="#000000"
+        strokeWidth="2.5"
+        strokeLinejoin="round"
+        strokeLinecap="round"
+      />
+      <path
+        d="M18 104 L18 50 Q18 8 52 8 Q86 8 86 50 L86 104 Q79 116 72 104 Q65 92 58 104 Q52 116 45 104 Q38 92 31 104 Q24 116 18 104 Z"
+        fill="#ffffff"
+        stroke="#000000"
+        strokeWidth="3"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M28 30 Q34 18 46 16"
+        fill="none"
+        stroke="#e0e0e0"
+        strokeWidth="4"
+        strokeLinecap="round"
+      />
+      <path
+        d="M34 48 Q40 40 46 48 M58 48 Q64 40 70 48"
+        fill="none"
+        stroke="#000000"
+        strokeWidth="3"
+        strokeLinecap="round"
+      />
+      <ellipse cx="31" cy="58" rx="6" ry="3.5" fill="rgba(240,128,170,0.55)" />
+      <ellipse cx="73" cy="58" rx="6" ry="3.5" fill="rgba(240,128,170,0.55)" />
+      <path
+        d="M42 62 Q52 76 62 62 Z"
+        fill="#000000"
+        stroke="#000000"
+        strokeWidth="2"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }
@@ -1044,6 +1224,486 @@ export function BallMist({
           strokeLinejoin="round"
         />
       ))}
+    </svg>
+  );
+}
+
+/** The SSM boards' 560px communication box: where each board draws its
+ *  waiting content (the dashed flight path, the courier, the friend's
+ *  computer) around the status. Each SSM2 Scene derives it from the status
+ *  as its own board lays that out, keeping the board's own offsets. */
+export interface CommunicationBox {
+  left: number;
+  top: number;
+}
+
+/** The dashed flight path with its two stars (SSM2.dc.html), ported as the
+ *  board draws it in its communication box. The asking board draws the
+ *  waiting status over the path's lower corner, so the status's box is cut
+ *  out of it here (agent decision A8). */
+export function MessagePath({
+  box,
+  occluders,
+}: {
+  box: CommunicationBox;
+  occluders?: ElementBox[];
+}) {
+  return (
+    <div
+      aria-hidden="true"
+      style={pieceStyle(
+        { left: box.left, top: box.top, width: 560, height: 300 },
+        occluders
+      )}
+    >
+      <svg
+        width="560"
+        height="300"
+        viewBox="0 0 560 300"
+        style={{ display: 'block' }}
+      >
+        <path
+          d="M-40 250 Q120 60 300 120 Q420 160 520 70"
+          fill="none"
+          stroke="#000000"
+          strokeWidth="2"
+          strokeDasharray="2 12"
+          strokeLinecap="round"
+        />
+        <g
+          fill="#fcb316"
+          stroke="#000000"
+          strokeWidth="1.5"
+          strokeLinejoin="round"
+        >
+          <path
+            d="M0 -10 L3 -3 L10 0 L3 3 L0 10 L-3 3 L-10 0 L-3 -3 Z"
+            transform="translate(470 60)"
+          />
+          <path
+            d="M0 -7 L2 -2 L7 0 L2 2 L0 7 L-2 2 L-7 0 L-2 -2 Z"
+            transform="translate(526 112)"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+/** The bat courier carrying the envelope (SSM2.dc.html), flying the board's
+ *  own course across the communication box, its wings flapping. */
+export function CourierBat({ left, top }: { left: number; top: number }) {
+  return (
+    <div
+      aria-hidden="true"
+      className="halloween-courier-fly"
+      style={{
+        position: 'absolute',
+        left: `${left}px`,
+        top: `${top}px`,
+        width: '180px',
+        height: '150px',
+      }}
+    >
+      <svg
+        width="180"
+        height="150"
+        viewBox="0 0 180 150"
+        style={{ display: 'block' }}
+      >
+        <g className="halloween-courier-wing">
+          <path
+            d="M84 46 Q60 6 18 18 Q30 26 26 38 Q38 34 44 44 Q54 38 60 50 Q70 44 84 52 Z"
+            fill="#000000"
+            stroke="#000000"
+            strokeWidth="2"
+            strokeLinejoin="round"
+          />
+        </g>
+        <g className="halloween-courier-wing">
+          <path
+            d="M96 46 Q120 6 162 18 Q150 26 154 38 Q142 34 136 44 Q126 38 120 50 Q110 44 96 52 Z"
+            fill="#000000"
+            stroke="#000000"
+            strokeWidth="2"
+            strokeLinejoin="round"
+          />
+        </g>
+        <path
+          d="M78 34 L80 20 L88 30 Z M102 34 L100 20 L92 30 Z"
+          fill="#000000"
+        />
+        <ellipse cx="90" cy="50" rx="16" ry="18" fill="#000000" />
+        <circle cx="84" cy="46" r="4.5" fill="#ffffff" />
+        <circle cx="96" cy="46" r="4.5" fill="#ffffff" />
+        <circle cx="85" cy="47" r="2" fill="#000000" />
+        <circle cx="97" cy="47" r="2" fill="#000000" />
+        <path
+          d="M86 58 L88 62 L90 58 L92 62 L94 58"
+          fill="#ffffff"
+          stroke="#ffffff"
+          strokeWidth="1"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M84 66 L80 82 M96 66 L100 82"
+          fill="none"
+          stroke="#000000"
+          strokeWidth="3"
+          strokeLinecap="round"
+        />
+        <g transform="rotate(-6 90 108)">
+          <rect
+            x="52"
+            y="80"
+            width="76"
+            height="52"
+            rx="4"
+            fill="#ffffff"
+            stroke="#000000"
+            strokeWidth="3"
+          />
+          <path
+            d="M52 82 L90 112 L128 82"
+            fill="none"
+            stroke="#000000"
+            strokeWidth="3"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M52 130 L80 106 M128 130 L100 106"
+            fill="none"
+            stroke="#000000"
+            strokeWidth="1.5"
+          />
+          <circle
+            cx="90"
+            cy="112"
+            r="8"
+            fill="#ff5f05"
+            stroke="#000000"
+            strokeWidth="2.5"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+/** The friend's computer with its invite popup (SSM2-waiting.dc.html),
+ *  ported as the board draws it in its communication box, its popup light
+ *  blinking. The waiting status is drawn below the computer on the board;
+ *  where the GUI's box reaches over the status the page shows, the
+ *  status's box is cut out of it (agent decision A8). */
+export function FriendComputer({
+  box,
+  occluders,
+}: {
+  box: CommunicationBox;
+  occluders?: ElementBox[];
+}) {
+  return (
+    <div
+      aria-hidden="true"
+      style={pieceStyle(
+        { left: box.left, top: box.top, width: 560, height: 330 },
+        occluders
+      )}
+    >
+      <svg
+        width="560"
+        height="330"
+        viewBox="0 0 560 330"
+        style={{ display: 'block' }}
+      >
+        <path
+          d="M-30 230 Q100 90 230 150 Q300 180 330 160"
+          fill="none"
+          stroke="#000000"
+          strokeWidth="2"
+          strokeDasharray="2 12"
+          strokeLinecap="round"
+        />
+        <rect
+          x="336"
+          y="96"
+          width="200"
+          height="140"
+          rx="10"
+          fill="#ffffff"
+          stroke="#000000"
+          strokeWidth="4"
+        />
+        <rect
+          x="350"
+          y="110"
+          width="172"
+          height="112"
+          rx="4"
+          fill="#13294b"
+          stroke="#000000"
+          strokeWidth="2"
+        />
+        <rect
+          x="370"
+          y="128"
+          width="132"
+          height="76"
+          rx="6"
+          fill="#ffffff"
+          stroke="#000000"
+          strokeWidth="2.5"
+        />
+        <path
+          d="M384 146 L470 146 M384 160 L446 160"
+          fill="none"
+          stroke="#707372"
+          strokeWidth="5"
+          strokeLinecap="round"
+        />
+        <rect
+          x="384"
+          y="176"
+          width="44"
+          height="18"
+          rx="4"
+          fill="#ffffff"
+          stroke="#000000"
+          strokeWidth="2"
+        />
+        <rect
+          x="440"
+          y="176"
+          width="48"
+          height="18"
+          rx="4"
+          fill="#ff5f05"
+          stroke="#000000"
+          strokeWidth="2"
+        />
+        <circle
+          className="halloween-popup-dot"
+          cx="492"
+          cy="134"
+          r="5"
+          fill="#fcb316"
+          stroke="#000000"
+          strokeWidth="1.5"
+        />
+        <path
+          d="M418 236 L410 268 L462 268 L454 236 Z"
+          fill="#ffffff"
+          stroke="#000000"
+          strokeWidth="4"
+          strokeLinejoin="round"
+        />
+        <rect
+          x="384"
+          y="268"
+          width="104"
+          height="14"
+          rx="4"
+          fill="#ffffff"
+          stroke="#000000"
+          strokeWidth="4"
+        />
+      </svg>
+    </div>
+  );
+}
+
+/** The ghost courier delivering the envelope (SSM2-waiting.dc.html),
+ *  flying the board's own course across the communication box. */
+export function CourierGhost({ left, top }: { left: number; top: number }) {
+  return (
+    <div
+      aria-hidden="true"
+      className="halloween-courier-deliver"
+      style={{
+        position: 'absolute',
+        left: `${left}px`,
+        top: `${top}px`,
+        width: '130px',
+        height: '140px',
+      }}
+    >
+      <svg
+        width="130"
+        height="140"
+        viewBox="0 0 130 140"
+        overflow="visible"
+        style={{ display: 'block' }}
+      >
+        <path
+          d="M18 112 L18 54 Q18 10 54 10 Q90 10 90 54 L90 112 Q83 124 76 112 Q69 100 62 112 Q55 124 48 112 Q41 100 34 112 Q27 124 18 112 Z"
+          fill="#ffffff"
+          stroke="#000000"
+          strokeWidth="3"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M28 34 Q34 20 46 18"
+          fill="none"
+          stroke="#e0e0e0"
+          strokeWidth="4"
+          strokeLinecap="round"
+        />
+        <ellipse cx="44" cy="48" rx="6" ry="8" fill="#000000" />
+        <ellipse cx="68" cy="48" rx="6" ry="8" fill="#000000" />
+        <circle cx="46" cy="45" r="2.2" fill="#ffffff" />
+        <circle cx="70" cy="45" r="2.2" fill="#ffffff" />
+        <ellipse
+          cx="35"
+          cy="60"
+          rx="6"
+          ry="3.5"
+          fill="rgba(240,128,170,0.55)"
+        />
+        <ellipse
+          cx="77"
+          cy="60"
+          rx="6"
+          ry="3.5"
+          fill="rgba(240,128,170,0.55)"
+        />
+        <path
+          d="M50 64 Q56 70 62 64"
+          fill="none"
+          stroke="#000000"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+        />
+        <g transform="rotate(8 104 74)">
+          <rect
+            x="78"
+            y="56"
+            width="52"
+            height="36"
+            rx="3"
+            fill="#ffffff"
+            stroke="#000000"
+            strokeWidth="2.5"
+          />
+          <path
+            d="M78 58 L104 78 L130 58"
+            fill="none"
+            stroke="#000000"
+            strokeWidth="2.5"
+            strokeLinejoin="round"
+          />
+          <circle
+            cx="104"
+            cy="78"
+            r="6"
+            fill="#ff5f05"
+            stroke="#000000"
+            strokeWidth="2"
+          />
+        </g>
+        <path
+          d="M84 66 Q96 62 98 72 Q92 80 84 76"
+          fill="#ffffff"
+          stroke="#000000"
+          strokeWidth="2.5"
+          strokeLinejoin="round"
+          strokeLinecap="round"
+        />
+      </svg>
+    </div>
+  );
+}
+
+/** The declined envelope with its seal crossed out
+ *  (SSM2-declined.dc.html), ported as the board draws it in its
+ *  communication box. */
+export function DeclinedEnvelope({ left, top }: { left: number; top: number }) {
+  return (
+    <svg
+      width="120"
+      height="84"
+      viewBox="0 0 120 84"
+      aria-hidden="true"
+      style={{ position: 'absolute', left: `${left}px`, top: `${top}px` }}
+    >
+      <g transform="rotate(10 60 50)">
+        <rect
+          x="14"
+          y="22"
+          width="92"
+          height="56"
+          rx="4"
+          fill="#ffffff"
+          stroke="#000000"
+          strokeWidth="3"
+        />
+        <path
+          d="M14 24 L60 56 L106 24"
+          fill="none"
+          stroke="#000000"
+          strokeWidth="3"
+          strokeLinejoin="round"
+        />
+        <circle
+          cx="60"
+          cy="56"
+          r="9"
+          fill="#ff5f05"
+          stroke="#000000"
+          strokeWidth="2.5"
+        />
+        <path
+          d="M55 51 L65 61 M65 51 L55 61"
+          fill="none"
+          stroke="#000000"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+        />
+      </g>
+    </svg>
+  );
+}
+
+/** The gold sparks of a perfect match (SSM4.dc.html, its perfect-match
+ *  variant): the board's four sparks on the results circle, twinkling —
+ *  the ssm4-perfect Scene's own Decorations (decision 14), separate from
+ *  the Celebration and from EmojiConfetti. Placed on the page's own
+ *  results circle, in the board's own circle coordinates. */
+export function Sparks({ circle }: { circle: ElementBox }) {
+  return (
+    <svg
+      width="560"
+      height="560"
+      viewBox="0 0 560 560"
+      aria-hidden="true"
+      style={{
+        position: 'absolute',
+        left: `${circle.left}px`,
+        top: `${circle.top}px`,
+      }}
+    >
+      <g
+        fill="#fcb316"
+        stroke="#000000"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      >
+        <path
+          className="halloween-spark"
+          d="M70 70 L74 82 L86 86 L74 90 L70 102 L66 90 L54 86 L66 82 Z"
+        />
+        <path
+          className="halloween-spark-late"
+          d="M492 96 L495 105 L504 108 L495 111 L492 120 L489 111 L480 108 L489 105 Z"
+        />
+        <path
+          className="halloween-spark"
+          d="M510 470 L513 479 L522 482 L513 485 L510 494 L507 485 L498 482 L507 479 Z"
+        />
+        <path
+          className="halloween-spark-late"
+          d="M40 480 L44 492 L56 496 L44 500 L40 512 L36 500 L24 496 L36 492 Z"
+        />
+      </g>
     </svg>
   );
 }

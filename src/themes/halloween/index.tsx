@@ -12,6 +12,16 @@ import {
   Chsh3WeakDecorations,
   Chsh3ErrorDecorations,
 } from './decorations/Chsh3Decorations';
+import Ssm1Decorations from './decorations/Ssm1Decorations';
+import {
+  Ssm2AskingDecorations,
+  Ssm2WaitingDecorations,
+  Ssm2DeclinedDecorations,
+} from './decorations/Ssm2Decorations';
+import Ssm3Decorations from './decorations/Ssm3Decorations';
+import Ssm4Decorations, {
+  Ssm4PerfectDecorations,
+} from './decorations/Ssm4Decorations';
 
 /**
  * The hat's size and tilt, the same on every board that shows Whobit: the
@@ -27,11 +37,10 @@ const hat = {
 /**
  * The Halloween Seasonal Theme: the witch hat Whobit wears, the spooky
  * Flavour copy, the bat-and-pumpkin Celebration, the Measuring popup's cream
- * track and cauldron illustration, and the Decorations of the home, qf1,
- * qf2, measuring and CHSH Scenes, ported from the boards in
- * docs/design/halloween/ (decision 12; pumpkins are always #ff5f05,
- * decision 7). The SSM Scenes' Decorations come in group 2.4; the background
- * and Whobit poses stay the Default Theme's (decision 8).
+ * track and cauldron illustration, and the Decorations of every Game's
+ * Scenes, ported from the boards in docs/design/halloween/ (decision 12;
+ * pumpkins are always #ff5f05, decision 7). The background and Whobit poses
+ * stay the Default Theme's (decision 8).
  */
 const halloween: SeasonalTheme = {
   palette: {
@@ -80,6 +89,13 @@ const halloween: SeasonalTheme = {
     'chsh3-entangled': Chsh3EntangledDecorations,
     'chsh3-weak': Chsh3WeakDecorations,
     'chsh3-error': Chsh3ErrorDecorations,
+    ssm1: Ssm1Decorations,
+    'ssm2-asking': Ssm2AskingDecorations,
+    'ssm2-waiting': Ssm2WaitingDecorations,
+    'ssm2-declined': Ssm2DeclinedDecorations,
+    ssm3: Ssm3Decorations,
+    ssm4: Ssm4Decorations,
+    'ssm4-perfect': Ssm4PerfectDecorations,
   },
   celebration: Burst,
 };

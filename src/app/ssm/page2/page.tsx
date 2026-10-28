@@ -96,6 +96,11 @@ export default function MyComponent() {
             />
           ) : wasAccepted === false ? (
             <Typography
+              // The Halloween Decorations' waiting-status anchor (agent
+              // decision A8), on the declined face that takes the spinner's
+              // place: the SSM2-declined board draws its sad pieces around
+              // this spot. Non-visual, so no theme changes the look.
+              data-decoration-anchor="ssm2-status"
               sx={{
                 fontSize: '150px',
               }}
@@ -105,6 +110,11 @@ export default function MyComponent() {
           ) : (
             <>
               <CircularProgress
+                // The Halloween Decorations' waiting-status anchor (agent
+                // decision A8): the SSM2 boards draw their waiting pieces
+                // around this spot. Non-visual, so no theme changes the
+                // look.
+                data-decoration-anchor="ssm2-status"
                 size={80}
                 thickness={4}
                 sx={{

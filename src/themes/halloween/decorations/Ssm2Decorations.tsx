@@ -62,9 +62,11 @@ const boards: Record<
  * leaning in from the stage's right edge. While the page shows its
  * connection-error image instead of a status, the status-placed pieces are
  * omitted and the set's other pieces stay (agent decision A8). The asking
- * board hangs its spider behind the bubble's right edge, so the bubble is
- * cut out of it here, and draws the status over its flight path's lower
- * corner, so the status is cut out of that too (agent decision A8).
+ * board hangs its spider behind the bubble's right edge, and the declined
+ * board's spider joins it there where the sad pumpkin the GUI clamps beside
+ * the declined face crosses its own spot, so the bubble is cut out of both
+ * spiders here; the asking board draws the status over its flight path's
+ * lower corner, so the status is cut out of that too (agent decision A8).
  */
 function Ssm2Decorations({ board }: { board: Ssm2Board }) {
   const stage = useElementBox(stageAnchor);
@@ -97,17 +99,36 @@ function Ssm2Decorations({ board }: { board: Ssm2Board }) {
             top: status.top + status.height / 2 - 280,
           }
     : null;
+  // The declined board's sad pumpkin's left, as `DeclinedPieces` places it:
+  // the spider keeps clear of the pumpkin wherever it lands.
+  const pumpkinLeft =
+    board === 'declined' && status && box
+      ? declinedPumpkinLeft(box, status, bubble)
+      : null;
   return (
     <>
       <Web stage={stage} />
       <Moon stage={stage} />
       <Bats stage={stage} />
       <Spider
-        left={spiderLeft(stage, bubble, spiderAt)}
+        left={
+          pumpkinLeft !== null
+            ? // The declined board's own spot crosses the pumpkin the GUI
+              // clamps beside the declined face, so the spider hangs further
+              // left instead, behind the bubble's right edge as the asking
+              // board's spider does — its sliver just clear of the pumpkin,
+              // its 18px bob included.
+              Math.min(spiderLeft(stage, bubble, spiderAt), pumpkinLeft - 45)
+            : spiderLeft(stage, bubble, spiderAt)
+        }
         top={stage.top}
         threadHeight={thread}
         bobDuration={bob}
-        occluders={board === 'asking' && status ? [bubble] : undefined}
+        occluders={
+          (board === 'asking' || board === 'declined') && status
+            ? [bubble]
+            : undefined
+        }
       />
       <Pumpkin
         left={pose.left + 258}
@@ -145,6 +166,21 @@ function Ssm2Decorations({ board }: { board: Ssm2Board }) {
   );
 }
 
+/** The declined board's sad pumpkin's left: its board spot, or beside the
+ *  declined face (280px wide, flush at its left edge) where the face
+ *  crosses that spot — never further left than 24px clear of the speech
+ *  bubble. */
+function declinedPumpkinLeft(
+  box: { left: number },
+  status: ElementBox,
+  bubble: ElementBox
+): number {
+  return Math.max(
+    Math.min(box.left + 140, status.left - 280),
+    bubble.right + 24
+  );
+}
+
 /** The declined board's sad pieces, placed around the declined face the
  *  GUI shows where the board draws them around its own box: the sad pumpkin
  *  stands whole, as on the board — beside the face where the face crosses
@@ -162,13 +198,7 @@ function DeclinedPieces({
   status: ElementBox;
   bubble: ElementBox;
 }) {
-  // The pumpkin's left: its board spot, or beside the declined face (280px
-  // wide, flush at its left edge) where the face crosses that spot — never
-  // further left than 24px clear of the speech bubble.
-  const pumpkinLeft = Math.max(
-    Math.min(box.left + 140, status.left - 280),
-    bubble.right + 24
-  );
+  const pumpkinLeft = declinedPumpkinLeft(box, status, bubble);
   const pumpkinTop = box.top + 40;
   // The ghost's board spot, or 20px below the pumpkin where the pumpkin's
   // clamped spot crosses it.

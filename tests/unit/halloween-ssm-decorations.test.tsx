@@ -94,7 +94,7 @@ const SSM = {
   pose: box(144, 459, 288, 358),
   circle: box(794, 199, 560, 560),
   status: box(1005, 443, 80, 80),
-  declinedStatus: box(970, 403, 150, 240),
+  declinedStatus: box(952, 361, 187, 225),
 };
 
 /** The anchors' boxes for the current render, keyed by data attribute; each
@@ -650,11 +650,38 @@ test('SSM2 declined renders the sad pumpkin whole beside the declined face, the 
   });
   expect(frank.querySelector('.halloween-tear')).not.toBeNull();
 
-  // The spider at the board's 41%, on its 140px thread, bobbing 4.2s.
+  // The spider at the board's 41%, on its 140px thread, bobbing 4.2s —
+  // its own spot crosses the sad pumpkin the GUI clamps beside the
+  // declined face, so it hangs further left instead, behind the bubble's
+  // right edge as the asking board's spider does: its box, the 18px bob
+  // included, stays clear of the pumpkin's, and the bubble is cut out of
+  // it so it shows only where the board shows it (A8).
   const spider = container.querySelector<HTMLElement>('.halloween-spider')!;
-  expect(parseFloat(spider.style.left)).toBe(spiderLeftAt(0.41));
+  const spiderBox = (left: number) => ({
+    left,
+    top: STAGE.top,
+    right: left + 40,
+    bottom: STAGE.top + 140 + 34 + 18,
+  });
+  expect(
+    intersects(spiderBox(spiderLeftAt(0.41)), pumpkinPlaced),
+    'the spider’s own board spot crosses the pumpkin, so the move below can fail'
+  ).toBe(true);
+  const spiderLeft = Math.min(spiderLeftAt(0.41), pumpkinLeft - 45);
+  expect(parseFloat(spider.style.left)).toBe(spiderLeft);
+  expect(spiderBox(spiderLeft).right).toBeLessThanOrEqual(pumpkinPlaced.left);
+  expect(intersects(spiderBox(spiderLeft), pumpkinPlaced)).toBe(false);
   expect(spider.firstElementChild).toHaveStyle({ height: '140px' });
   expect(spider).toHaveStyle({ animationDuration: '4.2s' });
+  expect(spider.style.clipPath).toMatch(/^path\(evenodd,/);
+  expect(spider.style.clipPath).toContain(
+    occluderHole(SSM.bubble, {
+      left: spiderLeft,
+      top: STAGE.top,
+      width: 40,
+      height: 140 + 34,
+    })
+  );
 
   // The flickering pumpkin, and only the declined board's pieces.
   expectPosePumpkin(container);
@@ -918,127 +945,169 @@ test('the SSM4 ghost and sparks follow the results circle when it moves', async 
   expect(sparkSvg.style.top).toBe(`${moved.top}px`);
 });
 
-test('SSM1 keeps its stage Decorations, and omits only its ghost, on a send error', async () => {
-  vi.mocked(calls.submitQKDEmoji).mockReturnValueOnce(
-    Promise.resolve({ success: false })
-  );
-  setAnchors({
-    stage: STAGE,
-    'whobit-bubble': SSM.bubble,
-    'whobit-pose': SSM.pose,
-    'ssm1-circle': SSM.circle,
-  });
-  const { container } = renderPage(<SSM1 />);
-
-  // Choose an emoji and send it; the send fails, so the page swaps the
-  // emoji circle for its broken-computer image and the circle's anchor
-  // goes with it (the page relays itself out around it).
-  fireEvent.click(screen.getByText('Tap'));
-  const dialog = await screen.findByRole('dialog');
-  // One of the real picker's own emoji buttons (they carry the emoji's
-  // unified code, not its character, as text).
-  await revealPickerEmojis();
-  const emoji = await waitFor(() => {
-    const found = dialog.querySelector<HTMLButtonElement>(
-      'button[data-unified]'
+test(
+  'SSM1 keeps its stage Decorations, and omits only its ghost, on a send error',
+  { timeout: 20000 },
+  async () => {
+    vi.mocked(calls.submitQKDEmoji).mockReturnValueOnce(
+      Promise.resolve({ success: false })
     );
-    expect(found).not.toBeNull();
-    return found;
-  });
-  fireEvent.click(emoji);
-  // The picker closes over MUI's exit transition, which keeps the page
-  // aria-hidden behind the modal until it ends.
-  const next = await screen.findByRole('link', { name: 'Next' });
-  fireEvent.click(next);
-  await screen.findByText(/There was an error sending your emoji/);
-  fireEvent(window, new Event('resize'));
+    setAnchors({
+      stage: STAGE,
+      'whobit-bubble': SSM.bubble,
+      'whobit-pose': SSM.pose,
+      'ssm1-circle': SSM.circle,
+    });
+    const { container } = renderPage(<SSM1 />);
 
-  // The stage-anchored pieces all stay: web, moon, bats, the spider, the
-  // skeleton and the flickering pumpkin under Whobit's pose.
-  expect(container.querySelector('svg[viewBox="0 0 200 200"]')).not.toBeNull();
-  const moon = container.querySelector('svg[viewBox="0 0 160 160"]')!
-    .parentElement as HTMLElement;
-  const bats = container.querySelector('.halloween-bats')!
-    .parentElement as HTMLElement;
-  expect(moon).not.toBeNull();
-  expect(bats).not.toBeNull();
-  expect(container.querySelector('.halloween-spider')).not.toBeNull();
-  expect(container.querySelector('.halloween-monster-skel')).not.toBeNull();
-  expectPosePumpkin(container);
+    // Choose an emoji and send it; the send fails, so the page swaps the
+    // emoji circle for its broken-computer image and the circle's anchor
+    // goes with it (the page relays itself out around it). The picker and
+    // its dialog run on real timers (MUI's exit transition), so every wait
+    // gets its own generous timeout and the test one of its own.
+    fireEvent.click(screen.getByText('Tap'));
+    const dialog = await screen.findByRole('dialog', {}, { timeout: 5000 });
+    // One of the real picker's own emoji buttons (they carry the emoji's
+    // unified code, not its character, as text).
+    await revealPickerEmojis();
+    const emoji = await waitFor(
+      () => {
+        const found = dialog.querySelector<HTMLButtonElement>(
+          'button[data-unified]'
+        );
+        expect(found).not.toBeNull();
+        return found;
+      },
+      { timeout: 5000 }
+    );
+    fireEvent.click(emoji);
+    // The picker closes over MUI's exit transition, which keeps the page
+    // aria-hidden behind the modal until it ends: wait the transition out
+    // before the page's link becomes reachable again.
+    await waitFor(
+      () => expect(screen.queryByRole('dialog')).not.toBeInTheDocument(),
+      { timeout: 5000 }
+    );
+    const next = await screen.findByRole(
+      'link',
+      { name: 'Next' },
+      { timeout: 5000 }
+    );
+    fireEvent.click(next);
+    await screen.findByText(
+      /There was an error sending your emoji/,
+      {},
+      { timeout: 5000 }
+    );
+    fireEvent(window, new Event('resize'));
 
-  // The ghost is omitted — its anchor is gone, and the board's error
-  // variant draws no ghost either — and with no circle drawn over them,
-  // the moon and the bats are whole.
-  expect(container.querySelector('.halloween-ghost')).toBeNull();
-  expect(moon.style.clipPath).toBe('');
-  expect(bats.style.clipPath).toBe('');
-});
-
-test('SSM2 keeps its stage Decorations, and omits its status-placed pieces, on a connection error', async () => {
-  vi.mocked(calls.requestFollower).mockReturnValueOnce(
-    Promise.resolve({ success: false })
-  );
-  setAnchors({
-    stage: STAGE,
-    'whobit-bubble': SSM.bubble,
-    'whobit-pose': SSM.pose,
-    'ssm2-status': SSM.status,
-  });
-  const { container } = renderPage(<SSM2 />);
-
-  // The request to the other computer fails, so the page shows its error
-  // text and its broken-computer image instead of a status (agent decision
-  // A2: still the ssm2-waiting Scene), and the status's anchor goes with
-  // the spinner (the page relays itself out around it).
-  await screen.findByText(
-    /There was an error connecting to the other computer/
-  );
-  fireEvent(window, new Event('resize'));
-
-  // The stage-anchored pieces all stay: web, moon, bats, the spider and
-  // the flickering pumpkin under Whobit's pose.
-  expect(container.querySelector('svg[viewBox="0 0 200 200"]')).not.toBeNull();
-  expect(container.querySelector('svg[viewBox="0 0 160 160"]')).not.toBeNull();
-  expect(container.querySelector('.halloween-bats')).not.toBeNull();
-  expect(container.querySelector('.halloween-spider')).not.toBeNull();
-  expectPosePumpkin(container);
-
-  // The status-placed pieces are omitted: no cat, no friend computer, no
-  // ghost courier — and no fuzz ball, this being the waiting board.
-  expect(container.querySelector('.halloween-monster-cat')).toBeNull();
-  expect(container.querySelector('svg[viewBox="0 0 560 330"]')).toBeNull();
-  expect(container.querySelector('.halloween-courier-deliver')).toBeNull();
-  expect(container.querySelector('.halloween-monster-fuzz')).toBeNull();
-});
-
-test('SSM1 keeps the page’s own full emoji picker under Halloween', async () => {
-  setAnchors({
-    stage: STAGE,
-    'whobit-bubble': SSM.bubble,
-    'whobit-pose': SSM.pose,
-    'ssm1-circle': SSM.circle,
-  });
-  const { container } = renderPage(<SSM1 />);
-
-  // Decision 4: SSM keeps the full emoji picker in every Seasonal Theme —
-  // the board's short Halloween emoji list is not built, and the
-  // Decorations layer carries no picker of its own (only the board's
-  // pieces, all inert).
-  fireEvent.click(screen.getByText('Tap'));
-  const dialog = await screen.findByRole('dialog');
-  const picker = dialog.querySelector('.epr-body');
-  expect(picker).not.toBeNull();
-  // The real picker's own list runs far past the board's 24 Halloween
-  // emoji (its first category alone holds more), so a themed short list
-  // swapped in fails here.
-  await revealPickerEmojis();
-  await waitFor(() => {
+    // The stage-anchored pieces all stay: web, moon, bats, the spider, the
+    // skeleton and the flickering pumpkin under Whobit's pose.
     expect(
-      dialog.querySelectorAll('button[data-unified]').length
-    ).toBeGreaterThan(24);
-  });
-  // Nothing the Decorations layer draws is a control (decision 10).
-  expect(
-    container.querySelectorAll('[aria-hidden="true"] button')
-  ).toHaveLength(0);
-});
+      container.querySelector('svg[viewBox="0 0 200 200"]')
+    ).not.toBeNull();
+    const moon = container.querySelector('svg[viewBox="0 0 160 160"]')!
+      .parentElement as HTMLElement;
+    const bats = container.querySelector('.halloween-bats')!
+      .parentElement as HTMLElement;
+    expect(moon).not.toBeNull();
+    expect(bats).not.toBeNull();
+    expect(container.querySelector('.halloween-spider')).not.toBeNull();
+    expect(container.querySelector('.halloween-monster-skel')).not.toBeNull();
+    expectPosePumpkin(container);
+
+    // The ghost is omitted — its anchor is gone, and the board's error
+    // variant draws no ghost either — and with no circle drawn over them,
+    // the moon and the bats are whole.
+    expect(container.querySelector('.halloween-ghost')).toBeNull();
+    expect(moon.style.clipPath).toBe('');
+    expect(bats.style.clipPath).toBe('');
+  }
+);
+
+test(
+  'SSM2 keeps its stage Decorations, and omits its status-placed pieces, on a connection error',
+  { timeout: 10000 },
+  async () => {
+    vi.mocked(calls.requestFollower).mockReturnValueOnce(
+      Promise.resolve({ success: false })
+    );
+    setAnchors({
+      stage: STAGE,
+      'whobit-bubble': SSM.bubble,
+      'whobit-pose': SSM.pose,
+      'ssm2-status': SSM.status,
+    });
+    const { container } = renderPage(<SSM2 />);
+
+    // The request to the other computer fails, so the page shows its error
+    // text and its broken-computer image instead of a status (agent decision
+    // A2: still the ssm2-waiting Scene), and the status's anchor goes with
+    // the spinner (the page relays itself out around it).
+    await screen.findByText(
+      /There was an error connecting to the other computer/,
+      {},
+      { timeout: 5000 }
+    );
+    fireEvent(window, new Event('resize'));
+
+    // The stage-anchored pieces all stay: web, moon, bats, the spider and
+    // the flickering pumpkin under Whobit's pose.
+    expect(
+      container.querySelector('svg[viewBox="0 0 200 200"]')
+    ).not.toBeNull();
+    expect(
+      container.querySelector('svg[viewBox="0 0 160 160"]')
+    ).not.toBeNull();
+    expect(container.querySelector('.halloween-bats')).not.toBeNull();
+    expect(container.querySelector('.halloween-spider')).not.toBeNull();
+    expectPosePumpkin(container);
+
+    // The status-placed pieces are omitted: no cat, no friend computer, no
+    // ghost courier — and no fuzz ball, this being the waiting board.
+    expect(container.querySelector('.halloween-monster-cat')).toBeNull();
+    expect(container.querySelector('svg[viewBox="0 0 560 330"]')).toBeNull();
+    expect(container.querySelector('.halloween-courier-deliver')).toBeNull();
+    expect(container.querySelector('.halloween-monster-fuzz')).toBeNull();
+  }
+);
+
+test(
+  'SSM1 keeps the page’s own full emoji picker under Halloween',
+  { timeout: 20000 },
+  async () => {
+    setAnchors({
+      stage: STAGE,
+      'whobit-bubble': SSM.bubble,
+      'whobit-pose': SSM.pose,
+      'ssm1-circle': SSM.circle,
+    });
+    const { container } = renderPage(<SSM1 />);
+
+    // Decision 4: SSM keeps the full emoji picker in every Seasonal Theme —
+    // the board's short Halloween emoji list is not built, and the
+    // Decorations layer carries no picker of its own (only the board's
+    // pieces, all inert). The picker runs on real timers, so every wait
+    // gets its own generous timeout and the test one of its own.
+    fireEvent.click(screen.getByText('Tap'));
+    const dialog = await screen.findByRole('dialog', {}, { timeout: 5000 });
+    const picker = dialog.querySelector('.epr-body');
+    expect(picker).not.toBeNull();
+    // The real picker's own list runs far past the board's 24 Halloween
+    // emoji (its first category alone holds more), so a themed short list
+    // swapped in fails here.
+    await revealPickerEmojis();
+    await waitFor(
+      () => {
+        expect(
+          dialog.querySelectorAll('button[data-unified]').length
+        ).toBeGreaterThan(24);
+      },
+      { timeout: 5000 }
+    );
+    // Nothing the Decorations layer draws is a control (decision 10).
+    expect(
+      container.querySelectorAll('[aria-hidden="true"] button')
+    ).toHaveLength(0);
+  }
+);

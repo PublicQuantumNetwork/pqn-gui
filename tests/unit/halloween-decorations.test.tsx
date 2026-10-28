@@ -720,10 +720,10 @@ test('CHSH1 renders the CHSH1 board’s ambient set, its pumpkin pair and the mu
 
   // The spider 100px left of the stage's centre on the board's own 70px
   // thread, bobbing its own 3.4s. The board hangs it beside the bubble,
-  // 32px right of its right edge, which the GUI lays right of the board's
+  // 56px right of its right edge, which the GUI lays right of the board's
   // stage, so it is clamped to keep that gap.
   const spider = container.querySelector<HTMLElement>('.halloween-spider')!;
-  expect(spider.style.left).toBe('676px');
+  expect(spider.style.left).toBe('700px');
   expect(
     CHSH.chsh1.bubble.left + CHSH.chsh1.bubble.width,
     'the board’s spot crosses the bubble’s gap, so the clamp above can fail'
@@ -733,10 +733,10 @@ test('CHSH1 renders the CHSH1 board’s ambient set, its pumpkin pair and the mu
   expect(spider).toHaveStyle({ animationDuration: '3.4s' });
 
   // The ghost at the board's own place (124px left of the stage's centre,
-  // 250px down) with the board's smile, keeping the board's own 8px gap
+  // 250px down) with the board's smile, keeping the board's own 32px gap
   // from the bubble's right edge.
   const ghost = container.querySelector<HTMLElement>('.halloween-ghost')!;
-  expect(ghost.style.left).toBe('652px');
+  expect(ghost.style.left).toBe('676px');
   expect(CHSH.chsh1.bubble.left + CHSH.chsh1.bubble.width).toBeGreaterThan(
     STAGE.left + STAGE.width / 2 - 124
   );
@@ -830,10 +830,10 @@ test('the CHSH1 pieces follow the Next button and clamp past the bubble', () => 
   fireEvent(window, new Event('resize'));
   expect(
     container.querySelector<HTMLElement>('.halloween-spider')!.style.left
-  ).toBe(`${wide.left + wide.width + 32}px`);
+  ).toBe(`${wide.left + wide.width + 56}px`);
   expect(
     container.querySelector<HTMLElement>('.halloween-ghost')!.style.left
-  ).toBe(`${wide.left + wide.width + 8}px`);
+  ).toBe(`${wide.left + wide.width + 32}px`);
 });
 
 test('CHSH2 renders the CHSH2 board’s ambient set and the ooze in its brew pot', () => {
@@ -1116,12 +1116,12 @@ test('CHSH3 shows the sock monster, and only that monster, under a weak result',
   // The sock monster dangling over the stage's top edge (82px left of its
   // centre), through a window whose top edge is the stage's own, which
   // hides it at rest; its board spot crosses the bubble, so it is clamped
-  // to keep the board's own 50px gap from the bubble's right edge.
+  // to keep the board's own 74px gap from the bubble's right edge.
   const dangle = container.querySelector<HTMLElement>(
     '.halloween-monster-dangle'
   )!;
   expect(dangle.parentElement).toHaveStyle({
-    left: '694px',
+    left: '718px',
     top: `${STAGE.top}px`,
     overflow: 'hidden',
   });

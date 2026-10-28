@@ -16,7 +16,7 @@ import { useElementBox } from './useElementBox';
 /** The anchors the chsh3 Scenes' Decorations are placed against (agent
  *  decision A8): the stage, Whobit's speech bubble (the ghost hangs on the
  *  results circle's bottom-left, clamped to the bubble's right edge, which
- *  the GUI lays right of the board's stage; the sock monster hangs 50px
+ *  the GUI lays right of the board's stage; the sock monster hangs 74px
  *  right of it, keeping its board gap), Whobit's pose (the board leans its
  *  pumpkin out from under it) and the page's own results circle (the board
  *  hangs its ghost and its small pumpkin on it, and draws it over the moon
@@ -98,7 +98,7 @@ function Chsh3Decorations({ board }: { board: Chsh3Board }) {
       {board === 'entangled' && <MonsterVamp stage={stage} />}
       {board === 'weak' && (
         <MonsterDangle
-          left={Math.max(stage.left + stage.width / 2 - 82, bubble.right + 50)}
+          left={Math.max(stage.left + stage.width / 2 - 82, bubble.right + 74)}
           top={stage.top}
         />
       )}

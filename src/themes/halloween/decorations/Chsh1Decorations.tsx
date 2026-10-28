@@ -14,7 +14,7 @@ import { useElementBox } from './useElementBox';
 
 /** The anchors the chsh1 Scene's Decorations are placed against (agent
  *  decision A8): the stage, Whobit's speech bubble (the board floats its
- *  spider and its ghost beside the bubble, 32px and 8px right of its right
+ *  spider and its ghost beside the bubble, 56px and 32px right of its right
  *  edge, which the GUI lays right of the board's stage, so both are clamped
  *  to keep their board gap from it), Whobit's pose (the board leans its
  *  pumpkin out from under it) and the Next button (the board floats its
@@ -52,13 +52,13 @@ export default function Chsh1Decorations() {
       <Moon stage={stage} />
       <Bats stage={stage} />
       <Spider
-        left={Math.max(stage.left + stage.width / 2 - 100, bubble.right + 32)}
+        left={Math.max(stage.left + stage.width / 2 - 100, bubble.right + 56)}
         top={stage.top}
         threadHeight={70}
         bobDuration="3.4s"
       />
       <Ghost
-        left={Math.max(stage.left + stage.width / 2 - 124, bubble.right + 8)}
+        left={Math.max(stage.left + stage.width / 2 - 124, bubble.right + 32)}
         top={stage.top + 250}
         width={84}
         height={100}

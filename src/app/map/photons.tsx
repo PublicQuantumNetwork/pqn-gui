@@ -42,26 +42,82 @@ function polarizationTiming() {
   };
 }
 
+// Waveplate plate geometry, in the unmirrored icon's coordinates. The front
+// face faces the viewer, so it keeps its size at every angle; its edge
+// recedes along WAVEPLATE_DEPTH, the beam's direction, which gives the 3D
+// look of Figma's Group 10. The centre keeps the whole plate, edge included,
+// centred in the 26x58 box.
+const WAVEPLATE_CENTRE = [16.5, 31.5];
+const WAVEPLATE_HALF_LENGTH = 20;
+const WAVEPLATE_HALF_WIDTH = 12;
+const WAVEPLATE_DEPTH = [-7, -5];
+const WAVEPLATE_FACE_TRANSFORM = `translate(${WAVEPLATE_CENTRE.join(' ')})`;
+// Samples per turn, so the redrawn edge follows the plate smoothly.
+const WAVEPLATE_TURN_STEPS = 8;
+
 /**
- * Waveplate dial: hold the current outcome while the photon is visible, then
+ * The plate's four edge faces at a given angle, as one path. The front face
+ * is the plate rotated in its own plane; each edge face joins
+ * two neighbouring front corners to the same corners pushed back by the depth.
+ */
+function waveplateEdgePath(angleDegrees: number) {
+  const radians = (angleDegrees * Math.PI) / 180;
+  const cos = Math.cos(radians);
+  const sin = Math.sin(radians);
+  const corners = [
+    [-1, -1],
+    [1, -1],
+    [1, 1],
+    [-1, 1],
+  ].map(([u, v]) => {
+    const x = u * WAVEPLATE_HALF_LENGTH * cos - v * WAVEPLATE_HALF_WIDTH * sin;
+    const y = u * WAVEPLATE_HALF_LENGTH * sin + v * WAVEPLATE_HALF_WIDTH * cos;
+    return [WAVEPLATE_CENTRE[0] + x, WAVEPLATE_CENTRE[1] + y];
+  });
+  const point = ([x, y]: number[], dx = 0, dy = 0) =>
+    `${(x + dx).toFixed(2)} ${(y + dy).toFixed(2)}`;
+  const [dx, dy] = WAVEPLATE_DEPTH;
+  return corners
+    .map((corner, i) => {
+      const next = corners[(i + 1) % corners.length];
+      return `M${point(corner)}L${point(next)}L${point(next, dx, dy)}L${point(corner, dx, dy)}Z`;
+    })
+    .join('');
+}
+
+/**
+ * Waveplate turn: hold the current outcome while the photon is visible, then
  * turn to the next outcome after the photon fades out. The final turn goes to
  * the first outcome plus 180deg, which is the same axis, so the loop is smooth.
  * Angles are negated because the icon is mirrored, which reverses rotation.
+ * Each turn is sampled so the plate's edge can be redrawn along the way.
  */
-function waveplateDialTiming() {
+function waveplateTiming() {
   const outcomeCount = POLARIZATION_OUTCOMES_DEGREES.length;
+  const angles = [
+    ...POLARIZATION_OUTCOMES_DEGREES,
+    POLARIZATION_OUTCOMES_DEGREES[0] + 180,
+  ].map((angle) => -angle);
   const keyTimes: number[] = [];
   const values: number[] = [];
-  POLARIZATION_OUTCOMES_DEGREES.forEach((angle, i) => {
-    keyTimes.push(i / outcomeCount, (i + TRIP_FADE_OUT) / outcomeCount);
-    values.push(-angle, -angle);
-  });
+  for (let i = 0; i < outcomeCount; i += 1) {
+    keyTimes.push(i / outcomeCount);
+    values.push(angles[i]);
+    for (let step = 0; step < WAVEPLATE_TURN_STEPS; step += 1) {
+      const progress = step / WAVEPLATE_TURN_STEPS;
+      keyTimes.push(
+        (i + TRIP_FADE_OUT + (1 - TRIP_FADE_OUT) * progress) / outcomeCount
+      );
+      values.push(angles[i] + (angles[i + 1] - angles[i]) * progress);
+    }
+  }
   keyTimes.push(1);
-  values.push(-(POLARIZATION_OUTCOMES_DEGREES[0] + 180));
+  values.push(angles[outcomeCount]);
   return {
     cycleDur: `${PHOTON_CYCLE_DURATION_SECONDS}s`,
-    keyTimes: keyTimes.join(';'),
-    values: values.join(';'),
+    keyTimes: keyTimes.map((t) => t.toFixed(5)).join(';'),
+    rotateValues: values.join(';'),
+    edgeValues: values.map(waveplateEdgePath).join(';'),
   };
 }
 
@@ -242,9 +298,12 @@ export function PhotonPairAnimation() {
   );
 }
 
-/** Figma's half-waveplate icon (26x58) with a dial that turns in step with the photons. */
+/**
+ * Figma's half-waveplate icon (26x58), redrawn so the whole plate can turn
+ * about the beam in step with the photons.
+ */
 export function WaveplateIcon() {
-  const { cycleDur, keyTimes, values } = waveplateDialTiming();
+  const { cycleDur, keyTimes, rotateValues, edgeValues } = waveplateTiming();
   return (
     <Box
       component="svg"
@@ -255,44 +314,45 @@ export function WaveplateIcon() {
       sx={{ display: 'block', width: 26, height: 58, overflow: 'visible' }}
     >
       {/*
-        The plate is drawn in perspective with the beam passing through it
-        left to right, so it turns about the beam: the slab stays put and only
-        the axis line on its front face turns, to the outcome the photon will
-        collapse to, like a rotation mount. Figma's Group 10 is mirrored so
-        the front face is on the left and the edge on the right.
+        The plate turns about the beam, like a rotation mount, to the outcome
+        the photon will collapse to; the line on its face marks its axis.
+        Mirrored so the front face is on the left and the edge on the right.
       */}
-      <g transform="matrix(-1 0 0 1 26 0)">
+      <g transform="matrix(-1 0 0 1 26 0)" stroke="#70B1BE">
         <path
-          d="M1.26294 15.9511C1.26294 15.5404 1.64898 15.239 2.04749 15.3386L7.09876 16.6014C7.37985 16.6717 7.57703 16.9242 7.57703 17.214V55.6911C7.57703 56.1019 7.191 56.4033 6.79249 56.3036L1.74121 55.0408C1.46013 54.9706 1.26294 54.718 1.26294 54.4283V15.9511Z"
           fill="#8DE8F9"
           fillOpacity="0.72"
-        />
-        <path
-          d="M18.4464 1.38502C18.563 1.29862 18.7059 1.25505 18.8509 1.26164L23.8969 1.491C24.4789 1.51746 24.7176 2.25086 24.2626 2.61481L8.4492 15.2656C8.29727 15.3871 8.09779 15.4318 7.90851 15.3867L2.89825 14.1938C2.3761 14.0695 2.23736 13.3917 2.66866 13.0722L18.4464 1.38502Z"
-          fill="#8DE8F9"
-          fillOpacity="0.72"
-        />
-        <path
-          d="M0 15.9511C1.1756e-05 15.1163 6.08557e-05 14.1938 0.315644 13.5639C0.947114 12.9325 1.20141 12.5873 1.91704 12.0572L17.6949 0.369966L17.8293 0.279325C18.1057 0.109191 18.4213 0.0131057 18.7456 0H18.9084L23.6853 0.444268C24.5236 0.482377 25.5762 0.959984 25.8878 1.56712C26.2251 2.22437 25.761 3.03342 25.0517 3.60101L9.23806 16.2514C9.07938 16.3783 8.90297 16.4767 8.71703 16.5461C8.79589 16.7552 8.83973 16.9803 8.83973 17.2139V55.6911C8.83973 56.9234 7.68167 57.8274 6.48613 57.5285L1.43485 56.2657C0.5916 56.0549 0 55.2974 0 54.4282V15.9511ZM18.851 1.26159C18.7061 1.255 18.5631 1.29862 18.4465 1.38491L2.66869 13.0721C2.23741 13.3916 2.37598 14.0694 2.89807 14.1938L7.90865 15.3869C8.09779 15.4318 8.29696 15.3868 8.4488 15.2654L23.9936 2.82994C24.4201 2.48869 24.237 1.82238 23.7327 1.7188L23.6279 1.70585L18.851 1.26159ZM1.26282 54.4282C1.26282 54.718 1.46023 54.9703 1.74131 55.0405L6.79258 56.3033C7.19105 56.4029 7.57691 56.1018 7.57691 55.6911V17.2139C7.5769 16.9605 7.42605 16.7356 7.20016 16.6362L7.09842 16.6016L2.04715 15.3388C1.6487 15.2393 1.26284 15.5404 1.26282 15.9511V54.4282Z"
-          fill="#70B1BE"
-        />
-        <path
-          d="M24.8877 3.37732V39.0375L8.57715 55.348V16.8754L24.8877 3.37732Z"
-          fill="#8DE8F9"
-          fillOpacity="0.72"
-          stroke="#70B1BE"
-          strokeWidth="2"
-        />
-        {/*
-              Polarization axis dial drawn on the front face. The face is a
-              parallelogram with vertical sides and slanted top/bottom, so the
-              dial is skewed to match: vertical stays vertical, horizontal
-              follows the slant. Centre of the face is (16.73, 28.66).
-            */}
-        <g transform="matrix(1 -0.8278 0 1 16.73 28.66)" stroke="#1c5a68">
-          <circle r="6.5" fill="none" strokeWidth={0.9} opacity={0.55} />
+          strokeWidth={1.26}
+          strokeLinejoin="round"
+        >
+          <animate
+            attributeName="d"
+            calcMode="linear"
+            dur={cycleDur}
+            keyTimes={keyTimes}
+            repeatCount="indefinite"
+            values={edgeValues}
+          />
+        </path>
+        <g transform={WAVEPLATE_FACE_TRANSFORM}>
           <g>
-            <line x1="-7" x2="7" strokeWidth={1.8} strokeLinecap="round" />
+            <rect
+              x={-WAVEPLATE_HALF_LENGTH}
+              y={-WAVEPLATE_HALF_WIDTH}
+              width={2 * WAVEPLATE_HALF_LENGTH}
+              height={2 * WAVEPLATE_HALF_WIDTH}
+              fill="#8DE8F9"
+              fillOpacity="0.72"
+              strokeWidth={2}
+              strokeLinejoin="round"
+            />
+            <line
+              x1={3 - WAVEPLATE_HALF_LENGTH}
+              x2={WAVEPLATE_HALF_LENGTH - 3}
+              stroke="#1c5a68"
+              strokeWidth={1.8}
+              strokeLinecap="round"
+            />
             <animateTransform
               attributeName="transform"
               type="rotate"
@@ -300,7 +360,7 @@ export function WaveplateIcon() {
               dur={cycleDur}
               keyTimes={keyTimes}
               repeatCount="indefinite"
-              values={values}
+              values={rotateValues}
             />
           </g>
         </g>

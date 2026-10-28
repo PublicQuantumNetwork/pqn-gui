@@ -24,24 +24,30 @@ const circleAnchor = () =>
  * the flickering pumpkin under Whobit's pose — plus the board's ghost by
  * the emoji circle and the skeleton sliding in from the stage's left edge.
  * The board draws the emoji circle over the moon and the bats, so both are
- * cut around the circle the page itself draws (agent decision A8).
+ * cut around the circle the page itself draws (agent decision A8). While
+ * the page shows its send-error image instead of the circle, the ghost and
+ * the cuts are omitted — as on the board's error variant, which draws no
+ * circle and no ghost — and never the rest of the set.
  */
 export default function Ssm1Decorations() {
   const stage = useElementBox(stageAnchor);
   const bubble = useElementBox(bubbleAnchor);
   const pose = useElementBox(poseAnchor);
   const circle = useElementBox(circleAnchor);
-  if (!stage || !bubble || !pose || !circle) {
+  if (!stage || !bubble || !pose) {
     return null;
   }
   // The emoji circle's own disc: the page draws circle.png contained in its
   // 560px box, so the image's own circle (57px inside the 550px image)
-  // scales to ~58px inside the box, as the CHSH3 results circle's does.
-  const disc = {
-    cx: circle.left + circle.width / 2,
-    cy: circle.top + circle.height / 2,
-    r: (circle.width - 2 * 58) / 2,
-  };
+  // scales to ~58px inside the box, as the CHSH3 results circle's does —
+  // or none, while the page shows its send-error image instead.
+  const disc = circle
+    ? {
+        cx: circle.left + circle.width / 2,
+        cy: circle.top + circle.height / 2,
+        r: (circle.width - 2 * 58) / 2,
+      }
+    : undefined;
   return (
     <>
       <Web stage={stage} />
@@ -60,12 +66,14 @@ export default function Ssm1Decorations() {
         flicker
         clipBottom={stage.bottom}
       />
-      <Ghost
-        left={circle.left + 540}
-        top={circle.top + 8}
-        width={84}
-        height={100}
-      />
+      {circle && (
+        <Ghost
+          left={circle.left + 540}
+          top={circle.top + 8}
+          width={84}
+          height={100}
+        />
+      )}
     </>
   );
 }

@@ -1,4 +1,10 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from '@testing-library/react';
 import { afterAll, beforeAll, expect, test, vi } from 'vitest';
 
 /**
@@ -106,17 +112,7 @@ beforeAll(() => {
   );
   // The real emoji picker watches its category list with an
   // IntersectionObserver, which jsdom has none of.
-  vi.stubGlobal(
-    'IntersectionObserver',
-    class {
-      observe() {}
-      unobserve() {}
-      disconnect() {}
-      takeRecords() {
-        return [];
-      }
-    }
-  );
+  vi.stubGlobal('IntersectionObserver', IntersectionObserverStub);
   vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(
     function (this: HTMLElement) {
       const name = this.getAttribute('data-decoration-anchor');
@@ -127,6 +123,52 @@ beforeAll(() => {
     }
   );
 });
+
+/**
+ * A stub IntersectionObserver: records every instance and everything each
+ * instance observes, so a test can fire the callbacks by hand with the
+ * entries the real browser fires as the picker's categories come into
+ * view — jsdom has no layout, so they never fire on their own and the
+ * picker's emoji never render without them.
+ */
+class IntersectionObserverStub {
+  static instances: IntersectionObserverStub[] = [];
+  callback: IntersectionObserverCallback;
+  observed: Element[] = [];
+  constructor(callback: IntersectionObserverCallback) {
+    this.callback = callback;
+    IntersectionObserverStub.instances.push(this);
+  }
+  observe(element: Element) {
+    this.observed.push(element);
+  }
+  unobserve(element: Element) {
+    this.observed = this.observed.filter((observed) => observed !== element);
+  }
+  disconnect() {
+    this.observed = [];
+  }
+  takeRecords() {
+    return [];
+  }
+}
+
+/** Fires the real emoji picker's IntersectionObservers, so its categories
+ *  become visible and their emoji render. */
+async function revealPickerEmojis() {
+  await act(async () => {
+    for (const observer of IntersectionObserverStub.instances) {
+      observer.callback(
+        observer.observed.map((target) => ({
+          target,
+          isIntersecting: true,
+          intersectionRatio: 1,
+        })),
+        observer as unknown as IntersectionObserver
+      );
+    }
+  });
+}
 
 function setAnchors(next: Record<string, Box>) {
   anchors.current = next;
@@ -164,6 +206,13 @@ function occluderHole(occluder: Box, piece: Box): string {
   const x = occluder.left - piece.left;
   const y = occluder.top - piece.top;
   return ` M${x} ${y} H${x + occluder.width} V${y + occluder.height} H${x} Z`;
+}
+
+/** Whether two boxes overlap (edges only touching do not). */
+function intersects(a: Box, b: Box): boolean {
+  return (
+    a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom
+  );
 }
 
 /** The other Scenes' monsters, none of which may leak onto an SSM page. */
@@ -491,7 +540,7 @@ test('SSM2 waiting renders the cat, the friend’s computer and the ghost courie
   expect(container.querySelector('.halloween-courier-fly')).toBeNull();
 });
 
-test('SSM2 declined renders the sad pumpkin, the envelope, the sad ghost and the monster', async () => {
+test('SSM2 declined renders the sad pumpkin whole beside the declined face, the envelope, the sad ghost and the monster', async () => {
   vi.mocked(calls.requestFollower).mockReturnValueOnce(
     Promise.resolve({ success: true, data: { accepted: false } })
   );
@@ -515,26 +564,43 @@ test('SSM2 declined renders the sad pumpkin, the envelope, the sad ghost and the
   const pumpkinBox = pumpkin.closest('div') as HTMLElement;
 
   // The board's communication box, centred on the declined face the GUI
-  // lays in the status's spot (the board carries no status of its own):
-  // the sad pumpkin 140px in and 40px down it, sagging, with the declined
-  // face's box cut out of it, so the page's own face stays clear (A8).
+  // lays in the status's spot (the board carries no status of its own).
   const commBox = {
     left: SSM.declinedStatus.left + SSM.declinedStatus.width / 2 - 280,
     top: SSM.declinedStatus.top + SSM.declinedStatus.height / 2 - 280,
   };
-  expect(pumpkinBox).toHaveStyle({
-    left: `${commBox.left + 140}px`,
-    top: `${commBox.top + 40}px`,
-  });
-  expect(pumpkinBox.style.clipPath).toMatch(/^path\(evenodd,/);
-  expect(pumpkinBox.style.clipPath).toContain(
-    occluderHole(SSM.declinedStatus, {
-      left: commBox.left + 140,
-      top: commBox.top + 40,
-      width: 280,
-      height: 270,
-    })
+  // The sad pumpkin stands whole, as on the board: no occluder hole slices
+  // through its face...
+  expect(pumpkinBox.style.clipPath).toBe('');
+  // ...and where its board spot crosses the declined face (the page's own
+  // content, which no piece may cover), it stands beside the face instead,
+  // flush at the face's left edge and never further left than 24px clear
+  // of the speech bubble.
+  const boardSpot = {
+    left: commBox.left + 140,
+    top: commBox.top + 40,
+    right: commBox.left + 140 + 280,
+    bottom: commBox.top + 40 + 270,
+  };
+  expect(
+    intersects(boardSpot, SSM.declinedStatus),
+    'the pumpkin’s board spot crosses the declined face, so the move below can fail'
+  ).toBe(true);
+  const pumpkinLeft = Math.max(
+    Math.min(boardSpot.left, SSM.declinedStatus.left - 280),
+    SSM.bubble.left + SSM.bubble.width + 24
   );
+  expect(pumpkinBox).toHaveStyle({
+    left: `${pumpkinLeft}px`,
+    top: `${boardSpot.top}px`,
+  });
+  const pumpkinPlaced = {
+    left: pumpkinLeft,
+    top: boardSpot.top,
+    right: pumpkinLeft + 280,
+    bottom: boardSpot.top + 270,
+  };
+  expect(intersects(pumpkinPlaced, SSM.declinedStatus)).toBe(false);
 
   // The crossed-out envelope 404px in and 252px down the box.
   const envelope = container.querySelector<HTMLElement>(
@@ -544,11 +610,28 @@ test('SSM2 declined renders the sad pumpkin, the envelope, the sad ghost and the
   expect(envelope.style.left).toBe(`${commBox.left + 404}px`);
   expect(envelope.style.top).toBe(`${commBox.top + 252}px`);
 
-  // The sad ghost 20px in and 120px down the box, floating the board's own
-  // slower 4.4s.
+  // The sad ghost keeps its board spot, or drops below the pumpkin where
+  // the pumpkin's clamped spot crosses it (its board spot crosses the
+  // pumpkin here): never over the pumpkin, never over the declined face,
+  // floating the board's own slower 4.4s.
   const ghost = container.querySelector<HTMLElement>('.halloween-ghost')!;
   expect(ghost.style.left).toBe(`${commBox.left + 20}px`);
-  expect(ghost.style.top).toBe(`${commBox.top + 120}px`);
+  expect(
+    commBox.left + 20 + 84 > pumpkinLeft &&
+      commBox.left + 20 < pumpkinLeft + 280 &&
+      commBox.top + 120 + 100 > boardSpot.top &&
+      commBox.top + 120 < boardSpot.top + 270,
+    'the ghost’s board spot crosses the pumpkin, so the move below can fail'
+  ).toBe(true);
+  expect(ghost.style.top).toBe(`${boardSpot.top + 270 + 20}px`);
+  const ghostPlaced = {
+    left: commBox.left + 20,
+    top: boardSpot.top + 270 + 20,
+    right: commBox.left + 20 + 84,
+    bottom: boardSpot.top + 270 + 20 + 100,
+  };
+  expect(intersects(ghostPlaced, pumpkinPlaced)).toBe(false);
+  expect(intersects(ghostPlaced, SSM.declinedStatus)).toBe(false);
   expect(ghost).toHaveStyle({ animationDuration: '4.4s' });
   // The sad ghost's own drooping arms, brows and frown.
   expect(
@@ -786,8 +869,9 @@ test('SSM4 twinkles its gold sparks on the results circle only on a perfect matc
 
   // EmojiConfetti stays exactly as today: the perfect match still bursts
   // the player's own emoji around the result, separate from the sparks
-  // (decision 14) — the particles are the page's own, outside the
-  // Decorations layer.
+  // (decision 14) — every particle carries the player's emoji (😂, the one
+  // the page's own params carry), and the particles are the page's own,
+  // outside the Decorations layer.
   await waitFor(
     () => {
       expect(
@@ -796,6 +880,11 @@ test('SSM4 twinkles its gold sparks on the results circle only on a perfect matc
     },
     { timeout: 2000 }
   );
+  const particles = document.querySelectorAll('.emoji-confetti-particle');
+  expect(particles.length).toBeGreaterThan(0);
+  for (const particle of particles) {
+    expect(particle.textContent).toBe('😂');
+  }
   expect(
     sparkSvg.contains(document.querySelector('.emoji-confetti-particle'))
   ).toBe(false);
@@ -829,6 +918,99 @@ test('the SSM4 ghost and sparks follow the results circle when it moves', async 
   expect(sparkSvg.style.top).toBe(`${moved.top}px`);
 });
 
+test('SSM1 keeps its stage Decorations, and omits only its ghost, on a send error', async () => {
+  vi.mocked(calls.submitQKDEmoji).mockReturnValueOnce(
+    Promise.resolve({ success: false })
+  );
+  setAnchors({
+    stage: STAGE,
+    'whobit-bubble': SSM.bubble,
+    'whobit-pose': SSM.pose,
+    'ssm1-circle': SSM.circle,
+  });
+  const { container } = renderPage(<SSM1 />);
+
+  // Choose an emoji and send it; the send fails, so the page swaps the
+  // emoji circle for its broken-computer image and the circle's anchor
+  // goes with it (the page relays itself out around it).
+  fireEvent.click(screen.getByText('Tap'));
+  const dialog = await screen.findByRole('dialog');
+  // One of the real picker's own emoji buttons (they carry the emoji's
+  // unified code, not its character, as text).
+  await revealPickerEmojis();
+  const emoji = await waitFor(() => {
+    const found = dialog.querySelector<HTMLButtonElement>(
+      'button[data-unified]'
+    );
+    expect(found).not.toBeNull();
+    return found;
+  });
+  fireEvent.click(emoji);
+  // The picker closes over MUI's exit transition, which keeps the page
+  // aria-hidden behind the modal until it ends.
+  const next = await screen.findByRole('link', { name: 'Next' });
+  fireEvent.click(next);
+  await screen.findByText(/There was an error sending your emoji/);
+  fireEvent(window, new Event('resize'));
+
+  // The stage-anchored pieces all stay: web, moon, bats, the spider, the
+  // skeleton and the flickering pumpkin under Whobit's pose.
+  expect(container.querySelector('svg[viewBox="0 0 200 200"]')).not.toBeNull();
+  const moon = container.querySelector('svg[viewBox="0 0 160 160"]')!
+    .parentElement as HTMLElement;
+  const bats = container.querySelector('.halloween-bats')!
+    .parentElement as HTMLElement;
+  expect(moon).not.toBeNull();
+  expect(bats).not.toBeNull();
+  expect(container.querySelector('.halloween-spider')).not.toBeNull();
+  expect(container.querySelector('.halloween-monster-skel')).not.toBeNull();
+  expectPosePumpkin(container);
+
+  // The ghost is omitted — its anchor is gone, and the board's error
+  // variant draws no ghost either — and with no circle drawn over them,
+  // the moon and the bats are whole.
+  expect(container.querySelector('.halloween-ghost')).toBeNull();
+  expect(moon.style.clipPath).toBe('');
+  expect(bats.style.clipPath).toBe('');
+});
+
+test('SSM2 keeps its stage Decorations, and omits its status-placed pieces, on a connection error', async () => {
+  vi.mocked(calls.requestFollower).mockReturnValueOnce(
+    Promise.resolve({ success: false })
+  );
+  setAnchors({
+    stage: STAGE,
+    'whobit-bubble': SSM.bubble,
+    'whobit-pose': SSM.pose,
+    'ssm2-status': SSM.status,
+  });
+  const { container } = renderPage(<SSM2 />);
+
+  // The request to the other computer fails, so the page shows its error
+  // text and its broken-computer image instead of a status (agent decision
+  // A2: still the ssm2-waiting Scene), and the status's anchor goes with
+  // the spinner (the page relays itself out around it).
+  await screen.findByText(
+    /There was an error connecting to the other computer/
+  );
+  fireEvent(window, new Event('resize'));
+
+  // The stage-anchored pieces all stay: web, moon, bats, the spider and
+  // the flickering pumpkin under Whobit's pose.
+  expect(container.querySelector('svg[viewBox="0 0 200 200"]')).not.toBeNull();
+  expect(container.querySelector('svg[viewBox="0 0 160 160"]')).not.toBeNull();
+  expect(container.querySelector('.halloween-bats')).not.toBeNull();
+  expect(container.querySelector('.halloween-spider')).not.toBeNull();
+  expectPosePumpkin(container);
+
+  // The status-placed pieces are omitted: no cat, no friend computer, no
+  // ghost courier — and no fuzz ball, this being the waiting board.
+  expect(container.querySelector('.halloween-monster-cat')).toBeNull();
+  expect(container.querySelector('svg[viewBox="0 0 560 330"]')).toBeNull();
+  expect(container.querySelector('.halloween-courier-deliver')).toBeNull();
+  expect(container.querySelector('.halloween-monster-fuzz')).toBeNull();
+});
+
 test('SSM1 keeps the page’s own full emoji picker under Halloween', async () => {
   setAnchors({
     stage: STAGE,
@@ -846,39 +1028,15 @@ test('SSM1 keeps the page’s own full emoji picker under Halloween', async () =
   const dialog = await screen.findByRole('dialog');
   const picker = dialog.querySelector('.epr-body');
   expect(picker).not.toBeNull();
-  // The real picker's own list carries emoji the board's short Halloween
-  // list has none of, so a themed short list swapped in fails here.
-  const boardHalloweenList = [
-    '🎃',
-    '👻',
-    '🦇',
-    '🕷️',
-    '🕸️',
-    '💀',
-    '🧙',
-    '🧛',
-    '🧟',
-    '🧹',
-    '🔮',
-    '🦉',
-    '🐈‍⬛',
-    '🌕',
-    '🌙',
-    '🕯️',
-    '🪦',
-    '⚰️',
-    '🍬',
-    '🍭',
-    '🍫',
-    '🍂',
-    '👽',
-    '😱',
-  ];
-  const shown = Array.from(dialog.querySelectorAll('button')).map(
-    (button) => button.textContent?.trim() ?? ''
-  );
-  expect(shown.length).toBeGreaterThan(0);
-  expect(shown.some((emoji) => !boardHalloweenList.includes(emoji))).toBe(true);
+  // The real picker's own list runs far past the board's 24 Halloween
+  // emoji (its first category alone holds more), so a themed short list
+  // swapped in fails here.
+  await revealPickerEmojis();
+  await waitFor(() => {
+    expect(
+      dialog.querySelectorAll('button[data-unified]').length
+    ).toBeGreaterThan(24);
+  });
   // Nothing the Decorations layer draws is a control (decision 10).
   expect(
     container.querySelectorAll('[aria-hidden="true"] button')

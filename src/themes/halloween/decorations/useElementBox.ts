@@ -50,7 +50,8 @@ function sameBox(a: ElementBox, b: ElementBox): boolean {
  * component's own place in the DOM. It must stay the same function across
  * renders (module-level, or `useCallback` with no deps), or the measurement
  * is torn down and set up again on every render. Until the element is laid
- * out, the box is null and a piece placed against it does not render.
+ * out, the box is null and a piece placed against it does not render; once
+ * the element is gone, the box is null again and its pieces stop rendering.
  */
 export function useElementBox(
   select: () => Element | null | undefined
@@ -63,6 +64,12 @@ export function useElementBox(
     const measure = () => {
       const element = select();
       if (!element) {
+        // An element that is gone has no box: the pieces placed against it
+        // stop rendering instead of floating on its last box (a page state
+        // can swap its element away, as SSM1's send error swaps the emoji
+        // circle for the broken computer), while the set's other pieces,
+        // each placed against its own anchor, stay (agent decision A8).
+        setBox(null);
         return;
       }
       if (element !== elementRef.current) {

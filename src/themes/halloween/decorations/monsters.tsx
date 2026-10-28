@@ -1615,23 +1615,15 @@ export function MonsterCat({ left, top }: { left: number; top: number }) {
 }
 
 /** The unlit, frowning jack-o'-lantern (SSM2-declined.dc.html): the
- *  board's own 280x270 drawing, sagging, at the board's own place (140px
- *  in, 40px down the communication box). The declined face the GUI shows
- *  in that box is the page's own content, so its box is cut out of the
- *  pumpkin here (agent decision A8). */
-export function SadPumpkin({
-  left,
-  top,
-  occluders,
-}: {
-  left: number;
-  top: number;
-  occluders?: ElementBox[];
-}) {
+ *  board's own 280x270 drawing, sagging, placed by the Scene beside the
+ *  declined face the GUI shows in that spot (the face is the page's own
+ *  content, which no piece may cover, and the pumpkin stands whole, as on
+ *  the board). */
+export function SadPumpkin({ left, top }: { left: number; top: number }) {
   return (
     <div
       aria-hidden="true"
-      style={pieceStyle({ left, top, width: 280, height: 270 }, occluders)}
+      style={pieceStyle({ left, top, width: 280, height: 270 })}
     >
       <svg
         width="280"

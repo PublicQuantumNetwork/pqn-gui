@@ -15,7 +15,7 @@ import {
   spiderLeft,
 } from './ambient';
 import { MonsterCat, MonsterFrank, MonsterFuzz, SadPumpkin } from './monsters';
-import { useElementBox } from './useElementBox';
+import { useElementBox, type ElementBox } from './useElementBox';
 
 /** The anchors the ssm2 Scenes' Decorations are placed against (agent
  *  decision A8): the stage, Whobit's speech bubble (the spider keeps its
@@ -57,12 +57,14 @@ const boards: Record<
  * and the fuzz ball popping up from the stage's bottom (clamped past the
  * pose pumpkin beside it, as the CHSH2 pot is); the waiting board's cat on
  * the friend's computer with its popup light blinking and the ghost
- * courier; the declined board's sad pumpkin (the declined face's box cut
- * out of it), the crossed-out envelope, the sad ghost and the monster
- * leaning in from the stage's right edge. The asking board hangs its
- * spider behind the bubble's right edge, so the bubble is cut out of it
- * here, and draws the status over its flight path's lower corner, so the
- * status is cut out of that too (agent decision A8).
+ * courier; the declined board's sad pumpkin standing whole beside the
+ * declined face, the crossed-out envelope, the sad ghost and the monster
+ * leaning in from the stage's right edge. While the page shows its
+ * connection-error image instead of a status, the status-placed pieces are
+ * omitted and the set's other pieces stay (agent decision A8). The asking
+ * board hangs its spider behind the bubble's right edge, so the bubble is
+ * cut out of it here, and draws the status over its flight path's lower
+ * corner, so the status is cut out of that too (agent decision A8).
  */
 function Ssm2Decorations({ board }: { board: Ssm2Board }) {
   const stage = useElementBox(stageAnchor);
@@ -136,22 +138,57 @@ function Ssm2Decorations({ board }: { board: Ssm2Board }) {
         </>
       )}
       {board === 'declined' && status && box && (
-        <>
-          <SadPumpkin
-            left={box.left + 140}
-            top={box.top + 40}
-            occluders={[status]}
-          />
-          <DeclinedEnvelope left={box.left + 404} top={box.top + 252} />
-          <GhostSad
-            left={box.left + 20}
-            top={box.top + 120}
-            width={84}
-            height={100}
-          />
-        </>
+        <DeclinedPieces box={box} status={status} bubble={bubble} />
       )}
       {board === 'declined' && <MonsterFrank stage={stage} />}
+    </>
+  );
+}
+
+/** The declined board's sad pieces, placed around the declined face the
+ *  GUI shows where the board draws them around its own box: the sad pumpkin
+ *  stands whole, as on the board — beside the face where the face crosses
+ *  its board spot, never over it, for no piece may cover the page's own
+ *  content and no occluder hole may slice through its face — the envelope
+ *  keeps its own board spot beside it, and the sad ghost keeps its board
+ *  spot, or drops below the pumpkin where the pumpkin's clamped spot
+ *  crosses it. */
+function DeclinedPieces({
+  box,
+  status,
+  bubble,
+}: {
+  box: { left: number; top: number };
+  status: ElementBox;
+  bubble: ElementBox;
+}) {
+  // The pumpkin's left: its board spot, or beside the declined face (280px
+  // wide, flush at its left edge) where the face crosses that spot — never
+  // further left than 24px clear of the speech bubble.
+  const pumpkinLeft = Math.max(
+    Math.min(box.left + 140, status.left - 280),
+    bubble.right + 24
+  );
+  const pumpkinTop = box.top + 40;
+  // The ghost's board spot, or 20px below the pumpkin where the pumpkin's
+  // clamped spot crosses it.
+  const ghostLeft = box.left + 20;
+  const ghostTop = box.top + 120;
+  const ghostCrossesPumpkin =
+    ghostLeft + 84 > pumpkinLeft &&
+    ghostLeft < pumpkinLeft + 280 &&
+    ghostTop + 100 > pumpkinTop &&
+    ghostTop < pumpkinTop + 270;
+  return (
+    <>
+      <SadPumpkin left={pumpkinLeft} top={pumpkinTop} />
+      <DeclinedEnvelope left={box.left + 404} top={box.top + 252} />
+      <GhostSad
+        left={ghostLeft}
+        top={ghostCrossesPumpkin ? pumpkinTop + 270 + 20 : ghostTop}
+        width={84}
+        height={100}
+      />
     </>
   );
 }
